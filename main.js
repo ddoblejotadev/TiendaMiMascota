@@ -51,3 +51,63 @@ document.addEventListener('DOMContentLoaded', () => {
     form.classList.remove('was-validated');
   });
 });
+
+/* --- Nuevas funciones: toggle contraseña, barra de fuerza y validación en vivo --- */
+(function() {
+  const pwd = document.getElementById('password');
+  if (!pwd) return;
+
+  // botón mostrar/ocultar
+  const btn = document.createElement('button');
+  btn.type = 'button';
+  btn.className = 'btn btn-outline-secondary btn-sm pwd-toggle';
+  btn.textContent = 'Mostrar';
+  pwd.after(btn);
+
+  btn.addEventListener('click', () => {
+    if (pwd.type === 'password') { pwd.type = 'text'; btn.textContent = 'Ocultar'; }
+    else { pwd.type = 'password'; btn.textContent = 'Mostrar'; }
+  });
+
+  // barra de fuerza
+  const meterWrap = document.createElement('div');
+  meterWrap.className = 'mt-2';
+  meterWrap.innerHTML = `
+    <div class="progress"><div class="progress-bar" role="progressbar" style="width:0%"></div></div>
+    <small class="text-muted d-block mt-1" id="pwdHint"></small>
+  `;
+  pwd.after(meterWrap);
+
+  pwd.addEventListener('input', () => {
+    const val = pwd.value;
+    let score = 0;
+    if (val.length >= 6) score += 30;
+    if (/[A-Z]/.test(val)) score += 20;
+    if (/[0-9]/.test(val)) score += 25;
+    if (/[\W_]/.test(val)) score += 25;
+    score = Math.min(100, score);
+
+    const bar = meterWrap.querySelector('.progress-bar');
+    bar.style.width = score + '%';
+    bar.className = 'progress-bar';
+    if (score < 40) bar.classList.add('bg-danger');
+    else if (score < 70) bar.classList.add('bg-warning');
+    else bar.classList.add('bg-success');
+
+    const hint = document.getElementById('pwdHint');
+    if (!val) hint.textContent = '';
+    else if (score < 40) hint.textContent = 'Contraseña débil';
+    else if (score < 70) hint.textContent = 'Contraseña moderada';
+    else hint.textContent = 'Contraseña fuerte';
+  });
+
+  // validación en tiempo real para algunos campos
+  ['fullName','email','username','phone'].forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.addEventListener('input', () => {
+      if (el.checkValidity()) { el.classList.remove('is-invalid'); el.classList.add('is-valid'); }
+      else { el.classList.remove('is-valid'); if (el.value) el.classList.add('is-invalid'); else el.classList.remove('is-invalid'); }
+    });
+  });
+})();
