@@ -35,6 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
       fullName: document.getElementById('fullName').value.trim(),
       email: document.getElementById('email').value.trim(),
       username: document.getElementById('username').value.trim(),
+      password: document.getElementById('password').value, // <-- ahora se guarda la contraseña (demo)
       phone: document.getElementById('phone').value.trim(),
       address: document.getElementById('address').value.trim(),
       city: document.getElementById('city').value.trim(),
@@ -43,6 +44,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Guardar en localStorage (array 'users')
     const users = JSON.parse(localStorage.getItem('users') || '[]');
+
+    // comprobar usuario duplicado básico (por email o username)
+    const exists = users.some(u => u.email === user.email || u.username === user.username);
+    if (exists) {
+      showAlert('danger', 'El email o usuario ya está registrado.');
+      return;
+    }
+
     users.push(user);
     localStorage.setItem('users', JSON.stringify(users));
 
@@ -111,3 +120,40 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 })();
+
+/* --- Lógica de inicio de sesión (si estamos en login.html) --- */
+document.addEventListener('DOMContentLoaded', () => {
+  const loginForm = document.getElementById('loginForm');
+  const formAlert2 = document.getElementById('loginAlert');
+  if (!loginForm) return;
+
+  function showLoginAlert(type, msg) {
+    if (!formAlert2) return;
+    formAlert2.innerHTML = `<div class="alert alert-${type}" role="alert">${msg}</div>`;
+    setTimeout(() => { formAlert2.innerHTML = ''; }, 3500);
+  }
+
+  loginForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const idVal = document.getElementById('loginId').value.trim();
+    const pwd = document.getElementById('loginPassword').value;
+
+    const users = JSON.parse(localStorage.getItem('users') || '[]');
+    const user = users.find(u => u.username === idVal || u.email === idVal);
+    if (!user) {
+      showLoginAlert('danger', 'Usuario o email no registrado.');
+      return;
+    }
+    if (user.password !== pwd) {
+      showLoginAlert('danger', 'Contraseña incorrecta.');
+      return;
+    }
+
+    // guardamos usuario actual (sin contraseña por seguridad mínima)
+    const current = { username: user.username, fullName: user.fullName, email: user.email };
+    localStorage.setItem('currentUser', JSON.stringify(current));
+
+    showLoginAlert('success', 'Inicio de sesión correcto. Redirigiendo...');
+    setTimeout(() => { window.location.href = 'dashboard.html'; }, 900);
+  });
+});
