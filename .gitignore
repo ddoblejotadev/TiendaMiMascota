@@ -1,0 +1,126 @@
+# ================================
+# .gitignore para Proyecto Web
+# Tienda MiMascota
+# ================================
+
+# Archivos del sistema operativo
+# --------------------------------
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.lnk
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon?
+._*
+
+# Linux
+*~
+.directory
+
+# Editores y IDEs
+# --------------------------------
+# Visual Studio Code
+.vscode/
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Atom
+.atom/
+
+# WebStorm/IntelliJ
+.idea/
+*.iml
+*.iws
+
+# Archivos temporales
+# --------------------------------
+# Logs
+*.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Archivos de respaldo
+*.bak
+*.tmp
+*.temp
+*~
+
+# Node.js (si usas herramientas de desarrollo)
+# --------------------------------
+node_modules/
+npm-debug.log
+yarn.lock
+package-lock.json
+
+# Dependencias de desarrollo
+dist/
+build/
+.cache/
+
+# Archivos de configuración local
+# --------------------------------
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Archivos de servidor local
+# --------------------------------
+.htaccess
+*.php.bak
+
+# Archivos de imagen temporal/cache
+# --------------------------------
+*.cache
+.sass-cache/
+.parcel-cache/
+
+# Archivos específicos del proyecto
+# --------------------------------
+# Archivos de prueba que no queremos subir
+test-data/
+*.test.html
+*.draft.*
+
+# Archivos de documentación temporal
+*.draft.md
+notas-personales.txt
+
+# Archivos de configuración de herramientas
+# --------------------------------
+.browserslistrc
+.eslintcache
+.stylelintcache
+
+# Archivos generados automáticamente
+# --------------------------------
+*.min.css
+*.min.js
+*.map
+
+# Carpetas de librerías descargadas (si las usas)
+# --------------------------------
+vendor/
+libs/
+
+# ================================
+# IMPORTANTE: 
+# Este archivo ayuda a mantener 
+# el repositorio limpio cuando
+# trabajas con tu compañero
+# ================================
