@@ -310,12 +310,21 @@ document.addEventListener('DOMContentLoaded', () => {
       const current = { 
         username: user.username, 
         fullName: user.fullName, 
-        email: user.email 
+        email: user.email,
+        isAdmin: user.isAdmin || user.email?.includes('@admin.cl') // Verificar si es admin
       };
       localStorage.setItem('currentUser', JSON.stringify(current));
 
       showLoginAlert('success', 'Inicio de sesión correcto. Redirigiendo...');
-      setTimeout(() => { window.location.href = 'dashboard.html'; }, 900);
+      
+      // Redirigir según tipo de usuario
+      setTimeout(() => { 
+        if (current.isAdmin || current.email?.includes('@admin.cl')) {
+          window.location.href = 'admin.html';
+        } else {
+          window.location.href = 'dashboard.html';
+        }
+      }, 900);
     });
   }
 });
