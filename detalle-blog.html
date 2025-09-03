@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Detalle Blog - Tienda MiMascota</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+  <body>
+    <header class="bg-primary text-white py-3 mb-4">
+      <div class="container d-flex align-items-center justify-content-between">
+        <a href="index.html" class="d-flex align-items-center text-white text-decoration-none">
+          <img src="assets/img/logo1.png" alt="Tienda MiMascota" style="height:48px; width:auto;" class="me-2">
+          <span class="h5 mb-0">🐾 Tienda MiMascota</span>
+        </a>
+        <nav>
+          <a href="productos.html" class="text-white me-3">Productos</a>
+          <a href="blogs.html" class="text-white me-3">Blog</a>
+          <a href="nosotros.html" class="text-white me-3">Nosotros</a>
+          <a href="contacto.html" class="text-white me-3">Contacto</a>
+          <a href="registro.html" class="text-white me-3">Registrarse</a>
+          <a href="login.html" class="text-white me-3">Iniciar sesión</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="container mb-5">
+      <!-- Navegación de breadcrumb -->
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="index.html">Inicio</a></li>
+          <li class="breadcrumb-item"><a href="blogs.html">Blog</a></li>
+          <li class="breadcrumb-item active" aria-current="page" id="breadcrumbTitle">Cargando...</li>
+        </ol>
+      </nav>
+
+      <!-- Contenido del blog -->
+      <article id="blogContent">
+        <!-- El contenido se cargará aquí con JavaScript -->
+        <div class="text-center">
+          <div class="spinner-border" role="status">
+            <span class="visually-hidden">Cargando...</span>
+          </div>
+          <p class="mt-2">Cargando artículo...</p>
+        </div>
+      </article>
+
+      <!-- Botón para volver -->
+      <div class="text-center mt-5">
+        <a href="blogs.html" class="btn btn-outline-primary">
+          ← Volver al blog
+        </a>
+      </div>
+
+      <!-- Artículos relacionados -->
+      <section class="mt-5">
+        <h3>Artículos relacionados</h3>
+        <div class="row" id="articulosRelacionados">
+          <!-- Se cargarán aquí con JavaScript -->
+        </div>
+      </section>
+    </main>
+
+    <footer class="bg-light text-center py-4 mt-5">
+      <div class="container">
+        <p>&copy; 2023 Tienda MiMascota - Todo para tu mejor amigo</p>
+      </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+      // Función para obtener parámetros de la URL
+      function obtenerParametroURL(nombre) {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get(nombre);
+      }
+
+      // Función para cargar el contenido del blog
+      function cargarBlog() {
+        const blogId = obtenerParametroURL('id');
+        const blogs = JSON.parse(localStorage.getItem('blogs')) || [];
+        
+        if (!blogId) {
+          mostrarError('No se especificó un artículo válido');
+          return;
+        }
+
+        const blog = blogs.find(b => b.id == blogId);
+        
+        if (!blog) {
+          mostrarError('Artículo no encontrado');
+          return;
+        }
+
+        // Actualizar el título de la página
+        document.title = `${blog.titulo} - Tienda MiMascota`;
+        document.getElementById('breadcrumbTitle').textContent = blog.titulo;
+
+        // Mostrar el contenido del blog
+        const blogContent = document.getElementById('blogContent');
+        blogContent.innerHTML = `
+          <header class="mb-4">
+            <div class="mb-3">
+              <span class="badge bg-primary fs-6">${blog.categoria}</span>
+            </div>
+            <h1 class="display-5 mb-3">${blog.titulo}</h1>
+            <p class="text-muted fs-5">${blog.fecha}</p>
+          </header>
+          
+          <div class="mb-4">
+            <img src="${blog.imagen}" alt="${blog.titulo}" class="img-fluid rounded" style="max-height: 400px; width: 100%; object-fit: cover;">
+          </div>
+          
+          <div class="blog-content">
+            ${blog.contenido}
+          </div>
+        `;
+
+        // Cargar artículos relacionados
+        cargarArticulosRelacionados(blog, blogs);
+      }
+
+      // Función para mostrar error
+      function mostrarError(mensaje) {
+        const blogContent = document.getElementById('blogContent');
+        blogContent.innerHTML = `
+          <div class="alert alert-warning text-center">
+            <h4>⚠️ ${mensaje}</h4>
+            <p>Por favor, regresa al <a href="blogs.html">blog principal</a> para ver todos los artículos disponibles.</p>
+          </div>
+        `;
+      }
+
+      // Función para cargar artículos relacionados
+      function cargarArticulosRelacionados(blogActual, todosLosBlogs) {
+        const articulosRelacionados = todosLosBlogs
+          .filter(blog => blog.id !== blogActual.id) // Excluir el artículo actual
+          .slice(0, 2); // Mostrar máximo 2 artículos relacionados
+
+        const container = document.getElementById('articulosRelacionados');
+        
+        if (articulosRelacionados.length === 0) {
+          container.innerHTML = '<p class="text-muted">No hay artículos relacionados disponibles.</p>';
+          return;
+        }
+
+        container.innerHTML = '';
+        articulosRelacionados.forEach(blog => {
+          const articleCard = `
+            <div class="col-md-6 mb-3">
+              <div class="card h-100">
+                <img src="${blog.imagen}" class="card-img-top" alt="${blog.titulo}" style="height: 150px; object-fit: cover;">
+                <div class="card-body">
+                  <span class="badge bg-primary mb-2">${blog.categoria}</span>
+                  <h6 class="card-title">${blog.titulo}</h6>
+                  <p class="card-text small">${blog.resumen}</p>
+                  <a href="detalle-blog.html?id=${blog.id}" class="btn btn-sm btn-outline-primary">Leer más</a>
+                </div>
+              </div>
+            </div>
+          `;
+          container.innerHTML += articleCard;
+        });
+      }
+
+      // Cargar el blog cuando la página esté lista
+      document.addEventListener('DOMContentLoaded', cargarBlog);
+    </script>
+  </body>
+</html>

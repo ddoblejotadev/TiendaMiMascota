@@ -1,12 +1,20 @@
+// ============= productos.js (versión simple para principiantes) =============
+// Este archivo contiene:
+// - Lista de productos por defecto
+// - Lógica simple del carrito usando localStorage
+// - Funciones para mostrar y filtrar productos
+// Comentarios claros para que puedas explicar cada parte en clase.
+
 // ============= DATOS DE PRODUCTOS =============
-// Lista inicial de productos (después el admin podrá agregar más)
-let productos = [
+
+// Lista inicial de productos (6 productos predeterminados)
+const productos = [
   {
     id: 1,
     nombre: "Comida Premium para Perros",
     precio: 15990,
     categoria: "comida",
-    imagen: "assets/img/prod.png",
+  imagen: "assets/img/Comida.jpg",
     descripcion: "Alimento balanceado premium para perros adultos",
     stock: 50
   },
@@ -142,11 +150,16 @@ function vaciarCarrito() {
 
 // ============= FUNCIONES DE PRODUCTOS =============
 
-// Función para obtener productos del localStorage (o usar los predeterminados)
+// Función para obtener productos del localStorage o devolver los productos por defecto
 function obtenerProductos() {
   const productosGuardados = localStorage.getItem('productos');
   if (productosGuardados) {
-    productos = JSON.parse(productosGuardados);
+    try {
+      return JSON.parse(productosGuardados);
+    } catch (e) {
+      console.warn('Error parseando productos en localStorage, usando lista por defecto', e);
+      return productos;
+    }
   }
   return productos;
 }

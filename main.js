@@ -1,11 +1,31 @@
 // ============= FUNCIONES AUXILIARES =============
 
-// Función para validar RUT chileno
+// Datos de regiones y comunas de Chile
+const regionesYcomunas = {
+  "Región de Arica y Parinacota": ["Arica", "Camarones", "Putre", "General Lagos"],
+  "Región de Tarapacá": ["Iquique", "Alto Hospicio", "Pozo Almonte", "Camiña", "Colchane", "Huara", "Pica"],
+  "Región de Antofagasta": ["Antofagasta", "Mejillones", "Sierra Gorda", "Taltal", "Calama", "Ollagüe", "San Pedro de Atacama", "Tocopilla", "María Elena"],
+  "Región de Atacama": ["Copiapó", "Caldera", "Tierra Amarilla", "Chañaral", "Diego de Almagro", "Vallenar", "Alto del Carmen", "Freirina", "Huasco"],
+  "Región de Coquimbo": ["La Serena", "Coquimbo", "Andacollo", "La Higuera", "Paiguano", "Vicuña", "Illapel", "Canela", "Los Vilos", "Salamanca", "Ovalle", "Combarbalá", "Monte Patria", "Punitaqui", "Río Hurtado"],
+  "Región de Valparaíso": ["Valparaíso", "Casablanca", "Concón", "Juan Fernández", "Puchuncaví", "Quintero", "Viña del Mar", "Isla de Pascua", "Los Andes", "Calle Larga", "Rinconada", "San Esteban", "La Ligua", "Cabildo", "Papudo", "Petorca", "Zapallar", "Quillota", "Calera", "Hijuelas", "La Cruz", "Nogales", "San Antonio", "Algarrobo", "Cartagena", "El Quisco", "El Tabo", "Santo Domingo", "San Felipe", "Catemu", "Llaillay", "Panquehue", "Putaendo", "Santa María", "Limache", "Olmué", "Villa Alemana"],
+  "Región Metropolitana": ["Santiago", "Cerrillos", "Cerro Navia", "Conchalí", "El Bosque", "Estación Central", "Huechuraba", "Independencia", "La Cisterna", "La Florida", "La Granja", "La Pintana", "La Reina", "Las Condes", "Lo Barnechea", "Lo Espejo", "Lo Prado", "Macul", "Maipú", "Ñuñoa", "Pedro Aguirre Cerda", "Peñalolén", "Providencia", "Pudahuel", "Quilicura", "Quinta Normal", "Recoleta", "Renca", "Santiago", "San Joaquín", "San Miguel", "San Ramón", "Vitacura", "Puente Alto", "Pirque", "San José de Maipo", "Colina", "Lampa", "Tiltil", "San Bernardo", "Buin", "Calera de Tango", "Paine", "Melipilla", "Alhué", "Curacaví", "María Pinto", "San Pedro", "Talagante", "El Monte", "Isla de Maipo", "Padre Hurtado", "Peñaflor"],
+  "Región del Libertador General Bernardo O'Higgins": ["Rancagua", "Codegua", "Coinco", "Coltauco", "Doñihue", "Graneros", "Las Cabras", "Machalí", "Malloa", "Mostazal", "Olivar", "Peumo", "Pichidegua", "Quinta de Tilcoco", "Rengo", "Requínoa", "San Vicente", "Pichilemu", "La Estrella", "Litueche", "Marchihue", "Navidad", "Paredones", "San Fernando", "Chépica", "Chimbarongo", "Lolol", "Nancagua", "Palmilla", "Peralillo", "Placilla", "Pumanque", "Santa Cruz"],
+  "Región del Maule": ["Talca", "ConsVtución", "Curepto", "Empedrado", "Maule", "Pelarco", "Pencahue", "Río Claro", "San Clemente", "San Rafael", "Cauquenes", "Chanco", "Pelluhue", "Curicó", "Hualañé", "Licantén", "Molina", "Rauco", "Romeral", "Sagrada Familia", "Teno", "Vichuquén", "Linares", "Colbún", "Longaví", "Parral", "Retiro", "San Javier", "Villa Alegre", "Yerbas Buenas"],
+  "Región del Ñuble": ["Chillán", "Bulnes", "Cobquecura", "Coelemu", "Coihueco", "Chillán Viejo", "El Carmen", "Ninhue", "Ñiquén", "Pemuco", "Pinto", "Portezuelo", "Quillón", "Quirihue", "Ránquil", "San Carlos", "San Fabián", "San Ignacio", "San Nicolás", "Treguaco", "Yungay"],
+  "Región del Biobío": ["Concepción", "Coronel", "Chiguayante", "Florida", "Hualqui", "Lota", "Penco", "San Pedro de la Paz", "Santa Juana", "Talcahuano", "Tomé", "Hualpén", "Lebu", "Arauco", "Cañete", "Contulmo", "Curanilahue", "Los Álamos", "Tirúa", "Los Ángeles", "Antuco", "Cabrero", "Laja", "Mulchén", "Nacimiento", "Negrete", "Quilaco", "Quilleco", "San Rosendo", "Santa Bárbara", "Tucapel", "Yumbel"],
+  "Región de La Araucanía": ["Temuco", "Carahue", "Cunco", "Curarrehue", "Freire", "Galvarino", "Gorbea", "Lautaro", "Loncoche", "Melipeuco", "Nueva Imperial", "Padre Las Casas", "Perquenco", "Pitrufquén", "Pucón", "Saavedra", "Teodoro Schmidt", "Toltén", "Vilcún", "Villarrica", "Cholchol", "Angol", "Collipulli", "Curacautín", "Ercilla", "Lonquimay", "Los Sauces", "Lumaco", "Purén", "Renaico", "Traiguén", "Victoria"],
+  "Región de Los Ríos": ["Valdivia", "Corral", "Lanco", "Los Lagos", "Máfil", "Mariquina", "Paillaco", "Panguipulli", "La Unión", "Futrono", "Lago Ranco", "Río Bueno"],
+  "Región de Los Lagos": ["Puerto Montt", "Calbuco", "Cochamó", "Fresia", "Frutillar", "Los Muermos", "Llanquihue", "Maullín", "Puerto Varas", "Castro", "Ancud", "Chonchi", "Curaco de Vélez", "Dalcahue", "Puqueldón", "Queilén", "Quellón", "Quemchi", "Quinchao", "Osorno", "Puerto Octay", "Purranque", "Puyehue", "Río Negro", "San Juan de la Costa", "San Pablo", "Chaitén", "Futaleufú", "Hualaihué", "Palena"],
+  "Región de Aysén del General Carlos Ibáñez del Campo": ["Coyhaique", "Lago Verde", "Aysén", "Cisnes", "Guaitecas", "Cochrane", "O'Higgins", "Tortel", "Chile Chico", "Río Ibáñez"],
+  "Región de Magallanes y de la Antártica Chilena": ["Punta Arenas", "Laguna Blanca", "Río Verde", "San Gregorio", "Cabo de Hornos", "Antártica", "Porvenir", "Primavera", "Timaukel", "Natales", "Torres del Paine"]
+};
+
+// Función para validar RUT chileno (SIN puntos ni guión)
 function validarRUT(rut) {
-  // Limpiar el RUT
-  rut = rut.replace(/\./g, '').replace('-', '');
-  
-  if (rut.length < 8 || rut.length > 9) return false;
+  // El RUT debe venir sin puntos ni guión como lo requiere la evaluación
+  if (!/^\d{7,8}[0-9Kk]$/.test(rut)) {
+    return false;
+  }
   
   const cuerpo = rut.slice(0, -1);
   const dv = rut.slice(-1).toLowerCase();
@@ -25,13 +45,60 @@ function validarRUT(rut) {
   return dv === dvCalculado;
 }
 
-// Función para formatear RUT
-function formatearRUT(rut) {
-  rut = rut.replace(/\./g, '').replace('-', '');
-  if (rut.length > 1) {
-    return rut.slice(0, -1).replace(/\B(?=(\d{3})+(?!\d))/g, '.') + '-' + rut.slice(-1);
-  }
-  return rut;
+// Función para validar email según los dominios permitidos
+function validarEmail(email) {
+  const dominiosPermitidos = ['duoc.cl', 'profesor.duoc.cl', 'gmail.com'];
+  const emailPattern = /^[^\s@]+@([^\s@]+)$/;
+  
+  const match = email.match(emailPattern);
+  if (!match) return false;
+  
+  const dominio = match[1];
+  return dominiosPermitidos.includes(dominio);
+}
+
+// Función para validar contraseña (mínimo 6 caracteres, al menos 1 número y 1 mayúscula)
+function validarPassword(password) {
+  const minLength = 6;
+  const hasNumber = /\d/.test(password);
+  const hasUppercase = /[A-Z]/.test(password);
+  
+  return password.length >= minLength && hasNumber && hasUppercase;
+}
+
+// Función para poblar selectores de región y comuna
+function poblarRegiones(selectRegion, selectComuna) {
+  const regionSelect = document.getElementById(selectRegion);
+  const comunaSelect = document.getElementById(selectComuna);
+  
+  if (!regionSelect || !comunaSelect) return;
+  
+  // Limpiar selectores
+  regionSelect.innerHTML = '<option value="">Selecciona una región</option>';
+  comunaSelect.innerHTML = '<option value="">Selecciona una comuna</option>';
+  
+  // Poblar regiones
+  Object.keys(regionesYcomunas).forEach(region => {
+    const option = document.createElement('option');
+    option.value = region;
+    option.textContent = region;
+    regionSelect.appendChild(option);
+  });
+  
+  // Evento para cargar comunas cuando se selecciona una región
+  regionSelect.addEventListener('change', function() {
+    const regionSeleccionada = this.value;
+    comunaSelect.innerHTML = '<option value="">Selecciona una comuna</option>';
+    
+    if (regionSeleccionada && regionesYcomunas[regionSeleccionada]) {
+      regionesYcomunas[regionSeleccionada].forEach(comuna => {
+        const option = document.createElement('option');
+        option.value = comuna;
+        option.textContent = comuna;
+        comunaSelect.appendChild(option);
+      });
+    }
+  });
 }
 
 // Función para mostrar alertas
@@ -46,39 +113,174 @@ function mostrarAlerta(tipo, mensaje, contenedorId) {
 // ============= CUANDO LA PÁGINA ESTÁ LISTA =============
 document.addEventListener('DOMContentLoaded', () => {
   
+  // Poblar selectores de región y comuna si existen
+  poblarRegiones('region', 'comuna');
+  
   // ============= REGISTRO DE CLIENTE Y MASCOTA =============
   const formularioRegistro = document.getElementById('registroForm');
   
   if (formularioRegistro) {
-    // Formatear RUT mientras se escribe
+    
+    // Validación en tiempo real del RUT
     const campoRUT = document.getElementById('rut');
     if (campoRUT) {
       campoRUT.addEventListener('input', function() {
+        // Solo permitir números y K/k
         let valor = this.value.replace(/[^0-9kK]/g, '');
         if (valor.length > 9) valor = valor.slice(0, 9);
-        this.value = formatearRUT(valor);
+        this.value = valor;
+        
+        // Validar en tiempo real
+        if (valor.length >= 8) {
+          if (validarRUT(valor)) {
+            this.classList.remove('is-invalid');
+            this.classList.add('is-valid');
+          } else {
+            this.classList.remove('is-valid');
+            this.classList.add('is-invalid');
+          }
+        }
       });
+    }
+
+    // Validación en tiempo real del email
+    const campoEmail = document.getElementById('email');
+    if (campoEmail) {
+      campoEmail.addEventListener('input', function() {
+        const email = this.value.trim();
+        if (email && validarEmail(email)) {
+          this.classList.remove('is-invalid');
+          this.classList.add('is-valid');
+        } else if (email) {
+          this.classList.remove('is-valid');
+          this.classList.add('is-invalid');
+        }
+      });
+    }
+
+    // Validación en tiempo real de la contraseña
+    const campoPassword = document.getElementById('password');
+    const campoConfirmPassword = document.getElementById('confirmPassword');
+    
+    if (campoPassword) {
+      campoPassword.addEventListener('input', function() {
+        const password = this.value;
+        if (validarPassword(password)) {
+          this.classList.remove('is-invalid');
+          this.classList.add('is-valid');
+        } else if (password) {
+          this.classList.remove('is-valid');
+          this.classList.add('is-invalid');
+        }
+        
+        // Revalidar confirmación si ya tiene valor
+        if (campoConfirmPassword && campoConfirmPassword.value) {
+          verificarConfirmacionPassword();
+        }
+      });
+    }
+
+    if (campoConfirmPassword) {
+      campoConfirmPassword.addEventListener('input', verificarConfirmacionPassword);
+    }
+
+    function verificarConfirmacionPassword() {
+      const password = campoPassword.value;
+      const confirmPassword = campoConfirmPassword.value;
+      
+      if (confirmPassword && password === confirmPassword) {
+        campoConfirmPassword.classList.remove('is-invalid');
+        campoConfirmPassword.classList.add('is-valid');
+      } else if (confirmPassword) {
+        campoConfirmPassword.classList.remove('is-valid');
+        campoConfirmPassword.classList.add('is-invalid');
+      }
     }
 
     formularioRegistro.addEventListener('submit', (e) => {
       e.preventDefault();
 
-      // Validar formulario HTML5
+      // Limpiar validaciones previas
+      formularioRegistro.classList.remove('was-validated');
+      
+      let esValido = true;
+      const errores = [];
+
+      // Validar RUT
+      const rut = document.getElementById('rut').value.trim();
+      if (!rut) {
+        errores.push('El RUT es obligatorio');
+        esValido = false;
+      } else if (!validarRUT(rut)) {
+        errores.push('El RUT ingresado no es válido');
+        esValido = false;
+      }
+
+      // Validar nombre
+      const nombre = document.getElementById('nombreCompleto').value.trim();
+      if (!nombre || nombre.length < 3) {
+        errores.push('El nombre debe tener al menos 3 caracteres');
+        esValido = false;
+      }
+
+      // Validar email
+      const email = document.getElementById('email').value.trim();
+      if (!email) {
+        errores.push('El email es obligatorio');
+        esValido = false;
+      } else if (!validarEmail(email)) {
+        errores.push('Solo se permiten emails @duoc.cl, @profesor.duoc.cl, @gmail.com');
+        esValido = false;
+      }
+
+      // Validar contraseña
+      const password = document.getElementById('password').value;
+      if (!password) {
+        errores.push('La contraseña es obligatoria');
+        esValido = false;
+      } else if (!validarPassword(password)) {
+        errores.push('La contraseña debe tener mínimo 6 caracteres, 1 número y 1 mayúscula');
+        esValido = false;
+      }
+
+      // Validar confirmación de contraseña
+      const confirmPassword = document.getElementById('confirmPassword').value;
+      if (password !== confirmPassword) {
+        errores.push('Las contraseñas no coinciden');
+        esValido = false;
+      }
+
+      // Validar región y comuna
+      const region = document.getElementById('region').value;
+      const comuna = document.getElementById('comuna').value;
+      if (!region) {
+        errores.push('Selecciona una región');
+        esValido = false;
+      }
+      if (!comuna) {
+        errores.push('Selecciona una comuna');
+        esValido = false;
+      }
+
+      // Validar teléfono
+      const telefono = document.getElementById('telefono').value.trim();
+      if (!telefono) {
+        errores.push('El teléfono es obligatorio');
+        esValido = false;
+      }
+
+      // Mostrar errores o procesar formulario
+      if (!esValido) {
+        mostrarAlerta('danger', errores.join('<br>'), 'alertaRegistro');
+        formularioRegistro.classList.add('was-validated');
+        return;
+      }
+
+      // Validar formulario HTML5 básico
       if (!formularioRegistro.checkValidity()) {
         formularioRegistro.classList.add('was-validated');
         mostrarAlerta('danger', 'Por favor completa todos los campos obligatorios.', 'alertaRegistro');
         return;
-      }
-
-      // Validar RUT
-      const rut = document.getElementById('rut').value;
-      if (!validarRUT(rut)) {
-        mostrarAlerta('danger', 'El RUT ingresado no es válido.', 'alertaRegistro');
-        document.getElementById('rut').classList.add('is-invalid');
-        return;
-      } else {
-        document.getElementById('rut').classList.remove('is-invalid');
-        document.getElementById('rut').classList.add('is-valid');
       }
 
       // Crear objeto con los datos
@@ -88,21 +290,34 @@ document.addEventListener('DOMContentLoaded', () => {
         nombreCompleto: document.getElementById('nombreCompleto').value.trim(),
         telefono: document.getElementById('telefono').value.trim(),
         email: document.getElementById('email').value.trim(),
-        direccion: document.getElementById('direccion').value.trim(),
         
         // Datos de la mascota
         nombreMascota: document.getElementById('nombreMascota').value.trim(),
         tipoMascota: document.getElementById('tipoMascota').value,
-        raza: document.getElementById('raza').value.trim(),
-        edadMascota: document.getElementById('edadMascota').value,
-        observaciones: document.getElementById('observaciones').value.trim(),
         
         // Metadata
         fechaRegistro: new Date().toISOString(),
         id: Date.now() // ID simple para identificar el registro
       };
 
-      // Guardar en localStorage
+      // Crear usuario para login
+      const usuario = {
+        username: registro.nombreCompleto.split(' ')[0].toLowerCase(), // Primer nombre como username
+        fullName: registro.nombreCompleto,
+        email: registro.email,
+        password: document.getElementById('password').value,
+        isAdmin: registro.email.includes('@admin.cl') // Si email termina en @admin.cl, es admin
+      };
+
+      // Guardar usuario en localStorage
+      const users = JSON.parse(localStorage.getItem('users') || '[]');
+      const userExists = users.find(u => u.email === usuario.email);
+      if (!userExists) {
+        users.push(usuario);
+        localStorage.setItem('users', JSON.stringify(users));
+      }
+
+      // Guardar registro en localStorage
       const registros = JSON.parse(localStorage.getItem('registros') || '[]');
       
       // Verificar si ya existe un registro con ese RUT

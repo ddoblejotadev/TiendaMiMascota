@@ -10,8 +10,8 @@ document.addEventListener('DOMContentLoaded', () => {
     return;
   }
 
-  // Verificar si es admin (email con @admin.cl o marcado como admin)
-  const isAdmin = currentUser.email?.includes('@admin.cl') || currentUser.isAdmin;
+  // Verificar si es admin (email con @admin.cl)
+  const isAdmin = currentUser.email?.includes('@admin.cl');
   
   if (!isAdmin) {
     alert('No tienes permisos de administrador');
@@ -30,78 +30,72 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // ============= GESTIÓN DE PRODUCTOS =============
 
-let productos = [];
-let editandoProducto = false;
-
-// Función para obtener productos
-function obtenerProductos() {
-  const productosGuardados = localStorage.getItem('productos');
-  if (productosGuardados) {
-    return JSON.parse(productosGuardados);
+// Productos por defecto
+let productos = [
+  {
+    id: 1,
+    nombre: "Comida Premium para Perros",
+    precio: 15990,
+    categoria: "comida",
+  imagen: "assets/img/Comida.jpg",
+    descripcion: "Alimento balanceado premium para perros adultos",
+    stock: 50
+  },
+  {
+    id: 2,
+    nombre: "Juguetes Varios",
+    precio: 5990,
+    categoria: "juguetes",
+    imagen: "assets/img/jugetes.png",
+    descripcion: "Set de pelotas y juguetes para mantener activa tu mascota",
+    stock: 30
+  },
+  {
+    id: 3,
+    nombre: "Cama Cómoda",
+    precio: 25990,
+    categoria: "camas",
+    imagen: "assets/img/cama2.png",
+    descripcion: "Cama super cómoda para el descanso perfecto",
+    stock: 15
+  },
+  {
+    id: 4,
+    nombre: "Productos de Salud",
+    precio: 12990,
+    categoria: "salud",
+    imagen: "assets/img/salud.png",
+    descripcion: "Vitaminas y suplementos para la salud de tu mascota",
+    stock: 25
+  },
+  {
+    id: 5,
+    nombre: "Accesorios Fashion",
+    precio: 8990,
+    categoria: "accesorios",
+    imagen: "assets/img/accesorios.png",
+    descripcion: "Collares, correas y accesorios fashion",
+    stock: 40
+  },
+  {
+    id: 6,
+    nombre: "Productos de Higiene",
+    precio: 9990,
+    categoria: "higiene",
+    imagen: "assets/img/higiene.png",
+    descripcion: "Shampoos y productos de limpieza",
+    stock: 35
   }
-  
-  // Productos por defecto si no hay guardados
-  return [
-    {
-      id: 1,
-      nombre: "Comida Premium para Perros",
-      precio: 15990,
-      categoria: "comida",
-      imagen: "assets/img/prod.png",
-      descripcion: "Alimento balanceado premium para perros adultos",
-      stock: 50
-    },
-    {
-      id: 2,
-      nombre: "Juguetes Varios",
-      precio: 5990,
-      categoria: "juguetes",
-      imagen: "assets/img/jugetes.png",
-      descripcion: "Set de pelotas y juguetes para mantener activa tu mascota",
-      stock: 30
-    },
-    {
-      id: 3,
-      nombre: "Cama Cómoda",
-      precio: 25990,
-      categoria: "camas",
-      imagen: "assets/img/cama2.png",
-      descripcion: "Cama super cómoda para el descanso perfecto",
-      stock: 15
-    },
-    {
-      id: 4,
-      nombre: "Productos de Salud",
-      precio: 12990,
-      categoria: "salud",
-      imagen: "assets/img/salud.png",
-      descripcion: "Vitaminas y suplementos para la salud de tu mascota",
-      stock: 25
-    },
-    {
-      id: 5,
-      nombre: "Accesorios Fashion",
-      precio: 8990,
-      categoria: "accesorios",
-      imagen: "assets/img/accesorios.png",
-      descripcion: "Collares, correas y accesorios fashion",
-      stock: 40
-    },
-    {
-      id: 6,
-      nombre: "Productos de Higiene",
-      precio: 9990,
-      categoria: "higiene",
-      imagen: "assets/img/higiene.png",
-      descripcion: "Shampoos y productos de limpieza",
-      stock: 35
-    }
-  ];
-}
+];
 
 // Función para cargar productos en el admin
 function cargarProductosAdmin() {
-  productos = obtenerProductos();
+  // Obtener productos del localStorage o usar los predeterminados
+  const productosGuardados = localStorage.getItem('productos');
+  if (productosGuardados) {
+    productos = JSON.parse(productosGuardados);
+  }
+  
   mostrarProductosAdmin();
 }
 
@@ -167,7 +161,6 @@ function mostrarProductosAdmin() {
 function mostrarFormularioProducto() {
   document.getElementById('cardFormularioProducto').style.display = 'block';
   document.getElementById('tituloFormulario').textContent = 'Agregar Producto';
-  editandoProducto = false;
   limpiarFormularioProducto();
 }
 
@@ -181,7 +174,6 @@ function limpiarFormularioProducto() {
 function cancelarEdicion() {
   document.getElementById('cardFormularioProducto').style.display = 'none';
   limpiarFormularioProducto();
-  editandoProducto = false;
 }
 
 // Función para editar producto
@@ -189,7 +181,6 @@ function editarProducto(id) {
   const producto = productos.find(p => p.id === id);
   if (!producto) return;
 
-  editandoProducto = true;
   document.getElementById('cardFormularioProducto').style.display = 'block';
   document.getElementById('tituloFormulario').textContent = 'Editar Producto';
 
@@ -219,7 +210,7 @@ document.getElementById('formularioProducto').addEventListener('submit', (e) => 
   e.preventDefault();
 
   const producto = {
-    id: editandoProducto ? parseInt(document.getElementById('productoId').value) : Date.now(),
+    id: Date.now(),
     nombre: document.getElementById('productoNombre').value.trim(),
     precio: parseInt(document.getElementById('productoPrecio').value),
     categoria: document.getElementById('productoCategoria').value,
@@ -228,21 +219,14 @@ document.getElementById('formularioProducto').addEventListener('submit', (e) => 
     imagen: document.getElementById('productoImagen').value.trim() || 'assets/img/producto-default.png'
   };
 
-  if (editandoProducto) {
-    // Actualizar producto existente
-    const index = productos.findIndex(p => p.id === producto.id);
-    productos[index] = producto;
-    mostrarMensaje('success', 'Producto actualizado correctamente');
-  } else {
-    // Agregar nuevo producto
-    productos.push(producto);
-    mostrarMensaje('success', 'Producto agregado correctamente');
-  }
-
+  // Agregar nuevo producto
+  productos.push(producto);
   localStorage.setItem('productos', JSON.stringify(productos));
+  
   mostrarProductosAdmin();
   cargarEstadisticas();
   cancelarEdicion();
+  mostrarMensaje('success', 'Producto agregado correctamente');
 });
 
 // ============= GESTIÓN DE USUARIOS =============
@@ -279,7 +263,7 @@ function mostrarUsuariosAdmin(usuarios) {
   `;
 
   usuarios.forEach((usuario, index) => {
-    const esAdmin = usuario.email?.includes('@admin.cl') || usuario.isAdmin;
+    const esAdmin = usuario.email?.includes('@admin.cl');
     const fecha = usuario.createdAt ? new Date(usuario.createdAt).toLocaleDateString('es-CL') : 'N/A';
     
     html += `
@@ -345,7 +329,6 @@ document.getElementById('formularioUsuario').addEventListener('submit', (e) => {
     username: document.getElementById('usuarioUsername').value.trim(),
     password: document.getElementById('usuarioPassword').value,
     phone: document.getElementById('usuarioTelefono').value.trim(),
-    isAdmin: document.getElementById('usuarioEsAdmin').checked,
     createdAt: new Date().toISOString()
   };
 
@@ -371,7 +354,6 @@ document.getElementById('formularioUsuario').addEventListener('submit', (e) => {
 
 function cargarEstadisticas() {
   // Total de productos
-  const productos = obtenerProductos();
   document.getElementById('totalProductos').textContent = productos.length;
 
   // Total de usuarios

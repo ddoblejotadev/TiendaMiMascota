@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Blog - Tienda MiMascota</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+  <body>
+    <header class="bg-primary text-white py-3 mb-4">
+      <div class="container d-flex align-items-center justify-content-between">
+        <a href="index.html" class="d-flex align-items-center text-white text-decoration-none">
+          <img src="assets/img/logo1.png" alt="Tienda MiMascota" style="height:48px; width:auto;" class="me-2">
+          <span class="h5 mb-0">🐾 Tienda MiMascota</span>
+        </a>
+        <nav>
+          <a href="productos.html" class="text-white me-3">Productos</a>
+          <a href="blogs.html" class="text-white me-3">Blog</a>
+          <a href="nosotros.html" class="text-white me-3">Nosotros</a>
+          <a href="contacto.html" class="text-white me-3">Contacto</a>
+          <a href="registro.html" class="text-white me-3">Registrarse</a>
+          <a href="login.html" class="text-white me-3">Iniciar sesión</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="container mb-5">
+      <!-- Header del blog -->
+      <section class="text-center mb-5">
+        <h1 class="display-4 mb-3">Blog MiMascota</h1>
+        <p class="lead">Noticias, consejos y datos curiosos sobre el mundo de las mascotas</p>
+      </section>
+
+      <!-- Lista de artículos del blog -->
+      <div class="row" id="blogContainer">
+        <!-- Los artículos se cargarán aquí con JavaScript -->
+      </div>
+    </main>
+
+    <footer class="bg-light text-center py-4 mt-5">
+      <div class="container">
+        <p>&copy; 2023 Tienda MiMascota - Todo para tu mejor amigo</p>
+      </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- JavaScript para cargar los blogs -->
+    <script>
+      // Datos de los blogs
+      const blogs = [
+        {
+          id: 1,
+          titulo: "Los 10 alimentos que nunca debes dar a tu perro",
+          resumen: "Conoce qué alimentos humanos pueden ser tóxicos para tu mascota y cómo mantenerla segura.",
+          fecha: "15 de Septiembre, 2023",
+          imagen: "assets/img/Comida.jpg",
+          categoria: "Salud",
+          contenido: `
+            <p>Como dueños responsables, es fundamental conocer qué alimentos pueden ser peligrosos para nuestros perros. Aunque es tentador compartir nuestra comida con ellos, algunos alimentos que son seguros para los humanos pueden ser tóxicos para los caninos.</p>
+            
+            <h4>Alimentos prohibidos:</h4>
+            <ol>
+              <li><strong>Chocolate:</strong> Contiene teobromina, una sustancia tóxica para los perros</li>
+              <li><strong>Uvas y pasas:</strong> Pueden causar insuficiencia renal aguda</li>
+              <li><strong>Cebolla y ajo:</strong> Destruyen los glóbulos rojos y pueden causar anemia</li>
+              <li><strong>Aguacate:</strong> Contiene persina, tóxica para los perros</li>
+              <li><strong>Xilitol (edulcorante):</strong> Puede causar hipoglucemia severa</li>
+              <li><strong>Alcohol:</strong> Extremadamente tóxico, puede causar coma</li>
+              <li><strong>Huesos cocidos:</strong> Se astillan y pueden perforar el tracto digestivo</li>
+              <li><strong>Nueces de macadamia:</strong> Causan debilidad, vómitos y fiebre</li>
+              <li><strong>Café:</strong> La cafeína es tóxica para los perros</li>
+              <li><strong>Masa de pan cruda:</strong> Fermenta en el estómago causando alcohol</li>
+            </ol>
+            
+            <h4>¿Qué hacer en caso de intoxicación?</h4>
+            <p>Si sospechas que tu perro ha ingerido alguno de estos alimentos, contacta inmediatamente a tu veterinario. Los síntomas pueden incluir vómitos, diarrea, letargo, dificultad para respirar o convulsiones.</p>
+            
+            <p>Recuerda: la prevención es la mejor medicina. Mantén estos alimentos fuera del alcance de tu mascota.</p>
+          `
+        },
+        {
+          id: 2,
+          titulo: "¿Sabías que los gatos pueden tener hasta 32 músculos en cada oreja?",
+          resumen: "Descubre datos fascinantes sobre la anatomía felina y sus increíbles habilidades auditivas.",
+          fecha: "10 de Septiembre, 2023",
+          imagen: "assets/img/Higiene.jpg",
+          categoria: "Curiosidades",
+          contenido: `
+            <p>Los gatos son criaturas verdaderamente fascinantes, y su sistema auditivo es una de sus características más impresionantes. ¿Sabías que cada oreja de gato contiene 32 músculos individuales?</p>
+            
+            <h4>Datos curiosos sobre las orejas de los gatos:</h4>
+            <ul>
+              <li><strong>Movilidad:</strong> Pueden rotar sus orejas 180 grados</li>
+              <li><strong>Independencia:</strong> Cada oreja se mueve independientemente</li>
+              <li><strong>Precisión:</strong> Pueden localizar el origen de un sonido con precisión de 3 grados</li>
+              <li><strong>Frecuencia:</strong> Detectan sonidos de hasta 64,000 Hz (los humanos solo hasta 20,000 Hz)</li>
+            </ul>
+            
+            <h4>¿Por qué es importante este sistema auditivo?</h4>
+            <p>En la naturaleza, esta capacidad auditiva excepcional les permite:</p>
+            <ul>
+              <li>Detectar presas pequeñas como ratones</li>
+              <li>Identificar depredadores potenciales</li>
+              <li>Comunicarse con otros gatos a distancia</li>
+              <li>Navegar en la oscuridad usando el sonido</li>
+            </ul>
+            
+            <h4>Cuidando las orejas de tu gato:</h4>
+            <p>Mantén las orejas de tu gato limpias y secas. Si notas mal olor, secreción o si tu gato se rasca excesivamente las orejas, consulta con el veterinario.</p>
+          `
+        },
+        {
+          id: 3,
+          titulo: "Nuevos juguetes interactivos llegan a nuestra tienda",
+          resumen: "Descubre la nueva línea de juguetes que estimulan la mente de tu mascota y promueven el ejercicio.",
+          fecha: "5 de Septiembre, 2023",
+          imagen: "assets/img/Juguetes.jpg",
+          categoria: "Noticias",
+          contenido: `
+            <p>¡Grandes noticias para todos los dueños de mascotas! Hemos incorporado una nueva línea de juguetes interactivos diseñados especialmente para mantener a tu mascota mentalmente estimulada y físicamente activa.</p>
+            
+            <h4>Nuevos productos disponibles:</h4>
+            
+            <h5>🧩 Juguetes de rompecabezas</h5>
+            <p>Perfectos para desarrollar la inteligencia de tu mascota mientras se divierte. Incluyen:</p>
+            <ul>
+              <li>Dispensadores de premios con niveles de dificultad</li>
+              <li>Rompecabezas deslizantes para perros</li>
+              <li>Torres de tratamiento para gatos</li>
+            </ul>
+            
+            <h5>🎾 Juguetes interactivos automatizados</h5>
+            <p>Para esos días cuando no puedes jugar tanto como te gustaría:</p>
+            <ul>
+              <li>Lanzadores automáticos de pelotas</li>
+              <li>Ratones robóticos para gatos</li>
+              <li>Juguetes con sensores de movimiento</li>
+            </ul>
+            
+            <h5>🧠 Beneficios de los juguetes interactivos:</h5>
+            <ul>
+              <li><strong>Estimulación mental:</strong> Previene el aburrimiento y comportamientos destructivos</li>
+              <li><strong>Ejercicio físico:</strong> Mantiene a tu mascota en forma</li>
+              <li><strong>Reducción de ansiedad:</strong> Proporciona una salida positiva para la energía</li>
+              <li><strong>Fortalecimiento del vínculo:</strong> Algunos juguetes permiten jugar juntos</li>
+            </ul>
+            
+            <h4>¡Oferta de lanzamiento!</h4>
+            <p>Durante esta semana, todos los juguetes interactivos tienen un <strong>15% de descuento</strong>. No pierdas la oportunidad de sorprender a tu mascota con algo nuevo y divertido.</p>
+            
+            <p>Visita nuestra sección de <a href="productos.html">productos</a> para ver toda la colección disponible.</p>
+          `
+        }
+      ];
+
+      // Función para mostrar los blogs en la página
+      function mostrarBlogs() {
+        const container = document.getElementById('blogContainer');
+        
+        blogs.forEach(blog => {
+          const blogCard = `
+            <div class="col-md-6 col-lg-4 mb-4">
+              <div class="card h-100">
+                <img src="${blog.imagen}" class="card-img-top" alt="${blog.titulo}" style="height: 200px; object-fit: cover;">
+                <div class="card-body d-flex flex-column">
+                  <div class="mb-2">
+                    <span class="badge bg-primary">${blog.categoria}</span>
+                  </div>
+                  <h5 class="card-title">${blog.titulo}</h5>
+                  <p class="card-text flex-grow-1">${blog.resumen}</p>
+                  <div class="mt-auto">
+                    <small class="text-muted d-block mb-2">${blog.fecha}</small>
+                    <a href="detalle-blog.html?id=${blog.id}" class="btn btn-primary">Leer más</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          `;
+          container.innerHTML += blogCard;
+        });
+      }
+
+      // Cargar blogs cuando la página esté lista
+      document.addEventListener('DOMContentLoaded', mostrarBlogs);
+      
+      // Guardar blogs en localStorage para que estén disponibles en la página de detalle
+      localStorage.setItem('blogs', JSON.stringify(blogs));
+    </script>
+  </body>
+</html>
