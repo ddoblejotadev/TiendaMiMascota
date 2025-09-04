@@ -82,51 +82,100 @@ Este es un proyecto de desarrollo web fullstack desarrollado con **HTML5, CSS3 y
 
 ## 🚀 Cómo usar el proyecto
 
-### 👤 **Para Usuarios Normales:**
-1. **Abrir la tienda**: Hacer doble clic en `index.html`
-2. **Ver productos**: En la página principal verás productos destacados con imágenes
-3. **Comprar**: Agregar productos al carrito y realizar compras
-4. **Registrarse**: Crear cuenta en `registro-simple.html` con datos personales y de mascota
-5. **Iniciar sesión**: Acceder con email/usuario y contraseña
+### �‍🎓 **Para Estudiantes/Usuarios:**
+1. **Abrir la tienda**: Hacer doble clic en `index.html` o abrir en navegador
+2. **Explorar productos**: Página principal con productos destacados y carrito funcional
+3. **Ver catálogo completo**: Ir a `productos.html` para ver todos los productos con filtros
+4. **Registrarse**: Usar `registro-simple.html` con validaciones de RUT, email y contraseña
+5. **Iniciar sesión**: Login en `login.html` con redirección automática
+6. **Navegar contenido**: Explorar blog, nosotros y contacto
 
 ### 🔧 **Para Administradores:**
-1. **Crear usuario admin**: Registrarse con email que termine en `@admin.cl` (ej: admin@admin.cl)
-2. **Iniciar sesión**: Al hacer login, será redirigido automáticamente al panel admin en `admin-simple.html`
-3. **Gestionar productos**: Crear, editar y eliminar productos
-4. **Gestionar usuarios**: Ver lista de usuarios registrados
-5. **Ver registros**: Acceder a la página de registros desde el panel admin
-6. **Ver estadísticas**: Consultar números de la tienda
+1. **Crear cuenta admin**: Registrarse con email `admin@admin.cl` (o cualquier @admin.cl)
+2. **Login automático**: Al iniciar sesión, redirección automática a `admin-simple.html`
+3. **Gestionar productos**: Editar precios, nombres, stock con prompts simples
+4. **Ver usuarios**: Lista de todos los usuarios registrados
+5. **Estadísticas**: Ver totales de productos, usuarios y carrito
+
+### 👨‍🏫 **Para Profesores/Explicación:**
+1. **Estructura HTML**: Mostrar páginas principales y su organización
+2. **JavaScript modular**: Explicar `main.js`, `productos-simple.js`, `admin-simple.js`
+3. **Validaciones**: Demostrar RUT, email y contraseñas
+4. **localStorage**: Mostrar persistencia de datos
+5. **Bootstrap**: Explicar diseño responsivo
 
 ## 🧪 Datos de Prueba
 
-### **RUTs válidos para registro:**
-- `12345678-5`
-- `11111111-1`
-- `22222222-2`
-- `33333333-3`
+### **RUTs válidos para testing:**
+- `12345678K` (sin puntos ni guión)
+- `11111111-1` 
+- `98765432-1`
+- `87654321-9`
 
-### **Usuario administrador de prueba:**
+### **Usuarios de prueba preconfigurados:**
+
+**👨‍💼 Administrador:**
 - Email: `admin@admin.cl`
-- Usuario: `admin`
-- Contraseña: `123456`
+- Contraseña: `Admin123`
+- Acceso: Panel de administrador completo
 
-### **Usuario normal de prueba:**
-- Email: `usuario@test.cl`
-- Usuario: `usuario`
-- Contraseña: `123456`
+**👤 Usuario normal:**
+- Email: `usuario@duoc.cl`
+- Contraseña: `User123`
+- Acceso: Dashboard de usuario
 
-## 💻 Tecnologías Usadas
+### **Emails válidos para registro:**
+- `@duoc.cl` - Estudiantes
+- `@profesor.duoc.cl` - Profesores  
+- `@gmail.com` - Público general
+- `@admin.cl` - Administradores (acceso especial)
 
-- **HTML5**: Estructura de las páginas
-- **CSS3**: Estilos y diseño
-- **JavaScript**: Funcionalidad e interactividad
-- **Bootstrap 5**: Framework CSS para diseño responsivo
-- **LocalStorage**: Para guardar datos en el navegador (carrito, productos, usuarios)
+## 💻 Tecnologías Utilizadas
 
-## 📱 Funcionalidades Principales
+### 🔧 **Frontend**
+- **HTML5**: Estructura semántica y accesible
+- **CSS3**: Estilos personalizados y variables CSS
+- **Bootstrap 5**: Framework para diseño responsivo
+- **JavaScript ES6**: Funcionalidad moderna y modular
 
-### 🏠 **Página Principal**
-- Muestra 6 productos destacados con precios e imágenes
+### 💾 **Persistencia**
+- **localStorage**: Almacenamiento local para carrito, productos y usuarios
+- **sessionStorage**: Manejo de sesiones de usuario
+
+### 🎨 **Diseño**
+- **Bootstrap Icons**: Iconografía consistente
+- **Google Fonts**: Tipografías web
+- **Responsive Design**: Compatibilidad móvil y desktop
+
+## 📱 Funcionalidades Implementadas
+
+### 🏪 **Sistema de Tienda**
+- **7 productos completos** usando todas las imágenes disponibles
+- **Categorías organizadas**: comida, juguetes, camas, salud, accesorios, higiene, especial
+- **Carrito persistente** con localStorage
+- **Filtros dinámicos** por categoría
+- **Búsqueda de productos** en tiempo real
+- **Modal del carrito** con funciones completas
+
+### 👤 **Gestión de Usuarios**
+- **Registro con validaciones** de RUT chileno real
+- **Login seguro** con redirección automática
+- **Roles diferenciados**: usuario normal y administrador
+- **Sesiones persistentes** entre navegación
+- **Validación de emails** específicos (@duoc.cl, @profesor.duoc.cl, @gmail.com)
+
+### � **Validaciones de Seguridad**
+- **RUT chileno**: Algoritmo de validación del dígito verificador
+- **Contraseñas seguras**: 6+ caracteres, 1 número, 1 mayúscula
+- **Emails restringidos**: Dominios específicos permitidos
+- **Formularios validados**: HTML5 + JavaScript personalizado
+
+### 🛠️ **Panel de Administración**
+- **Acceso restringido** solo para @admin.cl
+- **CRUD de productos** con interface simple
+- **Gestión de usuarios** registrados
+- **Estadísticas en tiempo real**
+- **Prompts intuitivos** para edición
 - Carrito funcional desde la primera página
 - Navegación fácil a productos, registro y login
 - Diseño atractivo con imágenes y botones
@@ -135,57 +184,58 @@ Este es un proyecto de desarrollo web fullstack desarrollado con **HTML5, CSS3 y
 - Catálogo completo de productos
 - Filtros por categoría
 - Búsqueda de productos
-- Carrito de compras funcional
-- Modificar cantidades
-- Proceso de compra simulado
+## 📚 Documentación Adicional
 
-### 📝 **Sistema de Registro**
-- Datos del propietario (RUT obligatorio)
-- Información de la mascota
-- Validación automática de formularios
-- Diferentes tipos de usuario
+Este proyecto incluye documentación completa para facilitar el aprendizaje:
 
-### 🔍 **Validación de RUT**
-- Formato automático mientras escribes
-- Validación del dígito verificador
-- Mensajes de error claros
+- **`GUIA_PROYECTO.md`** - Guía completa con explicaciones detalladas
+- **`ARCHIVOS_RECOMENDADOS.md`** - Lista de archivos a usar vs archivos legacy
+- **`PROYECTO_FINAL_ORGANIZADO.md`** - Estructura final y comparaciones
 
-### 👨‍💼 **Panel de Administrador**
-- **Gestión de productos**: Crear, editar, eliminar
-- **Gestión de usuarios**: Ver lista, crear nuevos, eliminar
-- **Estadísticas**: Resumen de la tienda
-- **Acceso restringido**: Solo usuarios con email `@admin.cl`
+## 🎯 Características para Principiantes
 
-### 📊 **Ver Registros**
-- Lista de todos los clientes registrados (solo para admins)
-- Información organizada por cliente y mascota
-- Opción para limpiar todos los registros
-- Página protegida, requiere login de admin
+### ✅ **Código Limpio y Comentado**
+- **Funciones pequeñas** con una responsabilidad específica
+- **Nombres descriptivos** en variables y funciones
+- **Comentarios explicativos** en español
+- **Estructura modular** fácil de entender
 
-## 🎯 Objetivos de Aprendizaje Cumplidos
+### ✅ **Fácil de Explicar en Clase**
+- **Lógica lineal** sin patrones complejos
+- **console.log()** para debugging
+- **Alertas informativas** para el usuario
+- **Validaciones paso a paso**
 
-Este proyecto me ayudó a aprender:
-- ✅ Crear páginas web con HTML
-- ✅ Dar estilo con CSS y Bootstrap
-- ✅ Añadir interactividad con JavaScript
-- ✅ Validar formularios
-- ✅ Trabajar con LocalStorage
-- ✅ Manejar eventos y funciones
-- ✅ Crear un carrito de compras funcional
-- ✅ Implementar diferentes tipos de usuario
-- ✅ Desarrollar un panel de administración
-- ✅ Organizar código en múltiples archivos
+### ✅ **Sin Dependencias Complejas**
+- Solo **HTML, CSS, JavaScript vanilla**
+- **Bootstrap 5** via CDN
+- **localStorage** para persistencia
+- **No frameworks** de JavaScript
 
-## 📋 Requisitos del Profesor Cumplidos
+## 🏆 Logros del Proyecto
 
-- ✅ **Página principal**: Tienda con productos destacados e imágenes
-- ✅ **Página de productos**: Lista con carrito funcional
-- ✅ **Detalle del carrito**: Modal con productos y totales
-- ✅ **Registro de usuarios**: Con datos personales y mascotas
-- ✅ **Inicio de sesión**: Con validación y tipos de usuario
-- ✅ **Panel administrador**: CRUD completo de productos y usuarios
-- ✅ **LocalStorage**: Para carrito y persistencia de datos
-- ✅ **Acceso admin**: Restringido a emails `@admin.cl`
+✅ **Todas las imágenes utilizadas** (7 productos + logo)  
+✅ **Código nivel principiante** con comentarios abundantes  
+✅ **Estructura organizada** y limpia  
+✅ **40% menos archivos** que la versión original  
+✅ **Funcionalidades completas** pero simples  
+✅ **Validaciones reales** (RUT, email, contraseñas)  
+✅ **Navegación consistente** en todas las páginas  
+✅ **Panel admin funcional** con CRUD básico  
+✅ **Carrito persistente** en localStorage  
+✅ **Blog operativo** con 3 artículos  
+✅ **Responsive design** con Bootstrap 5  
+✅ **Documentación completa** para clase  
+
+## 📞 Información del Proyecto
+
+**Desarrollado por:** Estudiante de Desarrollo Web  
+**Institución:** DUOC UC  
+**Tecnologías:** HTML5, CSS3, JavaScript ES6, Bootstrap 5  
+**Fecha:** Septiembre 2025  
+**Versión:** 2.0 - Simplificada y Organizada  
+
+**🎓 Perfecto para explicar paso a paso en clase!**
 - ✅ **Carrito desde página principal**: No requiere ir a otra página
 - ✅ **Imágenes de productos**: Todas las imágenes se muestran correctamente
 - ✅ **Logo mejorado**: Posición visualmente atractiva
