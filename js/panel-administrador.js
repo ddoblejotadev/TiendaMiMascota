@@ -118,6 +118,54 @@ let productos = [
   {
     id: 6,
     nombre: "Productos de Higiene",
+  {
+    id: 1,
+    nombre: "Alimento Premium para Perros",
+    precio: 15990,
+    categoria: "comida",
+    imagen: "../../assets/img/Comida.jpg",
+    descripcion: "Alimento balanceado premium para perros adultos. Rico en proteínas y vitaminas.",
+    stock: 50
+  },
+  {
+    id: 2,
+    nombre: "Juguetes Divertidos",
+    precio: 5990,
+    categoria: "juguetes", 
+    imagen: "../../assets/img/jugetes.png",
+    descripcion: "Set de pelotas y juguetes para mantener activa y feliz a tu mascota.",
+    stock: 30
+  },
+  {
+    id: 3,
+    nombre: "Cama Super Cómoda",
+    precio: 25990,
+    categoria: "camas",
+    imagen: "../../assets/img/cama2.png", 
+    descripcion: "Cama ultra cómoda con relleno de espuma para el descanso perfecto.",
+    stock: 15
+  },
+  {
+    id: 4,
+    nombre: "Productos de Salud",
+    precio: 12990,
+    categoria: "salud",
+    imagen: "../../assets/img/salud.png",
+    descripcion: "Vitaminas, suplementos y medicamentos para la salud de tu mascota.",
+    stock: 25
+  },
+  {
+    id: 5,
+    nombre: "Accesorios Fashion",
+    precio: 8990,
+    categoria: "accesorios",
+    imagen: "../../assets/img/accesorios.png",
+    descripcion: "Collares, correas y accesorios fashion para que tu mascota luzca genial.",
+    stock: 40
+  },
+  {
+    id: 6,
+    nombre: "Productos de Higiene",
     precio: 9990,
     categoria: "higiene",
     imagen: "../../assets/img/higiene.png",
