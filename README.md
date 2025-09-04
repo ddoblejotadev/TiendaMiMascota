@@ -23,19 +23,23 @@ Este es mi proyecto de clase de HTML, CSS y JavaScript. Es una tienda virtual qu
 
 ```
 📦 Tienda MiMascota
-├── 📄 index.html          # Página principal con productos y carrito
-├── 📄 productos.html      # Catálogo de productos con carrito
-├── 📄 registro.html       # Formulario de registro (persona + mascota)
-├── 📄 login.html          # Página de inicio de sesión
-├── 📄 ver-registros.html  # Ver todos los registros (solo admins)
-├── 📄 dashboard.html      # Panel del usuario
-├── 📄 admin.html          # Panel de administrador
-├── 📄 main.js             # Lógica principal (registro, login, RUT)
-├── 📄 productos.js        # Lógica del carrito y productos
-├── 📄 admin.js            # Lógica del panel de administrador
-├── 📄 README.md           # Este archivo
+├── 📄 index.html              # Página principal con productos
+├── 📄 productos.html          # Catálogo completo con carrito
+├── 📄 registro-simple.html    # Registro simplificado para principiantes ✨
+├── 📄 login.html              # Página de inicio de sesión
+├── 📄 dashboard.html          # Panel del usuario
+├── 📄 admin-simple.html       # Panel de administrador simplificado ✨
+├── 📄 blogs.html              # Blog con artículos
+├── 📄 nosotros.html           # Información de la empresa
+├── 📄 contacto.html           # Formulario de contacto
+├── 📄 main.js                 # JavaScript principal simplificado ✨
+├── 📄 productos-simple.js     # Carrito y productos simplificado ✨
+├── 📄 admin-simple.js         # Panel admin simplificado ✨
+├── 📄 README.md               # Este archivo
+├── 📄 GUIA_PROYECTO.md        # Guía completa del proyecto ✨
+├── 📄 PROYECTO_FINAL_ORGANIZADO.md # Estructura final ✨
 └── 📁 css/
-    └── 📄 styles.css      # Estilos CSS
+    └── 📄 styles.css          # Estilos CSS únicos
 ```
 
 ## 🚀 Cómo usar el proyecto
@@ -44,12 +48,12 @@ Este es mi proyecto de clase de HTML, CSS y JavaScript. Es una tienda virtual qu
 1. **Abrir la tienda**: Hacer doble clic en `index.html`
 2. **Ver productos**: En la página principal verás productos destacados con imágenes
 3. **Comprar**: Agregar productos al carrito y realizar compras
-4. **Registrarse**: Crear cuenta con datos personales y de mascota
+4. **Registrarse**: Crear cuenta en `registro-simple.html` con datos personales y de mascota
 5. **Iniciar sesión**: Acceder con email/usuario y contraseña
 
 ### 🔧 **Para Administradores:**
 1. **Crear usuario admin**: Registrarse con email que termine en `@admin.cl` (ej: admin@admin.cl)
-2. **Iniciar sesión**: Al hacer login, será redirigido automáticamente al panel de admin
+2. **Iniciar sesión**: Al hacer login, será redirigido automáticamente al panel admin en `admin-simple.html`
 3. **Gestionar productos**: Crear, editar y eliminar productos
 4. **Gestionar usuarios**: Ver lista de usuarios registrados
 5. **Ver registros**: Acceder a la página de registros desde el panel admin
