@@ -1,21 +1,3 @@
-# 🐾 Tienda MiMascota - Proyecto Final Organizado
-│   ├── 📄 README.md   ├── 📁 js/                           # ⚙️ TODOS LOS ARCHIVOS JAVASCRIPT
-│   ├── 📄 README.md                 # 📖 Explicación de scripts
-│   ├── 📄 funciones-principales.js  # ⚙️ JavaScript principal del proyecto
-│   ├── 📄 sistema-productos-carrito.js # 🛒 Sistema de productos y carrito
-│   └── 📄 panel-administrador.js    # 🔧 Funcionalidad del panel administrador         # 📖 Explicación de páginas
-│   ├── 📄 catalogo-productos.html   # 🛍️ Catálogo completo con filtros y carrito
-│   ├── 📁 admin/                    # 🔧 PÁGINAS DE ADMINISTRADOR
-│   │   └── 📄 panel-administrador.html # 👨‍💼 Panel de administrador completo
-│   ├── 📁 user/                     # 👤 PÁGINAS DE USUARIO
-│   │   ├── 📄 iniciar-sesion.html   # 🔐 Inicio de sesión
-│   │   ├── 📄 registro-usuario.html # 📝 Registro de usuarios
-│   │   └── 📄 panel-usuario.html    # 👤 Panel del usuario logueado
-│   └── 📁 content/                  # 📰 PÁGINAS DE CONTENIDO
-│       ├── 📄 blog-articulos.html   # 📰 Blog con 3 artículos
-│       ├── 📄 acerca-de-nosotros.html # ℹ️ Información de la empresa
-│       └── 📄 formulario-contacto.html # 📧 Formulario de contactob completo para una tienda de productos para mascotas con sistema de registro, carrito de compras y panel de administrador. **Proyecto optimizado para nivel principiante** con código simple, bien documentado y **estructura de carpetas organizada**.
-
 ## 📋 Descripción del Proyecto
 
 Este es un proyecto de desarrollo web fullstack desarrollado con **HTML5, CSS3 y JavaScript vanilla**. Es una tienda virtual moderna que vende productos para mascotas, permite el registro de clientes con información de sus mascotas, gestiona un carrito de compras funcional y cuenta con un panel de administración completo.
