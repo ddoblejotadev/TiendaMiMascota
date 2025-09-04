@@ -18,8 +18,12 @@
           <span class="h6 mb-0">🐾 Tienda MiMascota</span>
         </a>
         <nav>
-          <a href="index.html" class="text-white me-3">Tienda</a>
           <a href="productos.html" class="text-white me-3">Productos</a>
+          <a href="blogs.html" class="text-white me-3">Blog</a>
+          <a href="nosotros.html" class="text-white me-3">Nosotros</a>
+          <a href="contacto.html" class="text-white me-3">Contacto</a>
+          <a href="registro.html" class="text-white me-3">Registrarse</a>
+          <a href="login.html" class="text-white me-3">Iniciar sesión</a>
         </nav>
       </div>
     </header>
@@ -41,17 +45,21 @@
     </main>
 
     <script>
-      const cur = JSON.parse(localStorage.getItem("currentUser") || "null");
-      if (!cur) {
-        location.href = "login.html";
+      // Verificar si hay usuario logueado
+      const usuarioActual = JSON.parse(localStorage.getItem('usuarioActual') || 'null');
+      if (!usuarioActual) {
+        alert('Debes iniciar sesión para acceder');
+        window.location.href = 'login.html';
       } else {
-        document.getElementById("welcome").textContent =
-          "Hola, " + (cur.fullName || cur.username);
-        document.getElementById("userEmail").textContent = cur.email || "";
+        document.getElementById('welcome').textContent = 'Hola, ' + usuarioActual.nombre;
+        document.getElementById('userEmail').textContent = usuarioActual.email;
       }
-      document.getElementById("logoutBtn").addEventListener("click", () => {
-        localStorage.removeItem("currentUser");
-        location.href = "login.html";
+      
+      // Cerrar sesión
+      document.getElementById('logoutBtn').addEventListener('click', function() {
+        localStorage.removeItem('usuarioActual');
+        alert('Sesión cerrada');
+        window.location.href = 'login.html';
       });
     </script>
   </body>
