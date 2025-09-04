@@ -59,11 +59,7 @@ Este es un proyecto de desarrollo web fullstack desarrollado con **HTML5, CSS3 y
 ├── 📄 main.js                       # ⚙️ JavaScript principal ✨ SIMPLIFICADO
 ├── 📄 productos-simple.js           # 🛒 Productos y carrito ✨ NUEVO
 ├── 📄 admin-simple.js               # 👨‍💼 Panel administrador ✨ NUEVO
-├── 📄 README.md                     # 📋 Este archivo (actualizado)
-├── 📄 GUIA_PROYECTO.md              # 📚 Guía completa del proyecto
-├── 📄 ARCHIVOS_RECOMENDADOS.md      # 📋 Lista de archivos a usar
-├── 📄 PROYECTO_FINAL_ORGANIZADO.md  # 🎯 Estructura final
-├── 📁 css/
+├── 📄 README.md                     # 📋 Este archivo (actualizado)├── 📁 css/
 │   └── 📄 styles.css                # 🎨 Estilos únicos simplificados
 └── 📁 assets/img/                   # 🖼️ TODAS las imágenes utilizadas
     ├── 🖼️ Comida.jpg               # ✅ Producto 1: Alimento Premium
@@ -75,10 +71,6 @@ Este es un proyecto de desarrollo web fullstack desarrollado con **HTML5, CSS3 y
     ├── 🖼️ prod.png                # ✅ Producto 7: Producto Especial ✨
     └── 🖼️ logo1.png               # ✅ Logo de la empresa
 ```
-
-**✅ Archivos eliminados (legacy):** admin.html, admin.js, productos.js, registro.html, ver-registros.html
-
-**🎯 Resultado:** Proyecto 40% más simple y organizado
 
 ## 🚀 Cómo usar el proyecto
 
