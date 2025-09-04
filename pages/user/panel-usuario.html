@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
   <head>
     <meta charset="utf-8" />
@@ -15,15 +15,15 @@
       <div class="container d-flex align-items-center justify-content-between">
         <a href="../../index.html" class="d-flex align-items-center text-white text-decoration-none">
           <img src="../../assets/img/logo1.png" alt="MiMascota" style="height:40px; width:auto;" class="me-2">
-          <span class="h6 mb-0">🐾 Tienda MiMascota</span>
+          <span class="h6 mb-0">ðŸ¾ Tienda MiMascota</span>
         </a>
         <nav>
-          <a href="../productos.html" class="text-white me-3">Productos</a>
-          <a href="../content/blogs.html" class="text-white me-3">Blog</a>
-          <a href="../content/nosotros.html" class="text-white me-3">Nosotros</a>
-          <a href="../content/contacto.html" class="text-white me-3">Contacto</a>
-          <a href="registro-simple.html" class="text-white me-3">Registrarse</a>
-          <a href="login.html" class="text-white me-3">Iniciar sesión</a>
+          <a href="../catalogo-productos.html" class="text-white me-3">Productos</a>
+          <a href="../content/blog-articulos.html" class="text-white me-3">Blog</a>
+          <a href="../content/acerca-de-nosotros.html" class="text-white me-3">Nosotros</a>
+          <a href="../content/formulario-contacto.html" class="text-white me-3">Contacto</a>
+          <a href="registro-usuario.html" class="text-white me-3">Registrarse</a>
+          <a href="iniciar-sesion.html" class="text-white me-3">Iniciar sesiÃ³n</a>
         </nav>
       </div>
     </header>
@@ -36,7 +36,7 @@
             <p id="userEmail" class="text-muted"></p>
             <div class="d-grid">
               <button id="logoutBtn" class="btn btn-outline-secondary">
-                Cerrar sesión
+                Cerrar sesiÃ³n
               </button>
             </div>
           </div>
@@ -48,19 +48,20 @@
       // Verificar si hay usuario logueado
       const usuarioActual = JSON.parse(localStorage.getItem('usuarioActual') || 'null');
       if (!usuarioActual) {
-        alert('Debes iniciar sesión para acceder');
+        alert('Debes iniciar sesiÃ³n para acceder');
         window.location.href = 'login.html';
       } else {
         document.getElementById('welcome').textContent = 'Hola, ' + usuarioActual.nombre;
         document.getElementById('userEmail').textContent = usuarioActual.email;
       }
       
-      // Cerrar sesión
+      // Cerrar sesiÃ³n
       document.getElementById('logoutBtn').addEventListener('click', function() {
         localStorage.removeItem('usuarioActual');
-        alert('Sesión cerrada');
+        alert('SesiÃ³n cerrada');
         window.location.href = 'login.html';
       });
     </script>
   </body>
 </html>
+
