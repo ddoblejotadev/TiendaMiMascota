@@ -1,10 +1,9 @@
-// ============= PRODUCTOS.JS - MANEJO DE PRODUCTOS Y CARRITO =============
-// Archivo para manejar productos y carrito de compras
-// Código simple y comentado para nivel principiante
+// ===========================================
+// SISTEMA DE PRODUCTOS Y CARRITO - TIENDA MIMASCOTA
+// Código simple para principiantes
+// ===========================================
 
-// ============= 1. LISTA DE PRODUCTOS =============
-// Lista simple de productos con imágenes PNG
-
+// Lista de productos disponibles en la tienda
 const productos = [
   {
     id: 1,
@@ -62,19 +61,30 @@ const productos = [
   }
 ];
 
-// ============= 2. VARIABLES DEL CARRITO =============
-let carrito = []; // Array simple para el carrito
+// Variable para guardar los productos del carrito
+let carrito = [];
 
-// ============= 3. FUNCIONES BÁSICAS =============
+// ===========================================
+// FUNCIONES PARA MOSTRAR PRODUCTOS
+// ===========================================
 
-// Función para mostrar productos
+// Función que muestra todos los productos en la página
 function mostrarProductos() {
+  // Buscar el lugar donde van los productos
   const contenedor = document.getElementById('listaProductos');
-  if (!contenedor) return;
 
+  // Si no encuentra el contenedor, salir de la función
+  if (!contenedor) {
+    return;
+  }
+
+  // Crear el HTML para todos los productos
   let html = '';
 
-  productos.forEach(producto => {
+  // Recorrer cada producto y crear su tarjeta
+  for (let i = 0; i < productos.length; i++) {
+    const producto = productos[i];
+
     html += `
       <div class="col-md-6 col-lg-4 mb-4">
         <div class="card h-100">
@@ -95,74 +105,125 @@ function mostrarProductos() {
         </div>
       </div>
     `;
-  });
+  }
 
+  // Poner el HTML en la página
   contenedor.innerHTML = html;
 }
 
-// Función para agregar producto al carrito
+// ===========================================
+// FUNCIONES PARA EL CARRITO
+// ===========================================
+
+// Función para agregar un producto al carrito
 function agregarAlCarrito(idProducto) {
-  const producto = productos.find(p => p.id === idProducto);
-  if (!producto) return;
+  // Buscar el producto por su ID
+  let productoEncontrado = null;
 
-  // Buscar si el producto ya está en el carrito
-  const productoEnCarrito = carrito.find(p => p.id === idProducto);
+  for (let i = 0; i < productos.length; i++) {
+    if (productos[i].id === idProducto) {
+      productoEncontrado = productos[i];
+      break;
+    }
+  }
 
+  // Si no encuentra el producto, salir
+  if (!productoEncontrado) {
+    return;
+  }
+
+  // Verificar si el producto ya está en el carrito
+  let productoEnCarrito = null;
+  for (let i = 0; i < carrito.length; i++) {
+    if (carrito[i].id === idProducto) {
+      productoEnCarrito = carrito[i];
+      break;
+    }
+  }
+
+  // Si ya está en el carrito, aumentar la cantidad
   if (productoEnCarrito) {
-    productoEnCarrito.cantidad += 1;
+    productoEnCarrito.cantidad = productoEnCarrito.cantidad + 1;
   } else {
+    // Si no está, agregarlo al carrito
     carrito.push({
-      id: producto.id,
-      nombre: producto.nombre,
-      precio: producto.precio,
-      imagen: producto.imagen,
+      id: productoEncontrado.id,
+      nombre: productoEncontrado.nombre,
+      precio: productoEncontrado.precio,
+      imagen: productoEncontrado.imagen,
       cantidad: 1
     });
   }
 
-  // Guardar en localStorage
+  // Guardar el carrito en el navegador (localStorage)
   localStorage.setItem('carrito', JSON.stringify(carrito));
 
-  // Actualizar contador
+  // Actualizar el contador del carrito
   actualizarContadorCarrito();
 
-  alert('Producto agregado al carrito: ' + producto.nombre);
+  // Mostrar mensaje al usuario
+  alert('Producto agregado al carrito: ' + productoEncontrado.nombre);
 }
 
-// Función para actualizar contador del carrito
+// Función para actualizar el contador del carrito en la barra de navegación
 function actualizarContadorCarrito() {
   const contador = document.getElementById('cantidadCarrito');
+
   if (contador) {
-    const totalProductos = carrito.reduce((total, producto) => total + producto.cantidad, 0);
+    // Contar todos los productos en el carrito
+    let totalProductos = 0;
+    for (let i = 0; i < carrito.length; i++) {
+      totalProductos = totalProductos + carrito[i].cantidad;
+    }
+
+    // Mostrar el número en la página
     contador.textContent = totalProductos;
   }
 }
 
-// Función para vaciar carrito
+// Función para vaciar completamente el carrito
 function vaciarCarrito() {
-  // Confirmar antes de vaciar
-  if (confirm('¿Estás seguro de que quieres vaciar el carrito?')) {
-    carrito = []; // Vaciar el array del carrito
-    localStorage.removeItem('carrito'); // Eliminar del localStorage
-    actualizarContadorCarrito(); // Actualizar el contador
-    mostrarCarrito(); // Actualizar la vista del carrito
+  // Preguntar al usuario si está seguro
+  const confirmar = confirm('¿Estás seguro de que quieres vaciar el carrito?');
+
+  if (confirmar) {
+    // Vaciar el carrito
+    carrito = [];
+
+    // Borrar del navegador
+    localStorage.removeItem('carrito');
+
+    // Actualizar el contador
+    actualizarContadorCarrito();
+
+    // Actualizar la vista del carrito
+    mostrarCarrito();
+
+    // Mostrar mensaje
     alert('Carrito vaciado correctamente');
   }
 }
 
-// Función para mostrar carrito
+// Función para mostrar el contenido del carrito en el modal
 function mostrarCarrito() {
   const contenedor = document.getElementById('contenidoCarrito');
-  if (!contenedor) return;
 
+  if (!contenedor) {
+    return;
+  }
+
+  // Si el carrito está vacío
   if (carrito.length === 0) {
     contenedor.innerHTML = '<p class="text-center">Tu carrito está vacío</p>';
     return;
   }
 
+  // Crear la lista de productos
   let html = '<div class="list-group">';
 
-  carrito.forEach(producto => {
+  for (let i = 0; i < carrito.length; i++) {
+    const producto = carrito[i];
+
     html += `
       <div class="list-group-item d-flex justify-content-between align-items-center">
         <div class="d-flex align-items-center">
@@ -175,41 +236,65 @@ function mostrarCarrito() {
         <span class="fw-bold">$${(producto.precio * producto.cantidad).toLocaleString()}</span>
       </div>
     `;
-  });
+  }
 
   html += '</div>';
 
+  // Poner el HTML en la página
   contenedor.innerHTML = html;
 
-  // Calcular y mostrar total
-  const total = carrito.reduce((suma, producto) => suma + (producto.precio * producto.cantidad), 0);
+  // Calcular el total
+  let total = 0;
+  for (let i = 0; i < carrito.length; i++) {
+    total = total + (carrito[i].precio * carrito[i].cantidad);
+  }
+
+  // Mostrar el total
   const totalElement = document.getElementById('totalCarrito');
   if (totalElement) {
     totalElement.textContent = total.toLocaleString();
   }
 }
 
-// Función para filtrar productos
+// ===========================================
+// FUNCIONES PARA FILTRAR PRODUCTOS
+// ===========================================
+
+// Función para filtrar productos por categoría y búsqueda
 function filtrarProductos() {
-  const categoria = document.getElementById('filtroCategoria').value;
-  const busqueda = document.getElementById('buscarProducto').value.toLowerCase();
+  // Obtener los valores de los filtros
+  const categoriaSeleccionada = document.getElementById('filtroCategoria').value;
+  const textoBusqueda = document.getElementById('buscarProducto').value.toLowerCase();
 
+  // Buscar el contenedor de productos
   const contenedor = document.getElementById('listaProductos');
-  if (!contenedor) return;
+  if (!contenedor) {
+    return;
+  }
 
+  // Crear el HTML para los productos filtrados
   let html = '';
 
-  productos.forEach(producto => {
-    // Filtrar por categoría
-    if (categoria && producto.categoria !== categoria) {
-      return;
+  // Recorrer todos los productos
+  for (let i = 0; i < productos.length; i++) {
+    const producto = productos[i];
+
+    // Verificar filtro de categoría
+    if (categoriaSeleccionada && producto.categoria !== categoriaSeleccionada) {
+      continue; // Saltar este producto
     }
 
-    // Filtrar por búsqueda
-    if (busqueda && !producto.nombre.toLowerCase().includes(busqueda) && !producto.descripcion.toLowerCase().includes(busqueda)) {
-      return;
+    // Verificar filtro de búsqueda
+    if (textoBusqueda) {
+      const nombreMinuscula = producto.nombre.toLowerCase();
+      const descripcionMinuscula = producto.descripcion.toLowerCase();
+
+      if (!nombreMinuscula.includes(textoBusqueda) && !descripcionMinuscula.includes(textoBusqueda)) {
+        continue; // Saltar este producto
+      }
     }
 
+    // Si pasa los filtros, agregar el producto
     html += `
       <div class="col-md-6 col-lg-4 mb-4">
         <div class="card h-100">
@@ -230,34 +315,38 @@ function filtrarProductos() {
         </div>
       </div>
     `;
-  });
+  }
 
+  // Si no hay productos, mostrar mensaje
   if (html === '') {
     html = '<div class="col-12"><p class="text-center text-muted">No se encontraron productos</p></div>';
   }
 
+  // Poner el HTML en la página
   contenedor.innerHTML = html;
 }
 
-// ============= 4. CÓDIGO PRINCIPAL =============
+// ===========================================
+// CÓDIGO QUE SE EJECUTA CUANDO CARGA LA PÁGINA
+// ===========================================
 
-// Cuando se carga la página
+// Esperar a que cargue toda la página
 document.addEventListener('DOMContentLoaded', function() {
   console.log('Tienda MiMascota cargada');
 
-  // Cargar carrito del localStorage
+  // Cargar el carrito guardado del navegador
   const carritoGuardado = localStorage.getItem('carrito');
   if (carritoGuardado) {
     carrito = JSON.parse(carritoGuardado);
   }
 
-  // Mostrar productos
+  // Mostrar todos los productos
   mostrarProductos();
 
-  // Actualizar contador del carrito
+  // Actualizar el contador del carrito
   actualizarContadorCarrito();
 
-  // Eventos para filtros
+  // Conectar los filtros
   const filtroCategoria = document.getElementById('filtroCategoria');
   if (filtroCategoria) {
     filtroCategoria.addEventListener('change', filtrarProductos);
@@ -268,22 +357,22 @@ document.addEventListener('DOMContentLoaded', function() {
     buscarProducto.addEventListener('input', filtrarProductos);
   }
 
-  // Evento para mostrar carrito
+  // Conectar el botón del carrito
   const btnCarrito = document.getElementById('btnCarrito');
   if (btnCarrito) {
     btnCarrito.addEventListener('click', function() {
       mostrarCarrito();
-      // Mostrar modal del carrito
+      // Mostrar el modal del carrito
       const modal = new bootstrap.Modal(document.getElementById('modalCarrito'));
       modal.show();
     });
   }
 
-  // Evento para vaciar carrito
+  // Conectar el botón para vaciar carrito
   const btnVaciarCarrito = document.getElementById('btnVaciarCarrito');
   if (btnVaciarCarrito) {
     btnVaciarCarrito.addEventListener('click', vaciarCarrito);
   }
 });
 
-console.log('productos.js cargado correctamente');
+console.log('Sistema de productos cargado correctamente');
