@@ -402,6 +402,22 @@ document.addEventListener('DOMContentLoaded', function() {
       modal.show();
     });
   }
+
+  // Scroll suave para enlaces de navegación
+  const navLinks = document.querySelectorAll('a[href^="#"]');
+  navLinks.forEach(link => {
+    link.addEventListener('click', function(e) {
+      e.preventDefault();
+      const targetId = this.getAttribute('href').substring(1);
+      const targetElement = document.getElementById(targetId);
+      if (targetElement) {
+        targetElement.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start'
+        });
+      }
+    });
+  });
 });
 
 console.log('productos.js cargado correctamente');
