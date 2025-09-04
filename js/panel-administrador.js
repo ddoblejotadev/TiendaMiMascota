@@ -49,6 +49,25 @@ function logout() {
 
 // ============= 2. GESTIÓN DE PRODUCTOS =============
 
+// Datos de regiones y comunas para Chile
+const regionesYcomunas = {
+  "Región Metropolitana": [
+    "Santiago", "Providencia", "Las Condes", "Vitacura", "Ñuñoa", "La Reina", "Macul", "Peñalolén", "La Florida", "Puente Alto", "Maipú", "La Cisterna", "San Miguel", "Quilicura", "Renca", "Cerro Navia", "Lo Prado", "Pudahuel", "Quinta Normal", "Recoleta", "Independencia", "Conchalí", "Huechuraba", "Colina", "Lampa", "Tiltil", "San José de Maipo", "Pirque", "Puente Alto", "San Bernardo", "Buin", "Paine", "Calera de Tango", "Melipilla", "María Pinto", "Curacaví", "Talagante", "El Monte", "Isla de Maipo", "Padre Hurtado", "Peñaflor"
+  ],
+  "Región de Valparaíso": [
+    "Valparaíso", "Viña del Mar", "Quilpué", "Villa Alemana", "San Antonio", "Los Andes", "San Felipe", "Limache", "Olmué", "Llaillay", "Putaendo", "Santa María", "Cabildo", "Petorca", "Zapallar", "Puchuncaví", "Quintero", "Nogales", "Hijuelas", "La Ligua", "Papudo", "La Calera", "Casablanca", "Juan Fernández"
+  ],
+  "Región del Biobío": [
+    "Concepción", "Talcahuano", "Chiguayante", "Penco", "Tomé", "Hualqui", "Florida", "Coronel", "Lota", "Lebu", "Arauco", "Cañete", "Contulmo", "Curanilahue", "Los Álamos", "Tirúa", "Los Ángeles", "Mulchén", "Nacimiento", "Negrete", "Quilaco", "Quilleco", "San Rosendo", "Santa Bárbara", "Tucapel", "Yumbel", "Alto Biobío", "Antuco", "Cabrero", "Laja", "San Rosendo", "Yumbel"
+  ],
+  "Región de La Araucanía": [
+    "Temuco", "Padre Las Casas", "Villarrica", "Pucón", "Lautaro", "Nueva Imperial", "Carahue", "Saavedra", "Teodoro Schmidt", "Toltén", "Lumaco", "Purén", "Cunco", "Melipeuco", "Renaico", "Traiguén", "Victoria", "Curacautín", "Lonquimay", "Los Sauces", "Perquenco", "Galvarino", "Loncoche", "Freire", "Pitrufquén", "Gorbea", "Cholchol", "Toltén"
+  ],
+  "Región de Los Lagos": [
+    "Puerto Montt", "Puerto Varas", "Osorno", "Castro", "Ancud", "Quellón", "Calbuco", "Fresia", "Frutillar", "Llanquihue", "Los Muermos", "Maullín", "Puerto Octay", "Purranque", "Puyehue", "Río Negro", "San Pablo", "San Juan de la Costa", "Chaitén", "Futaleufú", "Hualaihué", "Palena", "Cochamó", "Dalcahue", "Puqueldón", "Queilén", "Quinchao", "Curaco de Vélez"
+  ]
+};
+
 // Lista de productos (misma que productos-simple.js)
 let productos = [
   {
