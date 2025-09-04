@@ -418,6 +418,52 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     });
   });
+
+  // Botón volver arriba
+  const btnVolverArriba = document.getElementById('btnVolverArriba');
+  if (btnVolverArriba) {
+    // Mostrar/ocultar botón según el scroll
+    window.addEventListener('scroll', function() {
+      if (window.pageYOffset > 300) {
+        btnVolverArriba.style.display = 'block';
+      } else {
+        btnVolverArriba.style.display = 'none';
+      }
+    });
+
+    // Funcionalidad del botón
+    btnVolverArriba.addEventListener('click', function() {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    });
+  }
+
+  // Resaltar navegación activa
+  const observerOptions = {
+    threshold: 0.5,
+    rootMargin: '-50px 0px -50px 0px'
+  };
+
+  const observer = new IntersectionObserver(function(entries) {
+    entries.forEach(entry => {
+      const navLink = document.querySelector(`a[href="#${entry.target.id}"]`);
+      if (navLink) {
+        if (entry.isIntersecting) {
+          navLink.classList.add('fw-bold');
+        } else {
+          navLink.classList.remove('fw-bold');
+        }
+      }
+    });
+  }, observerOptions);
+
+  // Observar secciones
+  const sections = document.querySelectorAll('main[id], section[id]');
+  sections.forEach(section => {
+    observer.observe(section);
+  });
 });
 
 console.log('productos.js cargado correctamente');
