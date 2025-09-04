@@ -1,74 +1,67 @@
-// ============= ADMIN-SIMPLE.JS - PANEL DE ADMINISTRADOR =============
-// Archivo para el panel de administrador
-// Código simple y comentado para nivel principiante
+// ===========================================
+// PANEL DE ADMINISTRADOR - TIENDA MIMASCOTA
+// Código simple para principiantes
+// ===========================================
 
-// ============= 1. VERIFICAR ACCESO ADMIN =============
+// ===========================================
+// VERIFICAR ACCESO DE ADMINISTRADOR
+// ===========================================
 
+// Función que se ejecuta cuando la página carga
 document.addEventListener('DOMContentLoaded', function() {
-  console.log('admin-simple.js cargado');
-  
-  // Verificar si hay usuario logueado
+  console.log('Panel de administrador cargado');
+
+  // Verificar si hay un usuario logueado
   const usuarioActual = JSON.parse(localStorage.getItem('usuarioActual') || 'null');
-  
+
   if (!usuarioActual) {
-    alert('Debes iniciar sesión para acceder');
+    alert('Debes iniciar sesión para acceder al panel de administrador');
     window.location.href = '../user/iniciar-sesion.html';
     return;
   }
-  
-  // Verificar si es admin (email con @admin.cl)
-  const esAdmin = usuarioActual.email?.includes('@admin.cl');
-  
+
+  // Verificar si es administrador (email contiene @admin.cl)
+  const esAdmin = usuarioActual.email && usuarioActual.email.includes('@admin.cl');
+
   if (!esAdmin) {
     alert('No tienes permisos de administrador');
     window.location.href = '../user/panel-usuario.html';
     return;
   }
-  
-  // Mostrar nombre del admin
+
+  // Mostrar el nombre del administrador
   const nombreAdmin = document.getElementById('adminNombre');
   if (nombreAdmin) {
-    nombreAdmin.textContent = `Admin: ${usuarioActual.nombre}`;
+    nombreAdmin.textContent = 'Admin: ' + usuarioActual.nombre;
   }
-  
-  // Cargar datos iniciales
+
+  // Cargar los datos iniciales
   cargarProductos();
   cargarUsuarios();
   cargarEstadisticas();
+
+  console.log('Panel de administrador inicializado correctamente');
 });
+
+// ===========================================
+// FUNCIONES PARA CERRAR SESIÓN
+// ===========================================
 
 // Función para cerrar sesión
 function logout() {
-  // Limpiar datos de sesión
+  // Limpiar los datos de sesión
   localStorage.removeItem('usuarioActual');
   localStorage.removeItem('currentUser');
-  
+
   // Redirigir al login
   window.location.href = '../user/iniciar-sesion.html';
 }
 
-// ============= 2. GESTIÓN DE PRODUCTOS =============
+// ===========================================
+// GESTIÓN DE PRODUCTOS
+// ===========================================
 
-// Datos de regiones y comunas para Chile
-const regionesYcomunas = {
-  "Región Metropolitana": [
-    "Santiago", "Providencia", "Las Condes", "Vitacura", "Ñuñoa", "La Reina", "Macul", "Peñalolén", "La Florida", "Puente Alto", "Maipú", "La Cisterna", "San Miguel", "Quilicura", "Renca", "Cerro Navia", "Lo Prado", "Pudahuel", "Quinta Normal", "Recoleta", "Independencia", "Conchalí", "Huechuraba", "Colina", "Lampa", "Tiltil", "San José de Maipo", "Pirque", "Puente Alto", "San Bernardo", "Buin", "Paine", "Calera de Tango", "Melipilla", "María Pinto", "Curacaví", "Talagante", "El Monte", "Isla de Maipo", "Padre Hurtado", "Peñaflor"
-  ],
-  "Región de Valparaíso": [
-    "Valparaíso", "Viña del Mar", "Quilpué", "Villa Alemana", "San Antonio", "Los Andes", "San Felipe", "Limache", "Olmué", "Llaillay", "Putaendo", "Santa María", "Cabildo", "Petorca", "Zapallar", "Puchuncaví", "Quintero", "Nogales", "Hijuelas", "La Ligua", "Papudo", "La Calera", "Casablanca", "Juan Fernández"
-  ],
-  "Región del Biobío": [
-    "Concepción", "Talcahuano", "Chiguayante", "Penco", "Tomé", "Hualqui", "Florida", "Coronel", "Lota", "Lebu", "Arauco", "Cañete", "Contulmo", "Curanilahue", "Los Álamos", "Tirúa", "Los Ángeles", "Mulchén", "Nacimiento", "Negrete", "Quilaco", "Quilleco", "San Rosendo", "Santa Bárbara", "Tucapel", "Yumbel", "Alto Biobío", "Antuco", "Cabrero", "Laja", "San Rosendo", "Yumbel"
-  ],
-  "Región de La Araucanía": [
-    "Temuco", "Padre Las Casas", "Villarrica", "Pucón", "Lautaro", "Nueva Imperial", "Carahue", "Saavedra", "Teodoro Schmidt", "Toltén", "Lumaco", "Purén", "Cunco", "Melipeuco", "Renaico", "Traiguén", "Victoria", "Curacautín", "Lonquimay", "Los Sauces", "Perquenco", "Galvarino", "Loncoche", "Freire", "Pitrufquén", "Gorbea", "Cholchol", "Toltén"
-  ],
-  "Región de Los Lagos": [
-    "Puerto Montt", "Puerto Varas", "Osorno", "Castro", "Ancud", "Quellón", "Calbuco", "Fresia", "Frutillar", "Llanquihue", "Los Muermos", "Maullín", "Puerto Octay", "Purranque", "Puyehue", "Río Negro", "San Pablo", "San Juan de la Costa", "Chaitén", "Futaleufú", "Hualaihué", "Palena", "Cochamó", "Dalcahue", "Puqueldón", "Queilén", "Quinchao", "Curaco de Vélez"
-  ]
-};
-
-// Lista de productos (misma que productos-simple.js)
+// Lista de productos (igual que en la tienda)
 let productos = [
   {
     id: 1,
@@ -76,16 +69,16 @@ let productos = [
     precio: 15990,
     categoria: "comida",
     imagen: "../../assets/img/Comida.jpg",
-    descripcion: "Alimento balanceado premium para perros adultos. Rico en proteínas y vitaminas.",
+    descripcion: "Alimento balanceado premium para perros adultos.",
     stock: 50
   },
   {
     id: 2,
     nombre: "Juguetes Divertidos",
     precio: 5990,
-    categoria: "juguetes", 
+    categoria: "juguetes",
     imagen: "../../assets/img/jugetes.png",
-    descripcion: "Set de pelotas y juguetes para mantener activa y feliz a tu mascota.",
+    descripcion: "Set de pelotas y juguetes para tu mascota.",
     stock: 30
   },
   {
@@ -93,8 +86,8 @@ let productos = [
     nombre: "Cama Super Cómoda",
     precio: 25990,
     categoria: "camas",
-    imagen: "../../assets/img/cama2.png", 
-    descripcion: "Cama ultra cómoda con relleno de espuma para el descanso perfecto.",
+    imagen: "../../assets/img/cama2.png",
+    descripcion: "Cama ultra cómoda con relleno de espuma.",
     stock: 15
   },
   {
@@ -103,7 +96,7 @@ let productos = [
     precio: 12990,
     categoria: "salud",
     imagen: "../../assets/img/salud.png",
-    descripcion: "Vitaminas, suplementos y medicamentos para la salud de tu mascota.",
+    descripcion: "Vitaminas y suplementos para tu mascota.",
     stock: 25
   },
   {
@@ -112,7 +105,7 @@ let productos = [
     precio: 8990,
     categoria: "accesorios",
     imagen: "../../assets/img/accesorios.png",
-    descripcion: "Collares, correas y accesorios fashion para que tu mascota luzca genial.",
+    descripcion: "Collares y accesorios fashion.",
     stock: 40
   },
   {
@@ -121,39 +114,32 @@ let productos = [
     precio: 7990,
     categoria: "higiene",
     imagen: "../../assets/img/higiene.png",
-    descripcion: "Champús, cepillos y productos de higiene para mantener a tu mascota limpia y saludable.",
+    descripcion: "Champús y productos de higiene.",
     stock: 35
-  },
-  {
-    id: 7,
-    nombre: "Producto Especial",
-    precio: 18990,
-    categoria: "especial",
-    imagen: "../../assets/img/prod.png",
-    descripcion: "Producto especial de la casa con múltiples beneficios para tu mascota.",
-    stock: 20
   }
 ];
 
-// Cargar productos desde localStorage si existen
-const productosGuardados = JSON.parse(localStorage.getItem('productos') || '[]');
-if (productosGuardados.length > 0) {
-  productos = productosGuardados;
-}
-
-// Función para cargar productos en el admin
+// Función para mostrar los productos en el panel de admin
 function cargarProductos() {
   const contenedor = document.getElementById('listaProductosAdmin');
-  if (!contenedor) return;
-  
+
+  if (!contenedor) {
+    return;
+  }
+
   let html = '';
-  productos.forEach(producto => {
+
+  // Recorrer todos los productos
+  for (let i = 0; i < productos.length; i++) {
+    const producto = productos[i];
+
     html += `
       <tr>
-        <td><img src="${producto.imagen}" alt="${producto.nombre}" style="width: 50px; height: 50px; object-fit: cover; border-radius: 5px;"></td>
+        <td>${producto.id}</td>
+        <td><img src="${producto.imagen}" alt="${producto.nombre}" style="width: 50px; height: 50px; object-fit: cover;"></td>
         <td>${producto.nombre}</td>
-        <td>$${producto.precio.toLocaleString()}</td>
         <td>${producto.categoria}</td>
+        <td>$${producto.precio.toLocaleString()}</td>
         <td>${producto.stock}</td>
         <td>
           <button class="btn btn-sm btn-warning" onclick="editarProducto(${producto.id})">Editar</button>
@@ -161,528 +147,245 @@ function cargarProductos() {
         </td>
       </tr>
     `;
-  });
-  
+  }
+
   contenedor.innerHTML = html;
 }
 
-// Función para mostrar formulario de producto
-function mostrarFormularioProducto() {
-  const formHtml = `
-    <div class="modal fade" id="modalProducto" tabindex="-1">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="tituloModal">Agregar Producto</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-          </div>
-          <div class="modal-body">
-            <form id="formProducto">
-              <input type="hidden" id="productoId">
-              <div class="mb-3">
-                <label for="codigoProducto" class="form-label">Código Producto *</label>
-                <input type="text" class="form-control" id="codigoProducto" required minlength="3">
-              </div>
-              <div class="mb-3">
-                <label for="nombreProducto" class="form-label">Nombre *</label>
-                <input type="text" class="form-control" id="nombreProducto" required maxlength="100">
-              </div>
-              <div class="mb-3">
-                <label for="descripcionProducto" class="form-label">Descripción</label>
-                <textarea class="form-control" id="descripcionProducto" maxlength="500"></textarea>
-              </div>
-              <div class="mb-3">
-                <label for="precioProducto" class="form-label">Precio *</label>
-                <input type="number" class="form-control" id="precioProducto" required min="0" step="0.01">
-              </div>
-              <div class="mb-3">
-                <label for="stockProducto" class="form-label">Stock *</label>
-                <input type="number" class="form-control" id="stockProducto" required min="0">
-              </div>
-              <div class="mb-3">
-                <label for="stockCriticoProducto" class="form-label">Stock Crítico</label>
-                <input type="number" class="form-control" id="stockCriticoProducto" min="0">
-              </div>
-              <div class="mb-3">
-                <label for="categoriaProducto" class="form-label">Categoría *</label>
-                <select class="form-select" id="categoriaProducto" required>
-                  <option value="">Seleccionar</option>
-                  <option value="comida">Comida</option>
-                  <option value="juguetes">Juguetes</option>
-                  <option value="camas">Camas</option>
-                  <option value="salud">Salud</option>
-                  <option value="accesorios">Accesorios</option>
-                  <option value="higiene">Higiene</option>
-                  <option value="especial">Especial</option>
-                </select>
-              </div>
-              <div class="mb-3">
-                <label for="imagenProducto" class="form-label">Imagen</label>
-                <input type="text" class="form-control" id="imagenProducto" placeholder="assets/img/imagen.jpg">
-              </div>
-            </form>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-            <button type="button" class="btn btn-primary" onclick="guardarProducto()">Guardar</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  `;
-  document.body.insertAdjacentHTML('beforeend', formHtml);
-  const modal = new bootstrap.Modal(document.getElementById('modalProducto'));
+// Función para agregar un nuevo producto
+function agregarProducto() {
+  // Obtener los datos del formulario
+  const nombre = document.getElementById('nombreProducto').value.trim();
+  const precio = parseInt(document.getElementById('precioProducto').value);
+  const categoria = document.getElementById('categoriaProducto').value;
+  const imagen = document.getElementById('imagenProducto').value.trim();
+  const descripcion = document.getElementById('descripcionProducto').value.trim();
+  const stock = parseInt(document.getElementById('stockProducto').value);
+
+  // Validar que todos los campos estén llenos
+  if (!nombre || !precio || !categoria || !imagen || !descripcion || !stock) {
+    alert('Por favor, completa todos los campos');
+    return;
+  }
+
+  // Crear el nuevo producto
+  const nuevoProducto = {
+    id: productos.length + 1,
+    nombre: nombre,
+    precio: precio,
+    categoria: categoria,
+    imagen: imagen,
+    descripcion: descripcion,
+    stock: stock
+  };
+
+  // Agregar a la lista
+  productos.push(nuevoProducto);
+
+  // Guardar en el navegador
+  localStorage.setItem('productos', JSON.stringify(productos));
+
+  // Recargar la lista
+  cargarProductos();
+
+  // Limpiar el formulario
+  document.getElementById('formAgregarProducto').reset();
+
+  alert('Producto agregado correctamente');
+}
+
+// Función para editar un producto
+function editarProducto(idProducto) {
+  // Buscar el producto
+  let productoEncontrado = null;
+  for (let i = 0; i < productos.length; i++) {
+    if (productos[i].id === idProducto) {
+      productoEncontrado = productos[i];
+      break;
+    }
+  }
+
+  if (!productoEncontrado) {
+    alert('Producto no encontrado');
+    return;
+  }
+
+  // Llenar el formulario con los datos del producto
+  document.getElementById('editIdProducto').value = productoEncontrado.id;
+  document.getElementById('editNombreProducto').value = productoEncontrado.nombre;
+  document.getElementById('editPrecioProducto').value = productoEncontrado.precio;
+  document.getElementById('editCategoriaProducto').value = productoEncontrado.categoria;
+  document.getElementById('editImagenProducto').value = productoEncontrado.imagen;
+  document.getElementById('editDescripcionProducto').value = productoEncontrado.descripcion;
+  document.getElementById('editStockProducto').value = productoEncontrado.stock;
+
+  // Mostrar el modal de edición
+  const modal = new bootstrap.Modal(document.getElementById('modalEditarProducto'));
   modal.show();
 }
 
-// Función para guardar producto
-function guardarProducto() {
-  const id = document.getElementById('productoId').value;
-  const codigo = document.getElementById('codigoProducto').value.trim();
-  const nombre = document.getElementById('nombreProducto').value.trim();
-  const descripcion = document.getElementById('descripcionProducto').value.trim();
-  const precio = parseFloat(document.getElementById('precioProducto').value);
-  const stock = parseInt(document.getElementById('stockProducto').value);
-  const stockCritico = parseInt(document.getElementById('stockCriticoProducto').value) || 0;
-  const categoria = document.getElementById('categoriaProducto').value;
-  const imagen = document.getElementById('imagenProducto').value.trim() || 'assets/img/producto-default.png';
+// Función para guardar los cambios de un producto editado
+function guardarEdicionProducto() {
+  const id = parseInt(document.getElementById('editIdProducto').value);
+  const nombre = document.getElementById('editNombreProducto').value.trim();
+  const precio = parseInt(document.getElementById('editPrecioProducto').value);
+  const categoria = document.getElementById('editCategoriaProducto').value;
+  const imagen = document.getElementById('editImagenProducto').value.trim();
+  const descripcion = document.getElementById('editDescripcionProducto').value.trim();
+  const stock = parseInt(document.getElementById('editStockProducto').value);
 
-  // Validaciones
-  if (!codigo || codigo.length < 3) {
-    alert('Código debe tener al menos 3 caracteres');
-    return;
-  }
-  if (!nombre || nombre.length > 100) {
-    alert('Nombre es requerido y máximo 100 caracteres');
-    return;
-  }
-  if (descripcion.length > 500) {
-    alert('Descripción máximo 500 caracteres');
-    return;
-  }
-  if (isNaN(precio) || precio < 0) {
-    alert('Precio debe ser un número mayor o igual a 0');
-    return;
-  }
-  if (isNaN(stock) || stock < 0) {
-    alert('Stock debe ser un número entero mayor o igual a 0');
-    return;
-  }
-  if (!categoria) {
-    alert('Categoría es requerida');
+  // Validar campos
+  if (!nombre || !precio || !categoria || !imagen || !descripcion || !stock) {
+    alert('Por favor, completa todos los campos');
     return;
   }
 
-  const producto = {
-    id: id ? parseInt(id) : Date.now(),
-    codigo: codigo,
-    nombre: nombre,
-    descripcion: descripcion,
-    precio: precio,
-    stock: stock,
-    stockCritico: stockCritico,
-    categoria: categoria,
-    imagen: imagen
-  };
-
-  if (id) {
-    // Editar
-    const index = productos.findIndex(p => p.id == id);
-    if (index !== -1) {
-      productos[index] = producto;
+  // Buscar y actualizar el producto
+  for (let i = 0; i < productos.length; i++) {
+    if (productos[i].id === id) {
+      productos[i] = {
+        id: id,
+        nombre: nombre,
+        precio: precio,
+        categoria: categoria,
+        imagen: imagen,
+        descripcion: descripcion,
+        stock: stock
+      };
+      break;
     }
-  } else {
-    // Nuevo
-    productos.push(producto);
   }
 
-  // Guardar en localStorage
+  // Guardar en el navegador
   localStorage.setItem('productos', JSON.stringify(productos));
 
-  // Cerrar modal y recargar
-  const modal = bootstrap.Modal.getInstance(document.getElementById('modalProducto'));
-  modal.hide();
+  // Recargar la lista
   cargarProductos();
-  cargarEstadisticas();
-  alert('Producto guardado correctamente');
+
+  // Cerrar el modal
+  const modal = bootstrap.Modal.getInstance(document.getElementById('modalEditarProducto'));
+  modal.hide();
+
+  alert('Producto actualizado correctamente');
 }
 
-// Función para editar producto
-function editarProducto(id) {
-  const producto = productos.find(p => p.id == id);
-  if (!producto) return;
+// Función para eliminar un producto
+function eliminarProducto(idProducto) {
+  // Confirmar eliminación
+  if (!confirm('¿Estás seguro de que quieres eliminar este producto?')) {
+    return;
+  }
 
-  mostrarFormularioProducto();
-  document.getElementById('tituloModal').textContent = 'Editar Producto';
-  document.getElementById('productoId').value = producto.id;
-  document.getElementById('codigoProducto').value = producto.codigo || '';
-  document.getElementById('nombreProducto').value = producto.nombre;
-  document.getElementById('descripcionProducto').value = producto.descripcion || '';
-  document.getElementById('precioProducto').value = producto.precio;
-  document.getElementById('stockProducto').value = producto.stock;
-  document.getElementById('stockCriticoProducto').value = producto.stockCritico || '';
-  document.getElementById('categoriaProducto').value = producto.categoria;
-  document.getElementById('imagenProducto').value = producto.imagen || '';
-}
-
-// Función para eliminar producto
-function eliminarProducto(id) {
-  if (confirm('¿Estás seguro de eliminar este producto?')) {
-    const index = productos.findIndex(p => p.id === id);
-    if (index !== -1) {
-      productos.splice(index, 1);
-      cargarProductos();
-      alert('Producto eliminado');
+  // Buscar y eliminar el producto
+  for (let i = 0; i < productos.length; i++) {
+    if (productos[i].id === idProducto) {
+      productos.splice(i, 1);
+      break;
     }
   }
+
+  // Guardar en el navegador
+  localStorage.setItem('productos', JSON.stringify(productos));
+
+  // Recargar la lista
+  cargarProductos();
+
+  alert('Producto eliminado correctamente');
 }
 
-// ============= 3. GESTIÓN DE USUARIOS =============
+// ===========================================
+// GESTIÓN DE USUARIOS
+// ===========================================
 
+// Función para mostrar los usuarios registrados
 function cargarUsuarios() {
-  const usuarios = JSON.parse(localStorage.getItem('usuarios') || '[]');
   const contenedor = document.getElementById('listaUsuariosAdmin');
-  if (!contenedor) return;
-  
+
+  if (!contenedor) {
+    return;
+  }
+
+  // Obtener usuarios del navegador
+  const usuarios = JSON.parse(localStorage.getItem('usuarios') || '[]');
+
   let html = '';
-  usuarios.forEach((usuario, index) => {
-    const tipoUsuario = usuario.tipoUsuario || (usuario.email.includes('@admin.cl') ? 'administrador' : 'cliente');
-    const tipoBadge = tipoUsuario === 'administrador' ? 'badge bg-danger' : 'badge bg-primary';
-    
+
+  // Recorrer todos los usuarios
+  for (let i = 0; i < usuarios.length; i++) {
+    const usuario = usuarios[i];
+
     html += `
       <tr>
         <td>${usuario.nombre}</td>
         <td>${usuario.email}</td>
-        <td>${usuario.telefono || 'N/A'}</td>
-        <td>${usuario.region || 'N/A'}</td>
-        <td>${usuario.comuna || 'N/A'}</td>
-        <td><span class="badge ${tipoBadge}">${tipoUsuario}</span></td>
+        <td>${usuario.tipoUsuario || 'cliente'}</td>
+        <td>${usuario.fechaRegistro ? new Date(usuario.fechaRegistro).toLocaleDateString() : 'N/A'}</td>
         <td>
-          <button class="btn btn-sm btn-danger" onclick="eliminarUsuario(${index})">Eliminar</button>
+          <button class="btn btn-sm btn-danger" onclick="eliminarUsuario('${usuario.email}')">Eliminar</button>
         </td>
       </tr>
     `;
-  });
-  
-  if (usuarios.length === 0) {
-    html = '<tr><td colspan="7" class="text-center text-muted">No hay usuarios registrados</td></tr>';
   }
-  
+
   contenedor.innerHTML = html;
 }
 
-// Función para eliminar usuario
-function eliminarUsuario(index) {
-  if (confirm('¿Estás seguro de eliminar este usuario?')) {
-    const usuarios = JSON.parse(localStorage.getItem('usuarios') || '[]');
-    usuarios.splice(index, 1);
-    localStorage.setItem('usuarios', JSON.stringify(usuarios));
-    cargarUsuarios();
-    cargarEstadisticas();
-  }
-}
-
-// Función para mostrar formulario de usuario
-function mostrarFormularioUsuario() {
-  const formHtml = `
-    <div class="modal fade" id="modalUsuario" tabindex="-1">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="tituloModalUsuario">Agregar Usuario</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-          </div>
-          <div class="modal-body">
-            <form id="formUsuario">
-              <input type="hidden" id="usuarioId">
-              <div class="mb-3">
-                <label for="rutUsuario" class="form-label">RUT *</label>
-                <input type="text" class="form-control" id="rutUsuario" required placeholder="12345678K">
-              </div>
-              <div class="mb-3">
-                <label for="nombreUsuario" class="form-label">Nombre *</label>
-                <input type="text" class="form-control" id="nombreUsuario" required maxlength="50">
-              </div>
-              <div class="mb-3">
-                <label for="apellidosUsuario" class="form-label">Apellidos *</label>
-                <input type="text" class="form-control" id="apellidosUsuario" required maxlength="100">
-              </div>
-              <div class="mb-3">
-                <label for="emailUsuario" class="form-label">Correo *</label>
-                <input type="email" class="form-control" id="emailUsuario" required maxlength="100">
-              </div>
-              <div class="mb-3">
-                <label for="fechaNacimientoUsuario" class="form-label">Fecha Nacimiento</label>
-                <input type="date" class="form-control" id="fechaNacimientoUsuario">
-              </div>
-              <div class="mb-3">
-                <label for="tipoUsuario" class="form-label">Tipo Usuario *</label>
-                <select class="form-select" id="tipoUsuario" required>
-                  <option value="">Seleccionar</option>
-                  <option value="cliente">Cliente</option>
-                  <option value="vendedor">Vendedor</option>
-                  <option value="administrador">Administrador</option>
-                </select>
-              </div>
-              <div class="mb-3">
-                <label for="regionUsuario" class="form-label">Región *</label>
-                <select class="form-select" id="regionUsuario" required>
-                  <option value="">Seleccionar</option>
-                  <option value="Región Metropolitana">Región Metropolitana</option>
-                  <option value="Región de Valparaíso">Región de Valparaíso</option>
-                  <option value="Región del Biobío">Región del Biobío</option>
-                  <option value="Región de La Araucanía">Región de La Araucanía</option>
-                  <option value="Región de Los Lagos">Región de Los Lagos</option>
-                </select>
-              </div>
-              <div class="mb-3">
-                <label for="comunaUsuario" class="form-label">Comuna *</label>
-                <select class="form-select" id="comunaUsuario" required>
-                  <option value="">Seleccionar comuna</option>
-                </select>
-              </div>
-              <div class="mb-3">
-                <label for="direccionUsuario" class="form-label">Dirección *</label>
-                <input type="text" class="form-control" id="direccionUsuario" required maxlength="300">
-              </div>
-            </form>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-            <button type="button" class="btn btn-primary" onclick="guardarUsuario()">Guardar</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  `;
-  document.body.insertAdjacentHTML('beforeend', formHtml);
-  const modal = new bootstrap.Modal(document.getElementById('modalUsuario'));
-  modal.show();
-
-  // Llenar comunas al cambiar región
-  document.getElementById('regionUsuario').addEventListener('change', function() {
-    const region = this.value;
-    const comunaSelect = document.getElementById('comunaUsuario');
-    comunaSelect.innerHTML = '<option value="">Seleccionar comuna</option>';
-    if (region && regionesYcomunas[region]) {
-      regionesYcomunas[region].forEach(comuna => {
-        const option = document.createElement('option');
-        option.value = comuna;
-        option.textContent = comuna;
-        comunaSelect.appendChild(option);
-      });
-    }
-  });
-}
-
-// Función para guardar usuario
-function guardarUsuario() {
-  const id = document.getElementById('usuarioId').value;
-  const rut = document.getElementById('rutUsuario').value.trim();
-  const nombre = document.getElementById('nombreUsuario').value.trim();
-  const apellidos = document.getElementById('apellidosUsuario').value.trim();
-  const email = document.getElementById('emailUsuario').value.trim();
-  const fechaNacimiento = document.getElementById('fechaNacimientoUsuario').value;
-  const tipoUsuario = document.getElementById('tipoUsuario').value;
-  const region = document.getElementById('regionUsuario').value;
-  const comuna = document.getElementById('comunaUsuario').value;
-  const direccion = document.getElementById('direccionUsuario').value.trim();
-
-  // Validaciones
-  if (!rut || !validarRUT(rut)) {
-    alert('RUT es requerido y debe ser válido');
-    return;
-  }
-  if (!nombre || nombre.length > 50) {
-    alert('Nombre es requerido y máximo 50 caracteres');
-    return;
-  }
-  if (!apellidos || apellidos.length > 100) {
-    alert('Apellidos son requeridos y máximo 100 caracteres');
-    return;
-  }
-  if (!email || email.length > 100 || !validarEmail(email)) {
-    alert('Email es requerido, máximo 100 caracteres y dominios permitidos');
-    return;
-  }
-  if (!tipoUsuario) {
-    alert('Tipo de usuario es requerido');
-    return;
-  }
-  if (!region || !comuna) {
-    alert('Región y comuna son requeridas');
-    return;
-  }
-  if (!direccion || direccion.length > 300) {
-    alert('Dirección es requerida y máximo 300 caracteres');
+// Función para eliminar un usuario
+function eliminarUsuario(emailUsuario) {
+  // Confirmar eliminación
+  if (!confirm('¿Estás seguro de que quieres eliminar este usuario?')) {
     return;
   }
 
-  const usuario = {
-    rut: rut,
-    nombre: nombre,
-    apellidos: apellidos,
-    email: email,
-    fechaNacimiento: fechaNacimiento,
-    tipoUsuario: tipoUsuario,
-    region: region,
-    comuna: comuna,
-    direccion: direccion,
-    fechaRegistro: new Date().toISOString()
-  };
-
+  // Obtener usuarios
   const usuarios = JSON.parse(localStorage.getItem('usuarios') || '[]');
-  if (id) {
-    // Editar
-    const index = usuarios.findIndex(u => u.rut === id);
-    if (index !== -1) {
-      usuarios[index] = usuario;
+
+  // Buscar y eliminar el usuario
+  for (let i = 0; i < usuarios.length; i++) {
+    if (usuarios[i].email === emailUsuario) {
+      usuarios.splice(i, 1);
+      break;
     }
-  } else {
-    // Nuevo
-    const existe = usuarios.find(u => u.rut === rut || u.email === email);
-    if (existe) {
-      alert('Ya existe un usuario con ese RUT o email');
-      return;
-    }
-    usuarios.push(usuario);
   }
 
+  // Guardar en el navegador
   localStorage.setItem('usuarios', JSON.stringify(usuarios));
 
-  // Cerrar modal y recargar
-  const modal = bootstrap.Modal.getInstance(document.getElementById('modalUsuario'));
-  modal.hide();
+  // Recargar la lista
   cargarUsuarios();
-  cargarEstadisticas();
-  alert('Usuario guardado correctamente');
+
+  alert('Usuario eliminado correctamente');
 }
 
-// Función para editar usuario
-function editarUsuario(index) {
-  const usuarios = JSON.parse(localStorage.getItem('usuarios') || '[]');
-  const usuario = usuarios[index];
-  if (!usuario) return;
+// ===========================================
+// ESTADÍSTICAS
+// ===========================================
 
-  mostrarFormularioUsuario();
-  document.getElementById('tituloModalUsuario').textContent = 'Editar Usuario';
-  document.getElementById('usuarioId').value = usuario.rut;
-  document.getElementById('rutUsuario').value = usuario.rut;
-  document.getElementById('nombreUsuario').value = usuario.nombre;
-  document.getElementById('apellidosUsuario').value = usuario.apellidos || '';
-  document.getElementById('emailUsuario').value = usuario.email;
-  document.getElementById('fechaNacimientoUsuario').value = usuario.fechaNacimiento || '';
-  document.getElementById('tipoUsuario').value = usuario.tipoUsuario || 'cliente';
-  document.getElementById('regionUsuario').value = usuario.region;
-  document.getElementById('direccionUsuario').value = usuario.direccion || '';
-
-  // Trigger change para cargar comunas
-  document.getElementById('regionUsuario').dispatchEvent(new Event('change'));
-  setTimeout(() => {
-    document.getElementById('comunaUsuario').value = usuario.comuna;
-  }, 100);
-}
-
-// ============= 4. ESTADÍSTICAS =============
-
+// Función para mostrar estadísticas simples
 function cargarEstadisticas() {
+  // Obtener datos
   const usuarios = JSON.parse(localStorage.getItem('usuarios') || '[]');
   const carrito = JSON.parse(localStorage.getItem('carrito') || '[]');
-  
-  // Contar usuarios
-  const totalUsuariosEl = document.getElementById('totalUsuarios');
-  if (totalUsuariosEl) {
-    totalUsuariosEl.textContent = usuarios.length;
+
+  // Mostrar estadísticas
+  const totalUsuarios = document.getElementById('totalUsuarios');
+  if (totalUsuarios) {
+    totalUsuarios.textContent = usuarios.length;
   }
-  
-  // Contar productos
-  const totalProductosEl = document.getElementById('totalProductos');
-  if (totalProductosEl) {
-    totalProductosEl.textContent = productos.length;
+
+  const totalProductos = document.getElementById('totalProductos');
+  if (totalProductos) {
+    totalProductos.textContent = productos.length;
   }
-  
-  // Productos en carrito
-  const productosEnCarrito = carrito.reduce((total, item) => total + (item.cantidad || 0), 0);
-  const productosCarritoEl = document.getElementById('productosCarrito');
-  if (productosCarritoEl) {
-    productosCarritoEl.textContent = productosEnCarrito;
-  }
-  
-  // Valor total del carrito
-  const valorCarrito = carrito.reduce((total, item) => total + ((item.precio || 0) * (item.cantidad || 0)), 0);
-  const valorCarritoEl = document.getElementById('valorCarrito');
-  if (valorCarritoEl) {
-    valorCarritoEl.textContent = `$${valorCarrito.toLocaleString()}`;
+
+  const productosEnCarrito = document.getElementById('productosEnCarrito');
+  if (productosEnCarrito) {
+    let totalEnCarrito = 0;
+    for (let i = 0; i < carrito.length; i++) {
+      totalEnCarrito += carrito[i].cantidad;
+    }
+    productosEnCarrito.textContent = totalEnCarrito;
   }
 }
 
-// ============= 5. EVENTOS GENERALES =============
-
-// Cerrar sesión
-function cerrarSesion() {
-  if (confirm('¿Estás seguro de cerrar sesión?')) {
-    localStorage.removeItem('usuarioActual');
-    localStorage.removeItem('currentUser');
-    window.location.href = '../user/iniciar-sesion.html';
-  }
-}
-
-// Función para cerrar sesión (alias de cerrarSesion)
-function logout() {
-  cerrarSesion();
-}
-
-// Volver a la tienda
-function volverTienda() {
-  window.location.href = '../../index.html';
-}
-
-console.log('admin-simple.js cargado correctamente');
-
-// Función para validar RUT chileno
-function validarRUT(rut) {
-  // Remover puntos y guión
-  rut = rut.replace(/\./g, '').replace(/-/g, '');
-  
-  if (rut.length < 8 || rut.length > 9) return false;
-  
-  const cuerpo = rut.slice(0, -1);
-  const dv = rut.slice(-1).toUpperCase();
-  
-  // Calcular dígito verificador
-  let suma = 0;
-  let multiplicador = 2;
-  
-  for (let i = cuerpo.length - 1; i >= 0; i--) {
-    suma += parseInt(cuerpo[i]) * multiplicador;
-    multiplicador = multiplicador === 7 ? 2 : multiplicador + 1;
-  }
-  
-  const resto = suma % 11;
-  const dvCalculado = 11 - resto;
-  
-  let dvEsperado;
-  if (dvCalculado === 11) dvEsperado = '0';
-  else if (dvCalculado === 10) dvEsperado = 'K';
-  else dvEsperado = dvCalculado.toString();
-  
-  return dv === dvEsperado;
-}
-
-// Función para validar email
-function validarEmail(email) {
-  const dominiosPermitidos = ['gmail.com', 'yahoo.com', 'hotmail.com', 'outlook.com', 'admin.cl'];
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  
-  if (!emailRegex.test(email)) return false;
-  
-  const dominio = email.split('@')[1];
-  return dominiosPermitidos.includes(dominio);
-}
-
-// Inicializar el panel de administración
-document.addEventListener('DOMContentLoaded', function() {
-  cargarProductos();
-  cargarUsuarios();
-  cargarEstadisticas();
-});
+console.log('Panel de administrador cargado correctamente');
