@@ -633,6 +633,47 @@ function volverTienda() {
 
 console.log('admin-simple.js cargado correctamente');
 
+// Función para validar RUT chileno
+function validarRUT(rut) {
+  // Remover puntos y guión
+  rut = rut.replace(/\./g, '').replace(/-/g, '');
+  
+  if (rut.length < 8 || rut.length > 9) return false;
+  
+  const cuerpo = rut.slice(0, -1);
+  const dv = rut.slice(-1).toUpperCase();
+  
+  // Calcular dígito verificador
+  let suma = 0;
+  let multiplicador = 2;
+  
+  for (let i = cuerpo.length - 1; i >= 0; i--) {
+    suma += parseInt(cuerpo[i]) * multiplicador;
+    multiplicador = multiplicador === 7 ? 2 : multiplicador + 1;
+  }
+  
+  const resto = suma % 11;
+  const dvCalculado = 11 - resto;
+  
+  let dvEsperado;
+  if (dvCalculado === 11) dvEsperado = '0';
+  else if (dvCalculado === 10) dvEsperado = 'K';
+  else dvEsperado = dvCalculado.toString();
+  
+  return dv === dvEsperado;
+}
+
+// Función para validar email
+function validarEmail(email) {
+  const dominiosPermitidos = ['gmail.com', 'yahoo.com', 'hotmail.com', 'outlook.com', 'admin.cl'];
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  
+  if (!emailRegex.test(email)) return false;
+  
+  const dominio = email.split('@')[1];
+  return dominiosPermitidos.includes(dominio);
+}
+
 // Inicializar el panel de administración
 document.addEventListener('DOMContentLoaded', function() {
   cargarProductos();
