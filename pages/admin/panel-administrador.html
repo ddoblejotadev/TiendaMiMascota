@@ -16,7 +16,7 @@
                 <span class="h6 mb-0">🐾 Tienda MiMascota</span>
             </a>
             <nav>
-                <span class="text-light me-3">Administrador</span>
+                <span class="text-light me-3" id="adminNombre">Administrador</span>
                 <button class="btn btn-outline-light btn-sm" onclick="logout()">Cerrar Sesión</button>
             </nav>
         </div>
@@ -34,53 +34,52 @@
                         <h5 class="mb-0">📦 Gestión de Productos</h5>
                     </div>
                     <div class="card-body">
-                        <button class="btn btn-success mb-3" onclick="showAddProductForm()">Agregar Producto</button>
+                        <button class="btn btn-success mb-3" onclick="mostrarFormularioProducto()">Agregar Producto</button>
                         
-                        <!-- Formulario para agregar producto -->
-                        <div id="addProductForm" class="d-none mb-4">
-                            <h6>Nuevo Producto</h6>
-                            <form id="productForm">
-                                <div class="row">
-                                    <div class="col-md-6 mb-3">
-                                        <label class="form-label">Nombre</label>
-                                        <input type="text" class="form-control" id="productName" required>
-                                    </div>
-                                    <div class="col-md-6 mb-3">
-                                        <label class="form-label">Precio</label>
-                                        <input type="number" class="form-control" id="productPrice" required>
-                                    </div>
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label">Descripción</label>
-                                    <textarea class="form-control" id="productDescription" rows="3"></textarea>
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label">Categoría</label>
-                                    <select class="form-control" id="productCategory">
-                                        <option value="alimentos">Alimentos</option>
-                                        <option value="juguetes">Juguetes</option>
-                                        <option value="accesorios">Accesorios</option>
-                                        <option value="higiene">Higiene</option>
-                                    </select>
-                                </div>
-                                <button type="submit" class="btn btn-primary me-2">Guardar</button>
-                                <button type="button" class="btn btn-secondary" onclick="hideAddProductForm()">Cancelar</button>
-                            </form>
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Nombre</th>
+                                        <th>Precio</th>
+                                        <th>Categoría</th>
+                                        <th>Stock</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="listaProductosAdmin">
+                                    <!-- Productos se cargan aquí -->
+                                </tbody>
+                            </table>
                         </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Gestión de Usuarios -->
+            <div class="col-12 mt-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">👥 Gestión de Usuarios</h5>
+                    </div>
+                    <div class="card-body">
+                        <button class="btn btn-success mb-3" onclick="mostrarFormularioUsuario()">Agregar Usuario</button>
                         
-                        <!-- Lista de productos -->
                         <div class="table-responsive">
                             <table class="table table-striped">
                                 <thead>
                                     <tr>
                                         <th>Nombre</th>
-                                        <th>Precio</th>
-                                        <th>Categoría</th>
+                                        <th>Email</th>
+                                        <th>Teléfono</th>
+                                        <th>Región</th>
+                                        <th>Comuna</th>
                                         <th>Acciones</th>
                                     </tr>
                                 </thead>
-                                <tbody id="productList">
-                                    <!-- Los productos se cargan dinámicamente -->
+                                <tbody id="listaUsuariosAdmin">
+                                    <!-- Usuarios se cargan aquí -->
                                 </tbody>
                             </table>
                         </div>
@@ -103,6 +102,6 @@
 
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="../../js/admin-panel.js"></script>
+    <script src="../../js/panel-administrador.js"></script>
 </body>
 </html>

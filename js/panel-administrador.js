@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', function() {
   
   if (!usuarioActual) {
     alert('Debes iniciar sesión para acceder');
-    window.location.href = 'login.html';
+    window.location.href = '../user/iniciar-sesion.html';
     return;
   }
   
@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', function() {
   
   if (!esAdmin) {
     alert('No tienes permisos de administrador');
-    window.location.href = 'dashboard.html';
+    window.location.href = '../user/panel-usuario.html';
     return;
   }
   
@@ -131,25 +131,163 @@ function cargarProductos() {
   contenedor.innerHTML = html;
 }
 
-// Función para editar producto (simplificada)
-function editarProducto(id) {
-  const producto = productos.find(p => p.id === id);
-  if (!producto) return;
-  
-  const nuevoNombre = prompt('Nuevo nombre:', producto.nombre);
-  const nuevoPrecio = prompt('Nuevo precio:', producto.precio);
-  const nuevaDescripcion = prompt('Nueva descripción:', producto.descripcion);
-  const nuevoStock = prompt('Nuevo stock:', producto.stock);
-  
-  if (nuevoNombre && nuevoPrecio && nuevaDescripcion && nuevoStock) {
-    producto.nombre = nuevoNombre;
-    producto.precio = parseInt(nuevoPrecio);
-    producto.descripcion = nuevaDescripcion;
-    producto.stock = parseInt(nuevoStock);
-    
-    cargarProductos();
-    alert('Producto actualizado correctamente');
+// Función para mostrar formulario de producto
+function mostrarFormularioProducto() {
+  const formHtml = `
+    <div class="modal fade" id="modalProducto" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="tituloModal">Agregar Producto</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">
+            <form id="formProducto">
+              <input type="hidden" id="productoId">
+              <div class="mb-3">
+                <label for="codigoProducto" class="form-label">Código Producto *</label>
+                <input type="text" class="form-control" id="codigoProducto" required minlength="3">
+              </div>
+              <div class="mb-3">
+                <label for="nombreProducto" class="form-label">Nombre *</label>
+                <input type="text" class="form-control" id="nombreProducto" required maxlength="100">
+              </div>
+              <div class="mb-3">
+                <label for="descripcionProducto" class="form-label">Descripción</label>
+                <textarea class="form-control" id="descripcionProducto" maxlength="500"></textarea>
+              </div>
+              <div class="mb-3">
+                <label for="precioProducto" class="form-label">Precio *</label>
+                <input type="number" class="form-control" id="precioProducto" required min="0" step="0.01">
+              </div>
+              <div class="mb-3">
+                <label for="stockProducto" class="form-label">Stock *</label>
+                <input type="number" class="form-control" id="stockProducto" required min="0">
+              </div>
+              <div class="mb-3">
+                <label for="stockCriticoProducto" class="form-label">Stock Crítico</label>
+                <input type="number" class="form-control" id="stockCriticoProducto" min="0">
+              </div>
+              <div class="mb-3">
+                <label for="categoriaProducto" class="form-label">Categoría *</label>
+                <select class="form-select" id="categoriaProducto" required>
+                  <option value="">Seleccionar</option>
+                  <option value="comida">Comida</option>
+                  <option value="juguetes">Juguetes</option>
+                  <option value="camas">Camas</option>
+                  <option value="salud">Salud</option>
+                  <option value="accesorios">Accesorios</option>
+                  <option value="higiene">Higiene</option>
+                  <option value="especial">Especial</option>
+                </select>
+              </div>
+              <div class="mb-3">
+                <label for="imagenProducto" class="form-label">Imagen</label>
+                <input type="text" class="form-control" id="imagenProducto" placeholder="assets/img/imagen.jpg">
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            <button type="button" class="btn btn-primary" onclick="guardarProducto()">Guardar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+  document.body.insertAdjacentHTML('beforeend', formHtml);
+  const modal = new bootstrap.Modal(document.getElementById('modalProducto'));
+  modal.show();
+}
+
+// Función para guardar producto
+function guardarProducto() {
+  const id = document.getElementById('productoId').value;
+  const codigo = document.getElementById('codigoProducto').value.trim();
+  const nombre = document.getElementById('nombreProducto').value.trim();
+  const descripcion = document.getElementById('descripcionProducto').value.trim();
+  const precio = parseFloat(document.getElementById('precioProducto').value);
+  const stock = parseInt(document.getElementById('stockProducto').value);
+  const stockCritico = parseInt(document.getElementById('stockCriticoProducto').value) || 0;
+  const categoria = document.getElementById('categoriaProducto').value;
+  const imagen = document.getElementById('imagenProducto').value.trim() || 'assets/img/producto-default.png';
+
+  // Validaciones
+  if (!codigo || codigo.length < 3) {
+    alert('Código debe tener al menos 3 caracteres');
+    return;
   }
+  if (!nombre || nombre.length > 100) {
+    alert('Nombre es requerido y máximo 100 caracteres');
+    return;
+  }
+  if (descripcion.length > 500) {
+    alert('Descripción máximo 500 caracteres');
+    return;
+  }
+  if (isNaN(precio) || precio < 0) {
+    alert('Precio debe ser un número mayor o igual a 0');
+    return;
+  }
+  if (isNaN(stock) || stock < 0) {
+    alert('Stock debe ser un número entero mayor o igual a 0');
+    return;
+  }
+  if (!categoria) {
+    alert('Categoría es requerida');
+    return;
+  }
+
+  const producto = {
+    id: id ? parseInt(id) : Date.now(),
+    codigo: codigo,
+    nombre: nombre,
+    descripcion: descripcion,
+    precio: precio,
+    stock: stock,
+    stockCritico: stockCritico,
+    categoria: categoria,
+    imagen: imagen
+  };
+
+  if (id) {
+    // Editar
+    const index = productos.findIndex(p => p.id == id);
+    if (index !== -1) {
+      productos[index] = producto;
+    }
+  } else {
+    // Nuevo
+    productos.push(producto);
+  }
+
+  // Guardar en localStorage
+  localStorage.setItem('productos', JSON.stringify(productos));
+
+  // Cerrar modal y recargar
+  const modal = bootstrap.Modal.getInstance(document.getElementById('modalProducto'));
+  modal.hide();
+  cargarProductos();
+  cargarEstadisticas();
+  alert('Producto guardado correctamente');
+}
+
+// Función para editar producto
+function editarProducto(id) {
+  const producto = productos.find(p => p.id == id);
+  if (!producto) return;
+
+  mostrarFormularioProducto();
+  document.getElementById('tituloModal').textContent = 'Editar Producto';
+  document.getElementById('productoId').value = producto.id;
+  document.getElementById('codigoProducto').value = producto.codigo || '';
+  document.getElementById('nombreProducto').value = producto.nombre;
+  document.getElementById('descripcionProducto').value = producto.descripcion || '';
+  document.getElementById('precioProducto').value = producto.precio;
+  document.getElementById('stockProducto').value = producto.stock;
+  document.getElementById('stockCriticoProducto').value = producto.stockCritico || '';
+  document.getElementById('categoriaProducto').value = producto.categoria;
+  document.getElementById('imagenProducto').value = producto.imagen || '';
 }
 
 // Función para eliminar producto
@@ -194,15 +332,205 @@ function cargarUsuarios() {
   contenedor.innerHTML = html;
 }
 
-// Función para eliminar usuario
-function eliminarUsuario(index) {
-  if (confirm('¿Estás seguro de eliminar este usuario?')) {
-    const usuarios = JSON.parse(localStorage.getItem('usuarios') || '[]');
-    usuarios.splice(index, 1);
-    localStorage.setItem('usuarios', JSON.stringify(usuarios));
-    cargarUsuarios();
-    alert('Usuario eliminado');
+// Función para mostrar formulario de usuario
+function mostrarFormularioUsuario() {
+  const formHtml = `
+    <div class="modal fade" id="modalUsuario" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="tituloModalUsuario">Agregar Usuario</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">
+            <form id="formUsuario">
+              <input type="hidden" id="usuarioId">
+              <div class="mb-3">
+                <label for="rutUsuario" class="form-label">RUT *</label>
+                <input type="text" class="form-control" id="rutUsuario" required placeholder="12345678K">
+              </div>
+              <div class="mb-3">
+                <label for="nombreUsuario" class="form-label">Nombre *</label>
+                <input type="text" class="form-control" id="nombreUsuario" required maxlength="50">
+              </div>
+              <div class="mb-3">
+                <label for="apellidosUsuario" class="form-label">Apellidos *</label>
+                <input type="text" class="form-control" id="apellidosUsuario" required maxlength="100">
+              </div>
+              <div class="mb-3">
+                <label for="emailUsuario" class="form-label">Correo *</label>
+                <input type="email" class="form-control" id="emailUsuario" required maxlength="100">
+              </div>
+              <div class="mb-3">
+                <label for="fechaNacimientoUsuario" class="form-label">Fecha Nacimiento</label>
+                <input type="date" class="form-control" id="fechaNacimientoUsuario">
+              </div>
+              <div class="mb-3">
+                <label for="tipoUsuario" class="form-label">Tipo Usuario *</label>
+                <select class="form-select" id="tipoUsuario" required>
+                  <option value="">Seleccionar</option>
+                  <option value="cliente">Cliente</option>
+                  <option value="vendedor">Vendedor</option>
+                  <option value="administrador">Administrador</option>
+                </select>
+              </div>
+              <div class="mb-3">
+                <label for="regionUsuario" class="form-label">Región *</label>
+                <select class="form-select" id="regionUsuario" required>
+                  <option value="">Seleccionar</option>
+                  <option value="Región Metropolitana">Región Metropolitana</option>
+                  <option value="Región de Valparaíso">Región de Valparaíso</option>
+                  <option value="Región del Biobío">Región del Biobío</option>
+                  <option value="Región de La Araucanía">Región de La Araucanía</option>
+                  <option value="Región de Los Lagos">Región de Los Lagos</option>
+                </select>
+              </div>
+              <div class="mb-3">
+                <label for="comunaUsuario" class="form-label">Comuna *</label>
+                <select class="form-select" id="comunaUsuario" required>
+                  <option value="">Seleccionar comuna</option>
+                </select>
+              </div>
+              <div class="mb-3">
+                <label for="direccionUsuario" class="form-label">Dirección *</label>
+                <input type="text" class="form-control" id="direccionUsuario" required maxlength="300">
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            <button type="button" class="btn btn-primary" onclick="guardarUsuario()">Guardar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+  document.body.insertAdjacentHTML('beforeend', formHtml);
+  const modal = new bootstrap.Modal(document.getElementById('modalUsuario'));
+  modal.show();
+
+  // Llenar comunas al cambiar región
+  document.getElementById('regionUsuario').addEventListener('change', function() {
+    const region = this.value;
+    const comunaSelect = document.getElementById('comunaUsuario');
+    comunaSelect.innerHTML = '<option value="">Seleccionar comuna</option>';
+    if (region && regionesYcomunas[region]) {
+      regionesYcomunas[region].forEach(comuna => {
+        const option = document.createElement('option');
+        option.value = comuna;
+        option.textContent = comuna;
+        comunaSelect.appendChild(option);
+      });
+    }
+  });
+}
+
+// Función para guardar usuario
+function guardarUsuario() {
+  const id = document.getElementById('usuarioId').value;
+  const rut = document.getElementById('rutUsuario').value.trim();
+  const nombre = document.getElementById('nombreUsuario').value.trim();
+  const apellidos = document.getElementById('apellidosUsuario').value.trim();
+  const email = document.getElementById('emailUsuario').value.trim();
+  const fechaNacimiento = document.getElementById('fechaNacimientoUsuario').value;
+  const tipoUsuario = document.getElementById('tipoUsuario').value;
+  const region = document.getElementById('regionUsuario').value;
+  const comuna = document.getElementById('comunaUsuario').value;
+  const direccion = document.getElementById('direccionUsuario').value.trim();
+
+  // Validaciones
+  if (!rut || !validarRUT(rut)) {
+    alert('RUT es requerido y debe ser válido');
+    return;
   }
+  if (!nombre || nombre.length > 50) {
+    alert('Nombre es requerido y máximo 50 caracteres');
+    return;
+  }
+  if (!apellidos || apellidos.length > 100) {
+    alert('Apellidos son requeridos y máximo 100 caracteres');
+    return;
+  }
+  if (!email || email.length > 100 || !validarEmail(email)) {
+    alert('Email es requerido, máximo 100 caracteres y dominios permitidos');
+    return;
+  }
+  if (!tipoUsuario) {
+    alert('Tipo de usuario es requerido');
+    return;
+  }
+  if (!region || !comuna) {
+    alert('Región y comuna son requeridas');
+    return;
+  }
+  if (!direccion || direccion.length > 300) {
+    alert('Dirección es requerida y máximo 300 caracteres');
+    return;
+  }
+
+  const usuario = {
+    rut: rut,
+    nombre: nombre,
+    apellidos: apellidos,
+    email: email,
+    fechaNacimiento: fechaNacimiento,
+    tipoUsuario: tipoUsuario,
+    region: region,
+    comuna: comuna,
+    direccion: direccion,
+    fechaRegistro: new Date().toISOString()
+  };
+
+  const usuarios = JSON.parse(localStorage.getItem('usuarios') || '[]');
+  if (id) {
+    // Editar
+    const index = usuarios.findIndex(u => u.rut === id);
+    if (index !== -1) {
+      usuarios[index] = usuario;
+    }
+  } else {
+    // Nuevo
+    const existe = usuarios.find(u => u.rut === rut || u.email === email);
+    if (existe) {
+      alert('Ya existe un usuario con ese RUT o email');
+      return;
+    }
+    usuarios.push(usuario);
+  }
+
+  localStorage.setItem('usuarios', JSON.stringify(usuarios));
+
+  // Cerrar modal y recargar
+  const modal = bootstrap.Modal.getInstance(document.getElementById('modalUsuario'));
+  modal.hide();
+  cargarUsuarios();
+  cargarEstadisticas();
+  alert('Usuario guardado correctamente');
+}
+
+// Función para editar usuario
+function editarUsuario(index) {
+  const usuarios = JSON.parse(localStorage.getItem('usuarios') || '[]');
+  const usuario = usuarios[index];
+  if (!usuario) return;
+
+  mostrarFormularioUsuario();
+  document.getElementById('tituloModalUsuario').textContent = 'Editar Usuario';
+  document.getElementById('usuarioId').value = usuario.rut;
+  document.getElementById('rutUsuario').value = usuario.rut;
+  document.getElementById('nombreUsuario').value = usuario.nombre;
+  document.getElementById('apellidosUsuario').value = usuario.apellidos || '';
+  document.getElementById('emailUsuario').value = usuario.email;
+  document.getElementById('fechaNacimientoUsuario').value = usuario.fechaNacimiento || '';
+  document.getElementById('tipoUsuario').value = usuario.tipoUsuario || 'cliente';
+  document.getElementById('regionUsuario').value = usuario.region;
+  document.getElementById('direccionUsuario').value = usuario.direccion || '';
+
+  // Trigger change para cargar comunas
+  document.getElementById('regionUsuario').dispatchEvent(new Event('change'));
+  setTimeout(() => {
+    document.getElementById('comunaUsuario').value = usuario.comuna;
+  }, 100);
 }
 
 // ============= 4. ESTADÍSTICAS =============

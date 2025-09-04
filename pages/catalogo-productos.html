@@ -30,14 +30,32 @@
     <main class="container py-4">
         <h1 class="text-center mb-4">🛍️ Nuestros Productos</h1>
         
+        <!-- Filtros -->
+        <div class="row mb-4">
+            <div class="col-md-6 mb-3">
+                <select class="form-select" id="filtroCategoria">
+                    <option value="">Todas las categorías</option>
+                    <option value="comida">Comida</option>
+                    <option value="juguetes">Juguetes</option>
+                    <option value="camas">Camas</option>
+                    <option value="accesorios">Accesorios</option>
+                    <option value="higiene">Higiene</option>
+                    <option value="salud">Salud</option>
+                </select>
+            </div>
+            <div class="col-md-6 mb-3">
+                <input type="text" class="form-control" id="buscarProducto" placeholder="Buscar productos...">
+            </div>
+        </div>
+        
         <!-- Productos -->
-        <div class="row" id="productContainer">
+        <div class="row" id="listaProductos">
             <!-- Los productos se cargan dinámicamente con JavaScript -->
         </div>
     </main>
 
     <!-- Modal del Carrito -->
-    <div class="modal fade" id="cartModal" tabindex="-1">
+    <div class="modal fade" id="modalCarrito" tabindex="-1">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
@@ -45,22 +63,22 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <div id="cartItems"></div>
+                    <div id="contenidoCarrito"></div>
                     <div class="text-end mt-3">
-                        <h5>Total: $<span id="cartTotal">0</span></h5>
+                        <h5>Total: $<span id="totalCarrito">0</span></h5>
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                    <button type="button" class="btn btn-primary" onclick="checkout()">Finalizar Compra</button>
+                    <button type="button" class="btn btn-primary" onclick="finalizarCompra()">Finalizar Compra</button>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- Botón flotante del carrito -->
-    <button class="btn btn-primary position-fixed" style="bottom: 20px; right: 20px; z-index: 1000;" data-bs-toggle="modal" data-bs-target="#cartModal">
-        🛒 <span id="cartCount">0</span>
+    <button class="btn btn-primary position-fixed" style="bottom: 20px; right: 20px; z-index: 1000;" id="btnCarrito">
+        🛒 <span id="cantidadCarrito">0</span>
     </button>
 
     <!-- Footer -->

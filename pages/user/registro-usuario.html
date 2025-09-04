@@ -116,15 +116,26 @@
                   </select>
                 </div>
 
-                <!-- Teléfono -->
+                <!-- Fecha Nacimiento -->
                 <div class="mb-3">
-                  <label for="telefono" class="form-label">Teléfono *</label>
+                  <label for="fechaNacimiento" class="form-label">Fecha de Nacimiento</label>
                   <input
-                    type="tel"
-                    id="telefono"
+                    type="date"
+                    id="fechaNacimiento"
+                    class="form-control"
+                  />
+                </div>
+
+                <!-- Dirección -->
+                <div class="mb-3">
+                  <label for="direccion" class="form-label">Dirección *</label>
+                  <input
+                    type="text"
+                    id="direccion"
                     class="form-control"
                     required
-                    placeholder="+56912345678"
+                    placeholder="Calle, número, comuna"
+                    maxlength="300"
                   />
                 </div>
               </div>

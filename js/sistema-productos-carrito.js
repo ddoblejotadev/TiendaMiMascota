@@ -288,9 +288,14 @@ function mostrarProductos(productosFiltrados = null) {
             <div class="mt-auto">
               <div class="d-flex justify-content-between align-items-center">
                 <span class="h5 text-primary">$${producto.precio.toLocaleString()}</span>
-                <button class="btn btn-primary" onclick="agregarAlCarrito(${producto.id})">
-                  Agregar al carrito
-                </button>
+                <div>
+                  <button class="btn btn-outline-primary btn-sm me-2" onclick="mostrarDetalleProducto(${producto.id})">
+                    Ver Detalle
+                  </button>
+                  <button class="btn btn-primary btn-sm" onclick="agregarAlCarrito(${producto.id})">
+                    Agregar
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -302,7 +307,44 @@ function mostrarProductos(productosFiltrados = null) {
   contenedor.innerHTML = html;
 }
 
-// Función para filtrar productos
+// Función para mostrar detalle del producto
+function mostrarDetalleProducto(idProducto) {
+  const producto = productos.find(p => p.id === idProducto);
+  if (!producto) return;
+  
+  // Crear modal de detalle
+  const modalHtml = `
+    <div class="modal fade" id="modalDetalle" tabindex="-1">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">${producto.nombre}</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">
+            <div class="row">
+              <div class="col-md-6">
+                <img src="${producto.imagen}" alt="${producto.nombre}" class="img-fluid">
+              </div>
+              <div class="col-md-6">
+                <h4>$${producto.precio.toLocaleString()}</h4>
+                <p><strong>Categoría:</strong> ${producto.categoria}</p>
+                <p><strong>Stock:</strong> ${producto.stock}</p>
+                <p>${producto.descripcion}</p>
+                <button class="btn btn-success" onclick="agregarAlCarrito(${producto.id}); bootstrap.Modal.getInstance(document.getElementById('modalDetalle')).hide();">
+                  Agregar al Carrito
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+  document.body.insertAdjacentHTML('beforeend', modalHtml);
+  const modal = new bootstrap.Modal(document.getElementById('modalDetalle'));
+  modal.show();
+}
 function filtrarProductos() {
   const categoria = document.getElementById('filtroCategoria')?.value || '';
   const busqueda = document.getElementById('buscarProducto')?.value.toLowerCase() || '';
