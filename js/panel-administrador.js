@@ -613,3 +613,10 @@ function volverTienda() {
 }
 
 console.log('admin-simple.js cargado correctamente');
+
+// Inicializar el panel de administración
+document.addEventListener('DOMContentLoaded', function() {
+  cargarProductos();
+  cargarUsuarios();
+  cargarEstadisticas();
+});
