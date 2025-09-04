@@ -262,7 +262,7 @@ document.addEventListener('DOMContentLoaded', function() {
       
       // Verificar si es admin (email termina en @admin.cl)
       if (usuarioEncontrado.email.includes('@admin.cl')) {
-        window.location.href = 'admin.html';
+        window.location.href = 'admin-simple.html';
       } else {
         window.location.href = 'dashboard.html';
       }
@@ -707,7 +707,7 @@ document.addEventListener('DOMContentLoaded', () => {
       // Redirigir según tipo de usuario
       setTimeout(() => { 
         if (current.isAdmin || current.email?.includes('@admin.cl')) {
-          window.location.href = 'admin.html';
+          window.location.href = 'admin-simple.html';
         } else {
           window.location.href = 'dashboard.html';
         }
