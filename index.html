@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
   <head>
-    <meta charset="UTF-8" />
+    <                <h2 class="text-center mb-4">🛍️ Nuestros Productos</h2>eta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Tienda MiMascota - Productos para tu mascota</title>
     <link
@@ -10,101 +10,68 @@
     />
     <link rel="stylesheet" href="css/styles.css" />
   </head>
-  <body id="inicio">
-    <header class="bg-primary text-white py-3 mb-4">
-      <div class="container d-flex align-items-center justify-content-between">
-        <a href="index.html" class="d-flex align-items-center text-white text-decoration-none">
-          <img src="assets/img/logo1.png" alt="Tienda MiMascota" style="height:48px; width:auto;" class="me-2">
-          <span class="h5 mb-0">🐾 Tienda MiMascota</span>
-        </a>
+  <body>
+    <!-- Header con navegación -->
+    <header class="bg-primary text-white py-3">
+        <div class="container">
+            <div class="d-flex align-items-center justify-content-between">
+                <a href="index.html" class="d-flex align-items-center text-white text-decoration-none">
+                    <img src="assets/img/logo1.png" alt="Tienda MiMascota" style="height: 40px; width: auto;" class="me-2">
+                    <span class="h6 mb-0">🐾 Tienda MiMascota</span>
+                </a>
 
-        <nav>
-          <a href="#productos" class="text-white me-3">Productos</a>
-          <a href="#inicio" class="text-white me-3">Inicio</a>
-          <a href="pages/content/blog-articulos.html" class="text-white me-3">Blog</a>
-          <a href="pages/content/acerca-de-nosotros.html" class="text-white me-3">Nosotros</a>
-          <a href="pages/content/formulario-contacto.html" class="text-white me-3">Contacto</a>
-          <a href="pages/user/registro-usuario.html" class="text-white me-3">Registrarse</a>
-          <a href="pages/user/iniciar-sesion.html" class="text-white me-3">Iniciar sesión</a>
-          <button id="btnCarrito" class="btn btn-outline-light btn-sm">🛒 Carrito (<span id="cantidadCarrito">0</span>)</button>
-        </nav>
-      </div>
+                <nav>
+                    <a href="index.html" class="text-white me-3">Inicio</a>
+                    <a href="pages/content/blog-articulos.html" class="text-white me-3">Blog</a>
+                    <a href="pages/content/acerca-de-nosotros.html" class="text-white me-3">Nosotros</a>
+                    <a href="pages/content/formulario-contacto.html" class="text-white me-3">Contacto</a>
+                    <a href="pages/user/registro-usuario.html" class="text-white me-3">Registrarse</a>
+                    <a href="pages/user/iniciar-sesion.html" class="text-white me-3">Iniciar sesión</a>
+                    <button id="btnCarrito" class="btn btn-outline-light btn-sm">🛒 Carrito (<span id="cantidadCarrito">0</span>)</button>
+                </nav>
+            </div>
+        </div>
     </header>
 
-    <!-- Hero Section -->
-    <section class="bg-light py-5">
-      <div class="container">
-        <div class="row align-items-center">
-          <div class="col-lg-6">
-            <h1 class="display-4 fw-bold text-primary mb-4">🐾 Todo para tu Mascota</h1>
-            <p class="lead mb-4">Encuentra los mejores productos para tu perro o gato. Alimentación premium, juguetes divertidos, camas cómodas y mucho más.</p>
-            <a href="#productos" class="btn btn-primary btn-lg me-3">Ver Productos</a>
-            <a href="pages/user/registro-usuario.html" class="btn btn-outline-primary btn-lg">Registrarse</a>
-          </div>
-          <div class="col-lg-6">
-            <img src="assets/img/logo1.png" alt="Tienda MiMascota" class="img-fluid rounded shadow">
-          </div>
+    <!-- Contenido principal -->
+    <main class="container py-4">
+        <div class="row">
+            <div class="col-12 text-center mb-4">
+                <h1>🐾 Bienvenidos a Tienda MiMascota</h1>
+                <p class="lead">Los mejores productos para tu mascota</p>
+            </div>
         </div>
-      </div>
-    </section>
 
-    <!-- Características -->
-    <section class="py-5">
-      <div class="container">
-        <h2 class="text-center mb-5">¿Por qué elegirnos?</h2>
-        <div class="row g-4">
-          <div class="col-md-4 text-center">
-            <div class="h1 text-primary mb-3">🚚</div>
-            <h5>Envío Rápido</h5>
-            <p>Entregamos en 24-48 horas en la mayoría de las comunas</p>
-          </div>
-          <div class="col-md-4 text-center">
-            <div class="h1 text-success mb-3">💚</div>
-            <h5>Productos Premium</h5>
-            <p>Solo trabajamos con marcas reconocidas y de calidad</p>
-          </div>
-          <div class="col-md-4 text-center">
-            <div class="h1 text-warning mb-3">📞</div>
-            <h5>Atención Personalizada</h5>
-            <p>Te asesoramos para elegir lo mejor para tu mascota</p>
-          </div>
-        </div>
-      </div>
-    </section>
+        <!-- Sección de productos -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <h2 class="text-center mb-4">�️ Nuestros Productos</h2>
 
-    <main id="productos" class="container mb-5">
-      <h2 class="text-center mb-4">🛍️ Catálogo de Productos</h2>
-      
-      <!-- Filtros simples -->
-      <div class="row mb-4">
-        <div class="col-md-6">
-          <select id="filtroCategoria" class="form-select">
-            <option value="">Todas las categorías</option>
-            <option value="comida">Comida</option>
-            <option value="juguetes">Juguetes</option>
-            <option value="camas">Camas</option>
-            <option value="salud">Salud</option>
-            <option value="accesorios">Accesorios</option>
-            <option value="higiene">Higiene</option>
-            <option value="especial">Especial</option>
-          </select>
-        </div>
-        <div class="col-md-6">
-          <input type="text" id="buscarProducto" class="form-control" placeholder="Buscar productos...">
-        </div>
-      </div>
+                <!-- Filtros simples -->
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <select id="filtroCategoria" class="form-select">
+                            <option value="">Todas las categorías</option>
+                            <option value="comida">Comida</option>
+                            <option value="juguetes">Juguetes</option>
+                            <option value="camas">Camas</option>
+                            <option value="salud">Salud</option>
+                            <option value="accesorios">Accesorios</option>
+                            <option value="higiene">Higiene</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <input type="text" id="buscarProducto" class="form-control" placeholder="Buscar productos...">
+                    </div>
+                </div>
 
-      <!-- Lista de productos -->
-      <div id="listaProductos" class="row">
-        <!-- Los productos se cargarán aquí con JavaScript -->
-      </div>
+                <!-- Lista de productos -->
+                <div id="listaProductos" class="row">
+                    <!-- Los productos se cargarán aquí con JavaScript -->
+                </div>
+            </div>
+        </div>
     </main>
-
-    <footer class="bg-light text-center py-4 mt-5">
-      <div class="container">
-        <p>&copy; 2023 Tienda MiMascota - Todo para tu mejor amigo</p>
-      </div>
-    </footer>
 
     <!-- Modal del carrito -->
     <div class="modal fade" id="modalCarrito" tabindex="-1">
@@ -131,9 +98,15 @@
       </div>
     </div>
 
-    <!-- Botón flotante volver arriba -->
-    <button id="btnVolverArriba" class="btn btn-primary position-fixed" style="bottom: 20px; right: 20px; z-index: 1000; display: none;">
-      ↑ Volver arriba
-    </button>
+    <!-- Footer -->
+    <footer class="bg-light text-center py-4">
+        <div class="container">
+            <p>&copy; 2024 Tienda MiMascota - Todo para tu mejor amigo</p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/sistema-productos-carrito.js"></script>
   </body>
 </html>

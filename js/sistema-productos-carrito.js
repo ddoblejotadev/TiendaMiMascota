@@ -2,22 +2,8 @@
 // Archivo para manejar productos y carrito de compras
 // Código simple y comentado para nivel principiante
 
-// ============= 0. CONFIGURACIÓN DE RUTAS =============
-// Función para determinar la ruta correcta según la ubicación de la página
-function obtenerRutaAssets() {
-  const currentPath = window.location.pathname;
-  // Si estamos en una subcarpeta (pages/), usar ../assets/
-  if (currentPath.includes('/pages/')) {
-    return '../assets/img/';
-  }
-  // Si estamos en la raíz, usar assets/
-  return 'assets/img/';
-}
-
-const rutaAssets = obtenerRutaAssets();
-
 // ============= 1. LISTA DE PRODUCTOS =============
-// Usamos TODAS las imágenes disponibles en assets/img/
+// Lista simple de productos con imágenes PNG
 
 const productos = [
   {
@@ -25,17 +11,17 @@ const productos = [
     nombre: "Alimento Premium para Perros",
     precio: 15990,
     categoria: "comida",
-    imagen: rutaAssets + "Comida.jpg",
-    descripcion: "Alimento balanceado premium para perros adultos. Rico en proteínas y vitaminas.",
+    imagen: "assets/img/Comida.jpg",
+    descripcion: "Alimento balanceado premium para perros adultos.",
     stock: 50
   },
   {
     id: 2,
     nombre: "Juguetes Divertidos",
     precio: 5990,
-    categoria: "juguetes", 
-    imagen: rutaAssets + "jugetes.png",
-    descripcion: "Set de pelotas y juguetes para mantener activa y feliz a tu mascota.",
+    categoria: "juguetes",
+    imagen: "assets/img/jugetes.png",
+    descripcion: "Set de pelotas y juguetes para tu mascota.",
     stock: 30
   },
   {
@@ -43,8 +29,8 @@ const productos = [
     nombre: "Cama Super Cómoda",
     precio: 25990,
     categoria: "camas",
-    imagen: rutaAssets + "cama2.png",
-    descripcion: "Cama ultra cómoda con relleno de espuma para el descanso perfecto.",
+    imagen: "assets/img/cama2.png",
+    descripcion: "Cama ultra cómoda con relleno de espuma.",
     stock: 15
   },
   {
@@ -52,8 +38,8 @@ const productos = [
     nombre: "Productos de Salud",
     precio: 12990,
     categoria: "salud",
-    imagen: rutaAssets + "salud.png",
-    descripcion: "Vitaminas, suplementos y medicamentos para la salud de tu mascota.",
+    imagen: "assets/img/salud.png",
+    descripcion: "Vitaminas y suplementos para tu mascota.",
     stock: 25
   },
   {
@@ -61,68 +47,70 @@ const productos = [
     nombre: "Accesorios Fashion",
     precio: 8990,
     categoria: "accesorios",
-    imagen: rutaAssets + "accesorios.png",
-    descripcion: "Collares, correas y accesorios fashion para que tu mascota luzca genial.",
+    imagen: "assets/img/accesorios.png",
+    descripcion: "Collares y accesorios fashion.",
     stock: 40
   },
   {
     id: 6,
     nombre: "Productos de Higiene",
-    precio: 9990,
+    precio: 7990,
     categoria: "higiene",
-    imagen: rutaAssets + "higiene.png",
-    descripcion: "Shampoos, acondicionadores y productos de limpieza para tu mascota.",
+    imagen: "assets/img/higiene.png",
+    descripcion: "Champús y productos de higiene.",
     stock: 35
-  },
-  {
-    id: 7,
-    nombre: "Producto Especial",
-    precio: 18990,
-    categoria: "especial",
-    imagen: rutaAssets + "prod.png",
-    descripcion: "Producto especial de la casa con múltiples beneficios para tu mascota.",
-    stock: 20
   }
 ];
 
-// ============= 2. VARIABLES GLOBALES =============
-let carrito = []; // Array para guardar productos del carrito
+// ============= 2. VARIABLES DEL CARRITO =============
+let carrito = []; // Array simple para el carrito
 
-// ============= 3. FUNCIONES DEL CARRITO =============
+// ============= 3. FUNCIONES BÁSICAS =============
 
-// Función para obtener carrito del localStorage
-function obtenerCarrito() {
-  const carritoGuardado = localStorage.getItem('carrito');
-  if (carritoGuardado) {
-    carrito = JSON.parse(carritoGuardado);
-  }
-  return carrito;
-}
+// Función para mostrar productos
+function mostrarProductos() {
+  const contenedor = document.getElementById('listaProductos');
+  if (!contenedor) return;
 
-// Función para guardar carrito en localStorage
-function guardarCarrito() {
-  localStorage.setItem('carrito', JSON.stringify(carrito));
+  let html = '';
+
+  productos.forEach(producto => {
+    html += `
+      <div class="col-md-6 col-lg-4 mb-4">
+        <div class="card h-100">
+          <img src="${producto.imagen}" alt="${producto.nombre}" class="card-img-top" style="height: 200px; object-fit: cover;">
+          <div class="card-body d-flex flex-column">
+            <h5 class="card-title">${producto.nombre}</h5>
+            <p class="card-text">${producto.descripcion}</p>
+            <p class="text-muted">Stock: ${producto.stock}</p>
+            <div class="mt-auto">
+              <div class="d-flex justify-content-between align-items-center">
+                <span class="h5 text-primary">$${producto.precio.toLocaleString()}</span>
+                <button class="btn btn-primary" onclick="agregarAlCarrito(${producto.id})">
+                  Agregar
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  });
+
+  contenedor.innerHTML = html;
 }
 
 // Función para agregar producto al carrito
 function agregarAlCarrito(idProducto) {
-  console.log('Agregando producto al carrito:', idProducto);
-  
-  // Buscar el producto en la lista
   const producto = productos.find(p => p.id === idProducto);
-  if (!producto) {
-    alert('Producto no encontrado');
-    return;
-  }
-  
-  // Verificar si el producto ya está en el carrito
-  const productoEnCarrito = carrito.find(item => item.id === idProducto);
-  
+  if (!producto) return;
+
+  // Buscar si el producto ya está en el carrito
+  const productoEnCarrito = carrito.find(p => p.id === idProducto);
+
   if (productoEnCarrito) {
-    // Si ya está, aumentar la cantidad
     productoEnCarrito.cantidad += 1;
   } else {
-    // Si no está, agregarlo con cantidad 1
     carrito.push({
       id: producto.id,
       nombre: producto.nombre,
@@ -131,171 +119,99 @@ function agregarAlCarrito(idProducto) {
       cantidad: 1
     });
   }
-  
+
   // Guardar en localStorage
-  guardarCarrito();
-  
-  // Actualizar contador del carrito
+  localStorage.setItem('carrito', JSON.stringify(carrito));
+
+  // Actualizar contador
   actualizarContadorCarrito();
-  
-  // Mostrar mensaje
-  alert(`${producto.nombre} agregado al carrito`);
+
+  alert('Producto agregado al carrito: ' + producto.nombre);
 }
 
-// Función para actualizar el contador del carrito
+// Función para actualizar contador del carrito
 function actualizarContadorCarrito() {
-  const cantidadTotal = carrito.reduce((total, item) => total + item.cantidad, 0);
   const contador = document.getElementById('cantidadCarrito');
   if (contador) {
-    contador.textContent = cantidadTotal;
+    const totalProductos = carrito.reduce((total, producto) => total + producto.cantidad, 0);
+    contador.textContent = totalProductos;
   }
 }
 
-// Función para mostrar el carrito
+// Función para mostrar carrito
 function mostrarCarrito() {
-  const contenido = document.getElementById('contenidoCarrito');
-  if (!contenido) return;
-  
+  const contenedor = document.getElementById('contenidoCarrito');
+  if (!contenedor) return;
+
   if (carrito.length === 0) {
-    contenido.innerHTML = '<p class="text-center text-muted">Tu carrito está vacío</p>';
+    contenedor.innerHTML = '<p class="text-center">Tu carrito está vacío</p>';
     return;
   }
-  
-  let html = '';
-  let total = 0;
-  
-  carrito.forEach(item => {
-    const subtotal = item.precio * item.cantidad;
-    total += subtotal;
-    
+
+  let html = '<div class="list-group">';
+
+  carrito.forEach(producto => {
     html += `
-      <div class="row mb-3 align-items-center">
-        <div class="col-2">
-          <img src="${item.imagen}" alt="${item.nombre}" class="img-fluid">
+      <div class="list-group-item d-flex justify-content-between align-items-center">
+        <div class="d-flex align-items-center">
+          <img src="${producto.imagen}" alt="${producto.nombre}" style="width: 50px; height: 50px; object-fit: cover; margin-right: 10px;">
+          <div>
+            <h6 class="mb-0">${producto.nombre}</h6>
+            <small>Cantidad: ${producto.cantidad}</small>
+          </div>
         </div>
-        <div class="col-6">
-          <h6>${item.nombre}</h6>
-          <small class="text-muted">$${item.precio.toLocaleString()}</small>
-        </div>
-        <div class="col-2">
-          <input type="number" class="form-control form-control-sm" 
-                 value="${item.cantidad}" min="1" 
-                 onchange="cambiarCantidad(${item.id}, this.value)">
-        </div>
-        <div class="col-2">
-          <button class="btn btn-sm btn-danger" onclick="eliminarDelCarrito(${item.id})">
-            ❌
-          </button>
-        </div>
+        <span class="fw-bold">$${(producto.precio * producto.cantidad).toLocaleString()}</span>
       </div>
-      <hr>
     `;
   });
-  
-  html += `
-    <div class="text-end">
-      <h5>Total: $${total.toLocaleString()}</h5>
-      <button class="btn btn-success" onclick="finalizarCompra()">
-        Finalizar Compra
-      </button>
-      <button class="btn btn-outline-danger ms-2" onclick="vaciarCarrito()">
-        Vaciar Carrito
-      </button>
-    </div>
-  `;
-  
-  contenido.innerHTML = html;
-}
 
-// Función para cambiar cantidad de un producto
-function cambiarCantidad(idProducto, nuevaCantidad) {
-  const cantidad = parseInt(nuevaCantidad);
-  if (cantidad <= 0) {
-    eliminarDelCarrito(idProducto);
-    return;
-  }
-  
-  const item = carrito.find(item => item.id === idProducto);
-  if (item) {
-    item.cantidad = cantidad;
-    guardarCarrito();
-    actualizarContadorCarrito();
-    mostrarCarrito();
+  html += '</div>';
+
+  contenedor.innerHTML = html;
+
+  // Calcular y mostrar total
+  const total = carrito.reduce((suma, producto) => suma + (producto.precio * producto.cantidad), 0);
+  const totalElement = document.getElementById('totalCarrito');
+  if (totalElement) {
+    totalElement.textContent = total.toLocaleString();
   }
 }
 
-// Función para eliminar producto del carrito
-function eliminarDelCarrito(idProducto) {
-  carrito = carrito.filter(item => item.id !== idProducto);
-  guardarCarrito();
-  actualizarContadorCarrito();
-  mostrarCarrito();
-}
+// Función para filtrar productos
+function filtrarProductos() {
+  const categoria = document.getElementById('filtroCategoria').value;
+  const busqueda = document.getElementById('buscarProducto').value.toLowerCase();
 
-// Función para vaciar carrito
-function vaciarCarrito() {
-  if (confirm('¿Estás seguro de vaciar el carrito?')) {
-    carrito = [];
-    guardarCarrito();
-    actualizarContadorCarrito();
-    mostrarCarrito();
-  }
-}
-
-// Función para finalizar compra
-function finalizarCompra() {
-  if (carrito.length === 0) {
-    alert('Tu carrito está vacío');
-    return;
-  }
-  
-  const total = carrito.reduce((sum, item) => sum + (item.precio * item.cantidad), 0);
-  
-  alert(`¡Compra realizada por $${total.toLocaleString()}! Gracias por tu compra.`);
-  
-  // Vaciar carrito después de la compra
-  carrito = [];
-  guardarCarrito();
-  actualizarContadorCarrito();
-  mostrarCarrito();
-}
-
-// ============= 4. FUNCIONES PARA MOSTRAR PRODUCTOS =============
-
-// Función para mostrar todos los productos
-function mostrarProductos(productosFiltrados = null) {
   const contenedor = document.getElementById('listaProductos');
   if (!contenedor) return;
-  
-  const productosAMostrar = productosFiltrados || productos;
-  
-  if (productosAMostrar.length === 0) {
-    contenedor.innerHTML = '<p class="text-center text-muted">No se encontraron productos</p>';
-    return;
-  }
-  
+
   let html = '';
-  
-  productosAMostrar.forEach(producto => {
+
+  productos.forEach(producto => {
+    // Filtrar por categoría
+    if (categoria && producto.categoria !== categoria) {
+      return;
+    }
+
+    // Filtrar por búsqueda
+    if (busqueda && !producto.nombre.toLowerCase().includes(busqueda) && !producto.descripcion.toLowerCase().includes(busqueda)) {
+      return;
+    }
+
     html += `
       <div class="col-md-6 col-lg-4 mb-4">
         <div class="card h-100">
           <img src="${producto.imagen}" alt="${producto.nombre}" class="card-img-top" style="height: 200px; object-fit: cover;">
           <div class="card-body d-flex flex-column">
             <h5 class="card-title">${producto.nombre}</h5>
-            <p class="card-text flex-grow-1">${producto.descripcion}</p>
+            <p class="card-text">${producto.descripcion}</p>
             <p class="text-muted">Stock: ${producto.stock}</p>
             <div class="mt-auto">
               <div class="d-flex justify-content-between align-items-center">
                 <span class="h5 text-primary">$${producto.precio.toLocaleString()}</span>
-                <div>
-                  <button class="btn btn-outline-primary btn-sm me-2" onclick="mostrarDetalleProducto(${producto.id})">
-                    Ver Detalle
-                  </button>
-                  <button class="btn btn-primary btn-sm" onclick="agregarAlCarrito(${producto.id})">
-                    Agregar
-                  </button>
-                </div>
+                <button class="btn btn-primary" onclick="agregarAlCarrito(${producto.id})">
+                  Agregar
+                </button>
               </div>
             </div>
           </div>
@@ -303,95 +219,43 @@ function mostrarProductos(productosFiltrados = null) {
       </div>
     `;
   });
-  
+
+  if (html === '') {
+    html = '<div class="col-12"><p class="text-center text-muted">No se encontraron productos</p></div>';
+  }
+
   contenedor.innerHTML = html;
 }
 
-// Función para mostrar detalle del producto
-function mostrarDetalleProducto(idProducto) {
-  const producto = productos.find(p => p.id === idProducto);
-  if (!producto) return;
-  
-  // Crear modal de detalle
-  const modalHtml = `
-    <div class="modal fade" id="modalDetalle" tabindex="-1">
-      <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title">${producto.nombre}</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-          </div>
-          <div class="modal-body">
-            <div class="row">
-              <div class="col-md-6">
-                <img src="${producto.imagen}" alt="${producto.nombre}" class="img-fluid">
-              </div>
-              <div class="col-md-6">
-                <h4>$${producto.precio.toLocaleString()}</h4>
-                <p><strong>Categoría:</strong> ${producto.categoria}</p>
-                <p><strong>Stock:</strong> ${producto.stock}</p>
-                <p>${producto.descripcion}</p>
-                <button class="btn btn-success" onclick="agregarAlCarrito(${producto.id}); bootstrap.Modal.getInstance(document.getElementById('modalDetalle')).hide();">
-                  Agregar al Carrito
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  `;
-  document.body.insertAdjacentHTML('beforeend', modalHtml);
-  const modal = new bootstrap.Modal(document.getElementById('modalDetalle'));
-  modal.show();
-}
-function filtrarProductos() {
-  const categoria = document.getElementById('filtroCategoria')?.value || '';
-  const busqueda = document.getElementById('buscarProducto')?.value.toLowerCase() || '';
-  
-  let productosFiltrados = productos;
-  
-  // Filtrar por categoría
-  if (categoria) {
-    productosFiltrados = productosFiltrados.filter(p => p.categoria === categoria);
-  }
-  
-  // Filtrar por búsqueda
-  if (busqueda) {
-    productosFiltrados = productosFiltrados.filter(p => 
-      p.nombre.toLowerCase().includes(busqueda) || 
-      p.descripcion.toLowerCase().includes(busqueda)
-    );
-  }
-  
-  mostrarProductos(productosFiltrados);
-}
+// ============= 4. CÓDIGO PRINCIPAL =============
 
-// ============= 5. CÓDIGO PRINCIPAL =============
-
+// Cuando se carga la página
 document.addEventListener('DOMContentLoaded', function() {
-  console.log('productos.js cargado');
-  
+  console.log('Tienda MiMascota cargada');
+
   // Cargar carrito del localStorage
-  obtenerCarrito();
-  
+  const carritoGuardado = localStorage.getItem('carrito');
+  if (carritoGuardado) {
+    carrito = JSON.parse(carritoGuardado);
+  }
+
   // Mostrar productos
   mostrarProductos();
-  
+
   // Actualizar contador del carrito
   actualizarContadorCarrito();
-  
+
   // Eventos para filtros
   const filtroCategoria = document.getElementById('filtroCategoria');
   if (filtroCategoria) {
     filtroCategoria.addEventListener('change', filtrarProductos);
   }
-  
+
   const buscarProducto = document.getElementById('buscarProducto');
   if (buscarProducto) {
     buscarProducto.addEventListener('input', filtrarProductos);
   }
-  
+
   // Evento para mostrar carrito
   const btnCarrito = document.getElementById('btnCarrito');
   if (btnCarrito) {
@@ -402,68 +266,6 @@ document.addEventListener('DOMContentLoaded', function() {
       modal.show();
     });
   }
-
-  // Scroll suave para enlaces de navegación
-  const navLinks = document.querySelectorAll('a[href^="#"]');
-  navLinks.forEach(link => {
-    link.addEventListener('click', function(e) {
-      e.preventDefault();
-      const targetId = this.getAttribute('href').substring(1);
-      const targetElement = document.getElementById(targetId);
-      if (targetElement) {
-        targetElement.scrollIntoView({
-          behavior: 'smooth',
-          block: 'start'
-        });
-      }
-    });
-  });
-
-  // Botón volver arriba
-  const btnVolverArriba = document.getElementById('btnVolverArriba');
-  if (btnVolverArriba) {
-    // Mostrar/ocultar botón según el scroll
-    window.addEventListener('scroll', function() {
-      if (window.pageYOffset > 300) {
-        btnVolverArriba.style.display = 'block';
-      } else {
-        btnVolverArriba.style.display = 'none';
-      }
-    });
-
-    // Funcionalidad del botón
-    btnVolverArriba.addEventListener('click', function() {
-      window.scrollTo({
-        top: 0,
-        behavior: 'smooth'
-      });
-    });
-  }
-
-  // Resaltar navegación activa
-  const observerOptions = {
-    threshold: 0.5,
-    rootMargin: '-50px 0px -50px 0px'
-  };
-
-  const observer = new IntersectionObserver(function(entries) {
-    entries.forEach(entry => {
-      const navLink = document.querySelector(`a[href="#${entry.target.id}"]`);
-      if (navLink) {
-        if (entry.isIntersecting) {
-          navLink.classList.add('fw-bold');
-        } else {
-          navLink.classList.remove('fw-bold');
-        }
-      }
-    });
-  }, observerOptions);
-
-  // Observar secciones
-  const sections = document.querySelectorAll('main[id], section[id]');
-  sections.forEach(section => {
-    observer.observe(section);
-  });
 });
 
 console.log('productos.js cargado correctamente');
