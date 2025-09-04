@@ -52,10 +52,9 @@ Este es un proyecto de desarrollo web fullstack desarrollado con **HTML5, CSS3 y
 ├── 📄 login.html                    # 🔐 Inicio de sesión
 ├── 📄 dashboard.html                # 👤 Panel del usuario logueado
 ├── 📄 admin-simple.html             # 🔧 Panel admin simplificado ✨ NUEVO
-├── 📄 blogs.html                    # 📰 Blog con 3 artículos
+├── 📄 blogs.html                    # 📰 Blog con 3 artículos (simplificado)
 ├── 📄 nosotros.html                 # ℹ️ Información de la empresa
 ├── 📄 contacto.html                 # 📧 Formulario de contacto
-├── 📄 detalle-blog.html             # 📖 Detalle de artículos del blog
 ├── 📄 main.js                       # ⚙️ JavaScript principal ✨ SIMPLIFICADO
 ├── 📄 productos-simple.js           # 🛒 Productos y carrito ✨ NUEVO
 ├── 📄 admin-simple.js               # 👨‍💼 Panel administrador ✨ NUEVO
