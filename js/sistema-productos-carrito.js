@@ -138,6 +138,18 @@ function actualizarContadorCarrito() {
   }
 }
 
+// Función para vaciar carrito
+function vaciarCarrito() {
+  // Confirmar antes de vaciar
+  if (confirm('¿Estás seguro de que quieres vaciar el carrito?')) {
+    carrito = []; // Vaciar el array del carrito
+    localStorage.removeItem('carrito'); // Eliminar del localStorage
+    actualizarContadorCarrito(); // Actualizar el contador
+    mostrarCarrito(); // Actualizar la vista del carrito
+    alert('Carrito vaciado correctamente');
+  }
+}
+
 // Función para mostrar carrito
 function mostrarCarrito() {
   const contenedor = document.getElementById('contenidoCarrito');
@@ -265,6 +277,12 @@ document.addEventListener('DOMContentLoaded', function() {
       const modal = new bootstrap.Modal(document.getElementById('modalCarrito'));
       modal.show();
     });
+  }
+
+  // Evento para vaciar carrito
+  const btnVaciarCarrito = document.getElementById('btnVaciarCarrito');
+  if (btnVaciarCarrito) {
+    btnVaciarCarrito.addEventListener('click', vaciarCarrito);
   }
 });
 
