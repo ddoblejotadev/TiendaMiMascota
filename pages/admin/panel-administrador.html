@@ -1,139 +1,144 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Panel Administrador - Tienda MiMascota</title>
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" href="../../css/styles.css" />
-  </head>
-  <body>
-    <header class="bg-dark text-white py-3 mb-4">
-      <div class="container d-flex align-items-center justify-content-between">
-        <div class="d-flex align-items-center">
-          <img src="../../assets/img/logo1.png" alt="MiMascota" style="height:40px; width:auto;" class="me-2">
-          <h1 class="h6 mb-0">ðŸ”§ Panel de Administrador</h1>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/styles.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="bg-primary text-white py-3 mb-4">
+        <div class="container d-flex align-items-center justify-content-between">
+            <a href="../../index.html" class="d-flex align-items-center text-white text-decoration-none">
+                <img src="../../assets/img/logo1.png" alt="Tienda MiMascota" style="height: 40px; width: auto;" class="me-2">
+                <span class="h6 mb-0">🐾 Tienda MiMascota</span>
+            </a>
+            <nav>
+                <span class="text-light me-3" id="adminNombre">Administrador</span>
+                <button class="btn btn-outline-light btn-sm" onclick="logout()">Cerrar Sesión</button>
+            </nav>
         </div>
-        <nav class="d-flex align-items-center">
-          <span id="adminNombre" class="me-3 text-light"></span>
-          <button class="btn btn-outline-light btn-sm me-2" onclick="volverTienda()">Volver a la tienda</button>
-          <button class="btn btn-outline-light btn-sm" onclick="cerrarSesion()">Cerrar sesiÃ³n</button>
-        </nav>
-      </div>
     </header>
 
-    <main class="container mb-5">
-      <!-- EstadÃ­sticas -->
-      <div class="row mb-4">
-                <div class="col-md-3">
-          <div class="card text-center bg-primary text-white">
-            <div class="card-body">
-              <h5 class="card-title">ï¿½ Productos</h5>
-              <h2 id="totalProductos">0</h2>
+    <!-- Contenido Principal -->
+    <main class="container py-4">
+        <h1 class="mb-4">⚙️ Panel de Administración</h1>
+        
+        <!-- Estadísticas -->
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <h5 class="card-title">👥 Usuarios</h5>
+                        <h2 class="text-primary" id="totalUsuarios">0</h2>
+                    </div>
+                </div>
             </div>
-          </div>
+            <div class="col-md-3">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <h5 class="card-title">📦 Productos</h5>
+                        <h2 class="text-success" id="totalProductos">0</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <h5 class="card-title">🛒 Items en Carrito</h5>
+                        <h2 class="text-warning" id="productosCarrito">0</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <h5 class="card-title">💰 Valor Carrito</h5>
+                        <h2 class="text-info" id="valorCarrito">$0</h2>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="col-md-3">
-          <div class="card text-center bg-success text-white">
-            <div class="card-body">
-              <h5 class="card-title">ï¿½ Usuarios</h5>
-              <h2 id="totalUsuarios">0</h2>
+        
+        <div class="row">
+            <!-- Gestión de Productos -->
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">📦 Gestión de Productos</h5>
+                    </div>
+                    <div class="card-body">
+                        <button class="btn btn-success mb-3" onclick="mostrarFormularioProducto()">Agregar Producto</button>
+                        
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Imagen</th>
+                                        <th>Nombre</th>
+                                        <th>Precio</th>
+                                        <th>Categoría</th>
+                                        <th>Stock</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="listaProductosAdmin">
+                                    <!-- Productos se cargan aquí -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
             </div>
-          </div>
+            
+            <!-- Gestión de Usuarios -->
+            <div class="col-12 mt-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">👥 Gestión de Usuarios</h5>
+                    </div>
+                    <div class="card-body">
+                        <button class="btn btn-success mb-3" onclick="mostrarFormularioUsuario()">Agregar Usuario</button>
+                        
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Nombre</th>
+                                        <th>Email</th>
+                                        <th>Teléfono</th>
+                                        <th>Región</th>
+                                        <th>Comuna</th>
+                                        <th>Tipo</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="listaUsuariosAdmin">
+                                    <!-- Usuarios se cargan aquí -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="col-md-3">
-          <div class="card text-center bg-warning text-white">
-            <div class="card-body">
-              <h5 class="card-title">ðŸ›’ En Carrito</h5>
-              <h2 id="productosCarrito">0</h2>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-3">
-          <div class="card text-center bg-info text-white">
-            <div class="card-body">
-              <h5 class="card-title">ðŸ’° Valor Carrito</h5>
-              <h6 id="valorCarrito">$0</h6>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- PestaÃ±as -->
-      <ul class="nav nav-tabs mb-4">
-        <li class="nav-item">
-          <a class="nav-link active" data-bs-toggle="tab" href="#productos">ðŸ“¦ Productos</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" data-bs-toggle="tab" href="#usuarios">ðŸ‘¥ Usuarios</a>
-        </li>
-      </ul>
-
-      <div class="tab-content">
-        <!-- PestaÃ±a de Productos -->
-        <div class="tab-pane fade show active" id="productos">
-          <div class="card">
-            <div class="card-header">
-              <h5>ðŸ“¦ GestiÃ³n de Productos</h5>
-            </div>
-            <div class="card-body">
-              <div class="table-responsive">
-                <table class="table table-striped">
-                  <thead>
-                    <tr>
-                      <th>Imagen</th>
-                      <th>Nombre</th>
-                      <th>Precio</th>
-                      <th>CategorÃ­a</th>
-                      <th>Stock</th>
-                      <th>Acciones</th>
-                    </tr>
-                  </thead>
-                  <tbody id="listaProductosAdmin">
-                    <!-- Se cargarÃ¡n aquÃ­ con JavaScript -->
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- PestaÃ±a de Usuarios -->
-        <div class="tab-pane fade" id="usuarios">
-          <div class="card">
-            <div class="card-header">
-              <h5>ðŸ‘¥ Usuarios Registrados</h5>
-            </div>
-            <div class="card-body">
-              <div class="table-responsive">
-                <table class="table table-striped">
-                  <thead>
-                    <tr>
-                      <th>Nombre</th>
-                      <th>Email</th>
-                      <th>TelÃ©fono</th>
-                      <th>RegiÃ³n</th>
-                      <th>Comuna</th>
-                      <th>Acciones</th>
-                    </tr>
-                  </thead>
-                  <tbody id="listaUsuariosAdmin">
-                    <!-- Se cargarÃ¡n aquÃ­ con JavaScript -->
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
     </main>
 
-    <!-- Bootstrap JS -->
+    <!-- Footer -->
+    <footer class="bg-dark text-white py-4 mt-5">
+        <div class="container text-center">
+            <div class="d-flex align-items-center justify-content-center mb-3">
+                <img src="../../assets/img/logo1.png" alt="Tienda MiMascota" style="height: 30px; width: auto;" class="me-2">
+                <span class="h6 mb-0">🐾 Tienda MiMascota</span>
+            </div>
+            <p class="mb-0">&copy; 2024 Tienda MiMascota. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
     <script src="../../js/panel-administrador.js"></script>
-  </body>
+</body>
 </html>
-

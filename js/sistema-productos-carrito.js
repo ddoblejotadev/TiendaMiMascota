@@ -1,10 +1,9 @@
-// ============= PRODUCTOS.JS - MANEJO DE PRODUCTOS Y CARRITO =============
-// Archivo para manejar productos y carrito de compras
-// Código simple y comentado para nivel principiante
+// ===========================================
+// SISTEMA DE PRODUCTOS Y CARRITO - TIENDA MIMASCOTA
+// Código simple para principiantes
+// ===========================================
 
-// ============= 1. LISTA DE PRODUCTOS =============
-// Usamos TODAS las imágenes disponibles en assets/img/
-
+// Lista de productos disponibles en la tienda
 const productos = [
   {
     id: 1,
@@ -12,16 +11,16 @@ const productos = [
     precio: 15990,
     categoria: "comida",
     imagen: "assets/img/Comida.jpg",
-    descripcion: "Alimento balanceado premium para perros adultos. Rico en proteínas y vitaminas.",
+    descripcion: "Alimento balanceado premium para perros adultos.",
     stock: 50
   },
   {
     id: 2,
     nombre: "Juguetes Divertidos",
     precio: 5990,
-    categoria: "juguetes", 
+    categoria: "juguetes",
     imagen: "assets/img/jugetes.png",
-    descripcion: "Set de pelotas y juguetes para mantener activa y feliz a tu mascota.",
+    descripcion: "Set de pelotas y juguetes para tu mascota.",
     stock: 30
   },
   {
@@ -29,8 +28,8 @@ const productos = [
     nombre: "Cama Super Cómoda",
     precio: 25990,
     categoria: "camas",
-    imagen: "assets/img/cama2.png", 
-    descripcion: "Cama ultra cómoda con relleno de espuma para el descanso perfecto.",
+    imagen: "assets/img/cama2.png",
+    descripcion: "Cama ultra cómoda con relleno de espuma.",
     stock: 15
   },
   {
@@ -39,7 +38,7 @@ const productos = [
     precio: 12990,
     categoria: "salud",
     imagen: "assets/img/salud.png",
-    descripcion: "Vitaminas, suplementos y medicamentos para la salud de tu mascota.",
+    descripcion: "Vitaminas y suplementos para tu mascota.",
     stock: 25
   },
   {
@@ -48,234 +47,57 @@ const productos = [
     precio: 8990,
     categoria: "accesorios",
     imagen: "assets/img/accesorios.png",
-    descripcion: "Collares, correas y accesorios fashion para que tu mascota luzca genial.",
+    descripcion: "Collares y accesorios fashion.",
     stock: 40
   },
   {
     id: 6,
     nombre: "Productos de Higiene",
-    precio: 9990,
+    precio: 7990,
     categoria: "higiene",
     imagen: "assets/img/higiene.png",
-    descripcion: "Shampoos, acondicionadores y productos de limpieza para tu mascota.",
+    descripcion: "Champús y productos de higiene.",
     stock: 35
-  },
-  {
-    id: 7,
-    nombre: "Producto Especial",
-    precio: 18990,
-    categoria: "especial",
-    imagen: "assets/img/prod.png",
-    descripcion: "Producto especial de la casa con múltiples beneficios para tu mascota.",
-    stock: 20
   }
 ];
 
-// ============= 2. VARIABLES GLOBALES =============
-let carrito = []; // Array para guardar productos del carrito
+// Variable para guardar los productos del carrito
+let carrito = [];
 
-// ============= 3. FUNCIONES DEL CARRITO =============
+// ===========================================
+// FUNCIONES PARA MOSTRAR PRODUCTOS
+// ===========================================
 
-// Función para obtener carrito del localStorage
-function obtenerCarrito() {
-  const carritoGuardado = localStorage.getItem('carrito');
-  if (carritoGuardado) {
-    carrito = JSON.parse(carritoGuardado);
-  }
-  return carrito;
-}
-
-// Función para guardar carrito en localStorage
-function guardarCarrito() {
-  localStorage.setItem('carrito', JSON.stringify(carrito));
-}
-
-// Función para agregar producto al carrito
-function agregarAlCarrito(idProducto) {
-  console.log('Agregando producto al carrito:', idProducto);
-  
-  // Buscar el producto en la lista
-  const producto = productos.find(p => p.id === idProducto);
-  if (!producto) {
-    alert('Producto no encontrado');
-    return;
-  }
-  
-  // Verificar si el producto ya está en el carrito
-  const productoEnCarrito = carrito.find(item => item.id === idProducto);
-  
-  if (productoEnCarrito) {
-    // Si ya está, aumentar la cantidad
-    productoEnCarrito.cantidad += 1;
-  } else {
-    // Si no está, agregarlo con cantidad 1
-    carrito.push({
-      id: producto.id,
-      nombre: producto.nombre,
-      precio: producto.precio,
-      imagen: producto.imagen,
-      cantidad: 1
-    });
-  }
-  
-  // Guardar en localStorage
-  guardarCarrito();
-  
-  // Actualizar contador del carrito
-  actualizarContadorCarrito();
-  
-  // Mostrar mensaje
-  alert(`${producto.nombre} agregado al carrito`);
-}
-
-// Función para actualizar el contador del carrito
-function actualizarContadorCarrito() {
-  const cantidadTotal = carrito.reduce((total, item) => total + item.cantidad, 0);
-  const contador = document.getElementById('cantidadCarrito');
-  if (contador) {
-    contador.textContent = cantidadTotal;
-  }
-}
-
-// Función para mostrar el carrito
-function mostrarCarrito() {
-  const contenido = document.getElementById('contenidoCarrito');
-  if (!contenido) return;
-  
-  if (carrito.length === 0) {
-    contenido.innerHTML = '<p class="text-center text-muted">Tu carrito está vacío</p>';
-    return;
-  }
-  
-  let html = '';
-  let total = 0;
-  
-  carrito.forEach(item => {
-    const subtotal = item.precio * item.cantidad;
-    total += subtotal;
-    
-    html += `
-      <div class="row mb-3 align-items-center">
-        <div class="col-2">
-          <img src="${item.imagen}" alt="${item.nombre}" class="img-fluid">
-        </div>
-        <div class="col-6">
-          <h6>${item.nombre}</h6>
-          <small class="text-muted">$${item.precio.toLocaleString()}</small>
-        </div>
-        <div class="col-2">
-          <input type="number" class="form-control form-control-sm" 
-                 value="${item.cantidad}" min="1" 
-                 onchange="cambiarCantidad(${item.id}, this.value)">
-        </div>
-        <div class="col-2">
-          <button class="btn btn-sm btn-danger" onclick="eliminarDelCarrito(${item.id})">
-            ❌
-          </button>
-        </div>
-      </div>
-      <hr>
-    `;
-  });
-  
-  html += `
-    <div class="text-end">
-      <h5>Total: $${total.toLocaleString()}</h5>
-      <button class="btn btn-success" onclick="finalizarCompra()">
-        Finalizar Compra
-      </button>
-      <button class="btn btn-outline-danger ms-2" onclick="vaciarCarrito()">
-        Vaciar Carrito
-      </button>
-    </div>
-  `;
-  
-  contenido.innerHTML = html;
-}
-
-// Función para cambiar cantidad de un producto
-function cambiarCantidad(idProducto, nuevaCantidad) {
-  const cantidad = parseInt(nuevaCantidad);
-  if (cantidad <= 0) {
-    eliminarDelCarrito(idProducto);
-    return;
-  }
-  
-  const item = carrito.find(item => item.id === idProducto);
-  if (item) {
-    item.cantidad = cantidad;
-    guardarCarrito();
-    actualizarContadorCarrito();
-    mostrarCarrito();
-  }
-}
-
-// Función para eliminar producto del carrito
-function eliminarDelCarrito(idProducto) {
-  carrito = carrito.filter(item => item.id !== idProducto);
-  guardarCarrito();
-  actualizarContadorCarrito();
-  mostrarCarrito();
-}
-
-// Función para vaciar carrito
-function vaciarCarrito() {
-  if (confirm('¿Estás seguro de vaciar el carrito?')) {
-    carrito = [];
-    guardarCarrito();
-    actualizarContadorCarrito();
-    mostrarCarrito();
-  }
-}
-
-// Función para finalizar compra
-function finalizarCompra() {
-  if (carrito.length === 0) {
-    alert('Tu carrito está vacío');
-    return;
-  }
-  
-  const total = carrito.reduce((sum, item) => sum + (item.precio * item.cantidad), 0);
-  
-  alert(`¡Compra realizada por $${total.toLocaleString()}! Gracias por tu compra.`);
-  
-  // Vaciar carrito después de la compra
-  carrito = [];
-  guardarCarrito();
-  actualizarContadorCarrito();
-  mostrarCarrito();
-}
-
-// ============= 4. FUNCIONES PARA MOSTRAR PRODUCTOS =============
-
-// Función para mostrar todos los productos
-function mostrarProductos(productosFiltrados = null) {
+// Función que muestra todos los productos en la página
+function mostrarProductos() {
+  // Buscar el lugar donde van los productos
   const contenedor = document.getElementById('listaProductos');
-  if (!contenedor) return;
-  
-  const productosAMostrar = productosFiltrados || productos;
-  
-  if (productosAMostrar.length === 0) {
-    contenedor.innerHTML = '<p class="text-center text-muted">No se encontraron productos</p>';
+
+  // Si no encuentra el contenedor, salir de la función
+  if (!contenedor) {
     return;
   }
-  
+
+  // Crear el HTML para todos los productos
   let html = '';
-  
-  productosAMostrar.forEach(producto => {
+
+  // Recorrer cada producto y crear su tarjeta
+  for (let i = 0; i < productos.length; i++) {
+    const producto = productos[i];
+
     html += `
       <div class="col-md-6 col-lg-4 mb-4">
         <div class="card h-100">
           <img src="${producto.imagen}" alt="${producto.nombre}" class="card-img-top" style="height: 200px; object-fit: cover;">
           <div class="card-body d-flex flex-column">
             <h5 class="card-title">${producto.nombre}</h5>
-            <p class="card-text flex-grow-1">${producto.descripcion}</p>
+            <p class="card-text">${producto.descripcion}</p>
             <p class="text-muted">Stock: ${producto.stock}</p>
             <div class="mt-auto">
               <div class="d-flex justify-content-between align-items-center">
                 <span class="h5 text-primary">$${producto.precio.toLocaleString()}</span>
                 <button class="btn btn-primary" onclick="agregarAlCarrito(${producto.id})">
-                  Agregar al carrito
+                  Agregar
                 </button>
               </div>
             </div>
@@ -283,69 +105,274 @@ function mostrarProductos(productosFiltrados = null) {
         </div>
       </div>
     `;
-  });
-  
+  }
+
+  // Poner el HTML en la página
   contenedor.innerHTML = html;
 }
 
-// Función para filtrar productos
-function filtrarProductos() {
-  const categoria = document.getElementById('filtroCategoria')?.value || '';
-  const busqueda = document.getElementById('buscarProducto')?.value.toLowerCase() || '';
-  
-  let productosFiltrados = productos;
-  
-  // Filtrar por categoría
-  if (categoria) {
-    productosFiltrados = productosFiltrados.filter(p => p.categoria === categoria);
+// ===========================================
+// FUNCIONES PARA EL CARRITO
+// ===========================================
+
+// Función para agregar un producto al carrito
+function agregarAlCarrito(idProducto) {
+  // Buscar el producto por su ID
+  let productoEncontrado = null;
+
+  for (let i = 0; i < productos.length; i++) {
+    if (productos[i].id === idProducto) {
+      productoEncontrado = productos[i];
+      break;
+    }
   }
-  
-  // Filtrar por búsqueda
-  if (busqueda) {
-    productosFiltrados = productosFiltrados.filter(p => 
-      p.nombre.toLowerCase().includes(busqueda) || 
-      p.descripcion.toLowerCase().includes(busqueda)
-    );
+
+  // Si no encuentra el producto, salir
+  if (!productoEncontrado) {
+    return;
   }
-  
-  mostrarProductos(productosFiltrados);
+
+  // Verificar si el producto ya está en el carrito
+  let productoEnCarrito = null;
+  for (let i = 0; i < carrito.length; i++) {
+    if (carrito[i].id === idProducto) {
+      productoEnCarrito = carrito[i];
+      break;
+    }
+  }
+
+  // Si ya está en el carrito, aumentar la cantidad
+  if (productoEnCarrito) {
+    productoEnCarrito.cantidad = productoEnCarrito.cantidad + 1;
+  } else {
+    // Si no está, agregarlo al carrito
+    carrito.push({
+      id: productoEncontrado.id,
+      nombre: productoEncontrado.nombre,
+      precio: productoEncontrado.precio,
+      imagen: productoEncontrado.imagen,
+      cantidad: 1
+    });
+  }
+
+  // Guardar el carrito en el navegador (localStorage)
+  localStorage.setItem('carrito', JSON.stringify(carrito));
+
+  // Actualizar el contador del carrito
+  actualizarContadorCarrito();
+
+  // Mostrar mensaje al usuario
+  alert('Producto agregado al carrito: ' + productoEncontrado.nombre);
 }
 
-// ============= 5. CÓDIGO PRINCIPAL =============
+// Función para actualizar el contador del carrito en la barra de navegación
+function actualizarContadorCarrito() {
+  const contador = document.getElementById('cantidadCarrito');
 
+  if (contador) {
+    // Contar todos los productos en el carrito
+    let totalProductos = 0;
+    for (let i = 0; i < carrito.length; i++) {
+      totalProductos = totalProductos + carrito[i].cantidad;
+    }
+
+    // Mostrar el número en la página
+    contador.textContent = totalProductos;
+  }
+}
+
+// Función para vaciar completamente el carrito
+function vaciarCarrito() {
+  // Preguntar al usuario si está seguro
+  const confirmar = confirm('¿Estás seguro de que quieres vaciar el carrito?');
+
+  if (confirmar) {
+    // Vaciar el carrito
+    carrito = [];
+
+    // Borrar del navegador
+    localStorage.removeItem('carrito');
+
+    // Actualizar el contador
+    actualizarContadorCarrito();
+
+    // Actualizar la vista del carrito
+    mostrarCarrito();
+
+    // Mostrar mensaje
+    alert('Carrito vaciado correctamente');
+  }
+}
+
+// Función para mostrar el contenido del carrito en el modal
+function mostrarCarrito() {
+  const contenedor = document.getElementById('contenidoCarrito');
+
+  if (!contenedor) {
+    return;
+  }
+
+  // Si el carrito está vacío
+  if (carrito.length === 0) {
+    contenedor.innerHTML = '<p class="text-center">Tu carrito está vacío</p>';
+    return;
+  }
+
+  // Crear la lista de productos
+  let html = '<div class="list-group">';
+
+  for (let i = 0; i < carrito.length; i++) {
+    const producto = carrito[i];
+
+    html += `
+      <div class="list-group-item d-flex justify-content-between align-items-center">
+        <div class="d-flex align-items-center">
+          <img src="${producto.imagen}" alt="${producto.nombre}" style="width: 50px; height: 50px; object-fit: cover; margin-right: 10px;">
+          <div>
+            <h6 class="mb-0">${producto.nombre}</h6>
+            <small>Cantidad: ${producto.cantidad}</small>
+          </div>
+        </div>
+        <span class="fw-bold">$${(producto.precio * producto.cantidad).toLocaleString()}</span>
+      </div>
+    `;
+  }
+
+  html += '</div>';
+
+  // Poner el HTML en la página
+  contenedor.innerHTML = html;
+
+  // Calcular el total
+  let total = 0;
+  for (let i = 0; i < carrito.length; i++) {
+    total = total + (carrito[i].precio * carrito[i].cantidad);
+  }
+
+  // Mostrar el total
+  const totalElement = document.getElementById('totalCarrito');
+  if (totalElement) {
+    totalElement.textContent = total.toLocaleString();
+  }
+}
+
+// ===========================================
+// FUNCIONES PARA FILTRAR PRODUCTOS
+// ===========================================
+
+// Función para filtrar productos por categoría y búsqueda
+function filtrarProductos() {
+  // Obtener los valores de los filtros
+  const categoriaSeleccionada = document.getElementById('filtroCategoria').value;
+  const textoBusqueda = document.getElementById('buscarProducto').value.toLowerCase();
+
+  // Buscar el contenedor de productos
+  const contenedor = document.getElementById('listaProductos');
+  if (!contenedor) {
+    return;
+  }
+
+  // Crear el HTML para los productos filtrados
+  let html = '';
+
+  // Recorrer todos los productos
+  for (let i = 0; i < productos.length; i++) {
+    const producto = productos[i];
+
+    // Verificar filtro de categoría
+    if (categoriaSeleccionada && producto.categoria !== categoriaSeleccionada) {
+      continue; // Saltar este producto
+    }
+
+    // Verificar filtro de búsqueda
+    if (textoBusqueda) {
+      const nombreMinuscula = producto.nombre.toLowerCase();
+      const descripcionMinuscula = producto.descripcion.toLowerCase();
+
+      if (!nombreMinuscula.includes(textoBusqueda) && !descripcionMinuscula.includes(textoBusqueda)) {
+        continue; // Saltar este producto
+      }
+    }
+
+    // Si pasa los filtros, agregar el producto
+    html += `
+      <div class="col-md-6 col-lg-4 mb-4">
+        <div class="card h-100">
+          <img src="${producto.imagen}" alt="${producto.nombre}" class="card-img-top" style="height: 200px; object-fit: cover;">
+          <div class="card-body d-flex flex-column">
+            <h5 class="card-title">${producto.nombre}</h5>
+            <p class="card-text">${producto.descripcion}</p>
+            <p class="text-muted">Stock: ${producto.stock}</p>
+            <div class="mt-auto">
+              <div class="d-flex justify-content-between align-items-center">
+                <span class="h5 text-primary">$${producto.precio.toLocaleString()}</span>
+                <button class="btn btn-primary" onclick="agregarAlCarrito(${producto.id})">
+                  Agregar
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  // Si no hay productos, mostrar mensaje
+  if (html === '') {
+    html = '<div class="col-12"><p class="text-center text-muted">No se encontraron productos</p></div>';
+  }
+
+  // Poner el HTML en la página
+  contenedor.innerHTML = html;
+}
+
+// ===========================================
+// CÓDIGO QUE SE EJECUTA CUANDO CARGA LA PÁGINA
+// ===========================================
+
+// Esperar a que cargue toda la página
 document.addEventListener('DOMContentLoaded', function() {
-  console.log('productos.js cargado');
-  
-  // Cargar carrito del localStorage
-  obtenerCarrito();
-  
-  // Mostrar productos
+  console.log('Tienda MiMascota cargada');
+
+  // Cargar el carrito guardado del navegador
+  const carritoGuardado = localStorage.getItem('carrito');
+  if (carritoGuardado) {
+    carrito = JSON.parse(carritoGuardado);
+  }
+
+  // Mostrar todos los productos
   mostrarProductos();
-  
-  // Actualizar contador del carrito
+
+  // Actualizar el contador del carrito
   actualizarContadorCarrito();
-  
-  // Eventos para filtros
+
+  // Conectar los filtros
   const filtroCategoria = document.getElementById('filtroCategoria');
   if (filtroCategoria) {
     filtroCategoria.addEventListener('change', filtrarProductos);
   }
-  
+
   const buscarProducto = document.getElementById('buscarProducto');
   if (buscarProducto) {
     buscarProducto.addEventListener('input', filtrarProductos);
   }
-  
-  // Evento para mostrar carrito
+
+  // Conectar el botón del carrito
   const btnCarrito = document.getElementById('btnCarrito');
   if (btnCarrito) {
     btnCarrito.addEventListener('click', function() {
       mostrarCarrito();
-      // Mostrar modal del carrito
+      // Mostrar el modal del carrito
       const modal = new bootstrap.Modal(document.getElementById('modalCarrito'));
       modal.show();
     });
   }
+
+  // Conectar el botón para vaciar carrito
+  const btnVaciarCarrito = document.getElementById('btnVaciarCarrito');
+  if (btnVaciarCarrito) {
+    btnVaciarCarrito.addEventListener('click', vaciarCarrito);
+  }
 });
 
-console.log('productos.js cargado correctamente');
+console.log('Sistema de productos cargado correctamente');

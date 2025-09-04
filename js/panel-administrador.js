@@ -1,62 +1,84 @@
-// ============= ADMIN-SIMPLE.JS - PANEL DE ADMINISTRADOR =============
-// Archivo para el panel de administrador
-// Código simple y comentado para nivel principiante
+// ===========================================
+// PANEL DE ADMINISTRADOR - TIENDA MIMASCOTA
+// Código simple para principiantes
+// ===========================================
 
-// ============= 1. VERIFICAR ACCESO ADMIN =============
+// ===========================================
+// VERIFICAR ACCESO DE ADMINISTRADOR
+// ===========================================
 
+// Función que se ejecuta cuando la página carga
 document.addEventListener('DOMContentLoaded', function() {
-  console.log('admin-simple.js cargado');
-  
-  // Verificar si hay usuario logueado
+  console.log('Panel de administrador cargado');
+
+  // Verificar si hay un usuario logueado
   const usuarioActual = JSON.parse(localStorage.getItem('usuarioActual') || 'null');
-  
+
   if (!usuarioActual) {
-    alert('Debes iniciar sesión para acceder');
-    window.location.href = 'login.html';
+    alert('Debes iniciar sesión para acceder al panel de administrador');
+    window.location.href = '../user/iniciar-sesion.html';
     return;
   }
-  
-  // Verificar si es admin (email con @admin.cl)
-  const esAdmin = usuarioActual.email?.includes('@admin.cl');
-  
+
+  // Verificar si es administrador (email contiene @admin.cl)
+  const esAdmin = usuarioActual.email && usuarioActual.email.includes('@admin.cl');
+
   if (!esAdmin) {
     alert('No tienes permisos de administrador');
-    window.location.href = 'dashboard.html';
+    window.location.href = '../user/panel-usuario.html';
     return;
   }
-  
-  // Mostrar nombre del admin
+
+  // Mostrar el nombre del administrador
   const nombreAdmin = document.getElementById('adminNombre');
   if (nombreAdmin) {
-    nombreAdmin.textContent = `Admin: ${usuarioActual.nombre}`;
+    nombreAdmin.textContent = 'Admin: ' + usuarioActual.nombre;
   }
-  
-  // Cargar datos iniciales
+
+  // Cargar los datos iniciales
   cargarProductos();
   cargarUsuarios();
   cargarEstadisticas();
+
+  console.log('Panel de administrador inicializado correctamente');
 });
 
-// ============= 2. GESTIÓN DE PRODUCTOS =============
+// ===========================================
+// FUNCIONES PARA CERRAR SESIÓN
+// ===========================================
 
-// Lista de productos (misma que productos-simple.js)
+// Función para cerrar sesión
+function logout() {
+  // Limpiar los datos de sesión
+  localStorage.removeItem('usuarioActual');
+  localStorage.removeItem('currentUser');
+
+  // Redirigir al login
+  window.location.href = '../user/iniciar-sesion.html';
+}
+
+// ===========================================
+// GESTIÓN DE PRODUCTOS
+// ===========================================
+
+// Lista de productos (igual que en la tienda)
 let productos = [
   {
     id: 1,
     nombre: "Alimento Premium para Perros",
     precio: 15990,
     categoria: "comida",
-    imagen: "assets/img/Comida.jpg",
-    descripcion: "Alimento balanceado premium para perros adultos. Rico en proteínas y vitaminas.",
+    imagen: "../../assets/img/Comida.jpg",
+    descripcion: "Alimento balanceado premium para perros adultos.",
     stock: 50
   },
   {
     id: 2,
     nombre: "Juguetes Divertidos",
     precio: 5990,
-    categoria: "juguetes", 
-    imagen: "assets/img/jugetes.png",
-    descripcion: "Set de pelotas y juguetes para mantener activa y feliz a tu mascota.",
+    categoria: "juguetes",
+    imagen: "../../assets/img/jugetes.png",
+    descripcion: "Set de pelotas y juguetes para tu mascota.",
     stock: 30
   },
   {
@@ -64,8 +86,8 @@ let productos = [
     nombre: "Cama Super Cómoda",
     precio: 25990,
     categoria: "camas",
-    imagen: "assets/img/cama2.png", 
-    descripcion: "Cama ultra cómoda con relleno de espuma para el descanso perfecto.",
+    imagen: "../../assets/img/cama2.png",
+    descripcion: "Cama ultra cómoda con relleno de espuma.",
     stock: 15
   },
   {
@@ -73,8 +95,8 @@ let productos = [
     nombre: "Productos de Salud",
     precio: 12990,
     categoria: "salud",
-    imagen: "assets/img/salud.png",
-    descripcion: "Vitaminas, suplementos y medicamentos para la salud de tu mascota.",
+    imagen: "../../assets/img/salud.png",
+    descripcion: "Vitaminas y suplementos para tu mascota.",
     stock: 25
   },
   {
@@ -82,43 +104,42 @@ let productos = [
     nombre: "Accesorios Fashion",
     precio: 8990,
     categoria: "accesorios",
-    imagen: "assets/img/accesorios.png",
-    descripcion: "Collares, correas y accesorios fashion para que tu mascota luzca genial.",
+    imagen: "../../assets/img/accesorios.png",
+    descripcion: "Collares y accesorios fashion.",
     stock: 40
   },
   {
     id: 6,
     nombre: "Productos de Higiene",
-    precio: 9990,
+    precio: 7990,
     categoria: "higiene",
-    imagen: "assets/img/higiene.png",
-    descripcion: "Shampoos, acondicionadores y productos de limpieza para tu mascota.",
+    imagen: "../../assets/img/higiene.png",
+    descripcion: "Champús y productos de higiene.",
     stock: 35
-  },
-  {
-    id: 7,
-    nombre: "Producto Especial",
-    precio: 18990,
-    categoria: "especial",
-    imagen: "assets/img/prod.png",
-    descripcion: "Producto especial de la casa con múltiples beneficios para tu mascota.",
-    stock: 20
   }
 ];
 
-// Función para cargar productos en el admin
+// Función para mostrar los productos en el panel de admin
 function cargarProductos() {
   const contenedor = document.getElementById('listaProductosAdmin');
-  if (!contenedor) return;
-  
+
+  if (!contenedor) {
+    return;
+  }
+
   let html = '';
-  productos.forEach(producto => {
+
+  // Recorrer todos los productos
+  for (let i = 0; i < productos.length; i++) {
+    const producto = productos[i];
+
     html += `
       <tr>
+        <td>${producto.id}</td>
         <td><img src="${producto.imagen}" alt="${producto.nombre}" style="width: 50px; height: 50px; object-fit: cover;"></td>
         <td>${producto.nombre}</td>
-        <td>$${producto.precio.toLocaleString()}</td>
         <td>${producto.categoria}</td>
+        <td>$${producto.precio.toLocaleString()}</td>
         <td>${producto.stock}</td>
         <td>
           <button class="btn btn-sm btn-warning" onclick="editarProducto(${producto.id})">Editar</button>
@@ -126,119 +147,245 @@ function cargarProductos() {
         </td>
       </tr>
     `;
-  });
-  
+  }
+
   contenedor.innerHTML = html;
 }
 
-// Función para editar producto (simplificada)
-function editarProducto(id) {
-  const producto = productos.find(p => p.id === id);
-  if (!producto) return;
-  
-  const nuevoNombre = prompt('Nuevo nombre:', producto.nombre);
-  const nuevoPrecio = prompt('Nuevo precio:', producto.precio);
-  const nuevaDescripcion = prompt('Nueva descripción:', producto.descripcion);
-  const nuevoStock = prompt('Nuevo stock:', producto.stock);
-  
-  if (nuevoNombre && nuevoPrecio && nuevaDescripcion && nuevoStock) {
-    producto.nombre = nuevoNombre;
-    producto.precio = parseInt(nuevoPrecio);
-    producto.descripcion = nuevaDescripcion;
-    producto.stock = parseInt(nuevoStock);
-    
-    cargarProductos();
-    alert('Producto actualizado correctamente');
+// Función para agregar un nuevo producto
+function agregarProducto() {
+  // Obtener los datos del formulario
+  const nombre = document.getElementById('nombreProducto').value.trim();
+  const precio = parseInt(document.getElementById('precioProducto').value);
+  const categoria = document.getElementById('categoriaProducto').value;
+  const imagen = document.getElementById('imagenProducto').value.trim();
+  const descripcion = document.getElementById('descripcionProducto').value.trim();
+  const stock = parseInt(document.getElementById('stockProducto').value);
+
+  // Validar que todos los campos estén llenos
+  if (!nombre || !precio || !categoria || !imagen || !descripcion || !stock) {
+    alert('Por favor, completa todos los campos');
+    return;
   }
+
+  // Crear el nuevo producto
+  const nuevoProducto = {
+    id: productos.length + 1,
+    nombre: nombre,
+    precio: precio,
+    categoria: categoria,
+    imagen: imagen,
+    descripcion: descripcion,
+    stock: stock
+  };
+
+  // Agregar a la lista
+  productos.push(nuevoProducto);
+
+  // Guardar en el navegador
+  localStorage.setItem('productos', JSON.stringify(productos));
+
+  // Recargar la lista
+  cargarProductos();
+
+  // Limpiar el formulario
+  document.getElementById('formAgregarProducto').reset();
+
+  alert('Producto agregado correctamente');
 }
 
-// Función para eliminar producto
-function eliminarProducto(id) {
-  if (confirm('¿Estás seguro de eliminar este producto?')) {
-    const index = productos.findIndex(p => p.id === id);
-    if (index !== -1) {
-      productos.splice(index, 1);
-      cargarProductos();
-      alert('Producto eliminado');
+// Función para editar un producto
+function editarProducto(idProducto) {
+  // Buscar el producto
+  let productoEncontrado = null;
+  for (let i = 0; i < productos.length; i++) {
+    if (productos[i].id === idProducto) {
+      productoEncontrado = productos[i];
+      break;
     }
   }
+
+  if (!productoEncontrado) {
+    alert('Producto no encontrado');
+    return;
+  }
+
+  // Llenar el formulario con los datos del producto
+  document.getElementById('editIdProducto').value = productoEncontrado.id;
+  document.getElementById('editNombreProducto').value = productoEncontrado.nombre;
+  document.getElementById('editPrecioProducto').value = productoEncontrado.precio;
+  document.getElementById('editCategoriaProducto').value = productoEncontrado.categoria;
+  document.getElementById('editImagenProducto').value = productoEncontrado.imagen;
+  document.getElementById('editDescripcionProducto').value = productoEncontrado.descripcion;
+  document.getElementById('editStockProducto').value = productoEncontrado.stock;
+
+  // Mostrar el modal de edición
+  const modal = new bootstrap.Modal(document.getElementById('modalEditarProducto'));
+  modal.show();
 }
 
-// ============= 3. GESTIÓN DE USUARIOS =============
+// Función para guardar los cambios de un producto editado
+function guardarEdicionProducto() {
+  const id = parseInt(document.getElementById('editIdProducto').value);
+  const nombre = document.getElementById('editNombreProducto').value.trim();
+  const precio = parseInt(document.getElementById('editPrecioProducto').value);
+  const categoria = document.getElementById('editCategoriaProducto').value;
+  const imagen = document.getElementById('editImagenProducto').value.trim();
+  const descripcion = document.getElementById('editDescripcionProducto').value.trim();
+  const stock = parseInt(document.getElementById('editStockProducto').value);
 
+  // Validar campos
+  if (!nombre || !precio || !categoria || !imagen || !descripcion || !stock) {
+    alert('Por favor, completa todos los campos');
+    return;
+  }
+
+  // Buscar y actualizar el producto
+  for (let i = 0; i < productos.length; i++) {
+    if (productos[i].id === id) {
+      productos[i] = {
+        id: id,
+        nombre: nombre,
+        precio: precio,
+        categoria: categoria,
+        imagen: imagen,
+        descripcion: descripcion,
+        stock: stock
+      };
+      break;
+    }
+  }
+
+  // Guardar en el navegador
+  localStorage.setItem('productos', JSON.stringify(productos));
+
+  // Recargar la lista
+  cargarProductos();
+
+  // Cerrar el modal
+  const modal = bootstrap.Modal.getInstance(document.getElementById('modalEditarProducto'));
+  modal.hide();
+
+  alert('Producto actualizado correctamente');
+}
+
+// Función para eliminar un producto
+function eliminarProducto(idProducto) {
+  // Confirmar eliminación
+  if (!confirm('¿Estás seguro de que quieres eliminar este producto?')) {
+    return;
+  }
+
+  // Buscar y eliminar el producto
+  for (let i = 0; i < productos.length; i++) {
+    if (productos[i].id === idProducto) {
+      productos.splice(i, 1);
+      break;
+    }
+  }
+
+  // Guardar en el navegador
+  localStorage.setItem('productos', JSON.stringify(productos));
+
+  // Recargar la lista
+  cargarProductos();
+
+  alert('Producto eliminado correctamente');
+}
+
+// ===========================================
+// GESTIÓN DE USUARIOS
+// ===========================================
+
+// Función para mostrar los usuarios registrados
 function cargarUsuarios() {
-  const usuarios = JSON.parse(localStorage.getItem('usuarios') || '[]');
   const contenedor = document.getElementById('listaUsuariosAdmin');
-  if (!contenedor) return;
-  
+
+  if (!contenedor) {
+    return;
+  }
+
+  // Obtener usuarios del navegador
+  const usuarios = JSON.parse(localStorage.getItem('usuarios') || '[]');
+
   let html = '';
-  usuarios.forEach((usuario, index) => {
+
+  // Recorrer todos los usuarios
+  for (let i = 0; i < usuarios.length; i++) {
+    const usuario = usuarios[i];
+
     html += `
       <tr>
         <td>${usuario.nombre}</td>
         <td>${usuario.email}</td>
-        <td>${usuario.telefono}</td>
-        <td>${usuario.region}</td>
-        <td>${usuario.comuna}</td>
+        <td>${usuario.tipoUsuario || 'cliente'}</td>
+        <td>${usuario.fechaRegistro ? new Date(usuario.fechaRegistro).toLocaleDateString() : 'N/A'}</td>
         <td>
-          <button class="btn btn-sm btn-danger" onclick="eliminarUsuario(${index})">Eliminar</button>
+          <button class="btn btn-sm btn-danger" onclick="eliminarUsuario('${usuario.email}')">Eliminar</button>
         </td>
       </tr>
     `;
-  });
-  
-  if (usuarios.length === 0) {
-    html = '<tr><td colspan="6" class="text-center text-muted">No hay usuarios registrados</td></tr>';
   }
-  
+
   contenedor.innerHTML = html;
 }
 
-// Función para eliminar usuario
-function eliminarUsuario(index) {
-  if (confirm('¿Estás seguro de eliminar este usuario?')) {
-    const usuarios = JSON.parse(localStorage.getItem('usuarios') || '[]');
-    usuarios.splice(index, 1);
-    localStorage.setItem('usuarios', JSON.stringify(usuarios));
-    cargarUsuarios();
-    alert('Usuario eliminado');
+// Función para eliminar un usuario
+function eliminarUsuario(emailUsuario) {
+  // Confirmar eliminación
+  if (!confirm('¿Estás seguro de que quieres eliminar este usuario?')) {
+    return;
   }
+
+  // Obtener usuarios
+  const usuarios = JSON.parse(localStorage.getItem('usuarios') || '[]');
+
+  // Buscar y eliminar el usuario
+  for (let i = 0; i < usuarios.length; i++) {
+    if (usuarios[i].email === emailUsuario) {
+      usuarios.splice(i, 1);
+      break;
+    }
+  }
+
+  // Guardar en el navegador
+  localStorage.setItem('usuarios', JSON.stringify(usuarios));
+
+  // Recargar la lista
+  cargarUsuarios();
+
+  alert('Usuario eliminado correctamente');
 }
 
-// ============= 4. ESTADÍSTICAS =============
+// ===========================================
+// ESTADÍSTICAS
+// ===========================================
 
+// Función para mostrar estadísticas simples
 function cargarEstadisticas() {
+  // Obtener datos
   const usuarios = JSON.parse(localStorage.getItem('usuarios') || '[]');
   const carrito = JSON.parse(localStorage.getItem('carrito') || '[]');
-  
-  // Contar usuarios
-  document.getElementById('totalUsuarios').textContent = usuarios.length;
-  
-  // Contar productos
-  document.getElementById('totalProductos').textContent = productos.length;
-  
-  // Productos en carrito
-  const productosEnCarrito = carrito.reduce((total, item) => total + item.cantidad, 0);
-  document.getElementById('productosCarrito').textContent = productosEnCarrito;
-  
-  // Valor total del carrito
-  const valorCarrito = carrito.reduce((total, item) => total + (item.precio * item.cantidad), 0);
-  document.getElementById('valorCarrito').textContent = `$${valorCarrito.toLocaleString()}`;
-}
 
-// ============= 5. EVENTOS GENERALES =============
+  // Mostrar estadísticas
+  const totalUsuarios = document.getElementById('totalUsuarios');
+  if (totalUsuarios) {
+    totalUsuarios.textContent = usuarios.length;
+  }
 
-// Cerrar sesión
-function cerrarSesion() {
-  if (confirm('¿Estás seguro de cerrar sesión?')) {
-    localStorage.removeItem('usuarioActual');
-    window.location.href = 'login.html';
+  const totalProductos = document.getElementById('totalProductos');
+  if (totalProductos) {
+    totalProductos.textContent = productos.length;
+  }
+
+  const productosEnCarrito = document.getElementById('productosEnCarrito');
+  if (productosEnCarrito) {
+    let totalEnCarrito = 0;
+    for (let i = 0; i < carrito.length; i++) {
+      totalEnCarrito += carrito[i].cantidad;
+    }
+    productosEnCarrito.textContent = totalEnCarrito;
   }
 }
 
-// Volver a la tienda
-function volverTienda() {
-  window.location.href = 'index.html';
-}
-
-console.log('admin-simple.js cargado correctamente');
+console.log('Panel de administrador cargado correctamente');

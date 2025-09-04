@@ -14,15 +14,15 @@
     <header class="bg-primary text-white py-3 mb-4">
       <div class="container d-flex justify-content-between align-items-center">
         <a href="../../index.html" class="text-white text-decoration-none">
-          <h1 class="h5 mb-0">ðŸ¾ Tienda MiMascota</h1>
+          <h1 class="h5 mb-0">🐾 Tienda MiMascota</h1>
         </a>
         <nav>
-          <a href="../catalogo-productos.html" class="text-white me-3">Productos</a>
+          <a href="../../index.html" class="text-white me-3">Productos</a>
           <a href="../content/blog-articulos.html" class="text-white me-3">Blog</a>
           <a href="../content/acerca-de-nosotros.html" class="text-white me-3">Nosotros</a>
           <a href="../content/formulario-contacto.html" class="text-white me-3">Contacto</a>
           <a href="registro-usuario.html" class="text-white me-3">Registrarse</a>
-          <a href="iniciar-sesion.html" class="text-white me-3">Iniciar sesiÃ³n</a>
+          <a href="iniciar-sesion.html" class="text-white me-3">Iniciar sesión</a>
         </nav>
       </div>
     </header>
@@ -31,12 +31,12 @@
       <div class="row justify-content-center">
         <div class="col-12 col-md-8 col-lg-6">
           <div class="card p-4">
-            <h2 class="h5 mb-4 text-center">ðŸ“‹ Registro de Cliente y Mascota</h2>
+            <h2 class="h5 mb-4 text-center">📋 Registro de Cliente y Mascota</h2>
             
             <form id="registroForm">
               <!-- DATOS DE LA PERSONA -->
               <div class="border rounded p-3 mb-4" style="background-color: #f8f9ff;">
-                <h4 class="h6 mb-3 text-primary">ðŸ‘¤ Datos del Propietario</h4>
+                <h4 class="h6 mb-3 text-primary">👤 Datos del Propietario</h4>
                 
                 <!-- RUT -->
                 <div class="mb-3">
@@ -46,10 +46,10 @@
                     id="rut"
                     class="form-control"
                     required
-                    placeholder="12345678K (sin puntos ni guiÃ³n)"
+                    placeholder="12345678K (sin puntos ni guión)"
                     maxlength="9"
                   />
-                  <div class="form-text">Ingresa el RUT sin puntos ni guiÃ³n. Ejemplo: 12345678K</div>
+                  <div class="form-text">Ingresa el RUT sin puntos ni guión. Ejemplo: 12345678K</div>
                 </div>
 
                 <!-- Nombre completo -->
@@ -60,7 +60,7 @@
                     id="nombreCompleto"
                     class="form-control"
                     required
-                    placeholder="Juan PÃ©rez GonzÃ¡lez"
+                    placeholder="Juan Pérez González"
                   />
                 </div>
 
@@ -72,26 +72,26 @@
                     id="email"
                     class="form-control"
                     required
-                    placeholder="usuario@duoc.cl"
+                    placeholder="juan@duoc.cl"
                   />
                   <div class="form-text">Solo se permiten: @duoc.cl, @profesor.duoc.cl, @gmail.com, @admin.cl</div>
                 </div>
 
-                <!-- ContraseÃ±a -->
+                <!-- Contraseña -->
                 <div class="mb-3">
-                  <label for="password" class="form-label">ContraseÃ±a *</label>
+                  <label for="password" class="form-label">Contraseña *</label>
                   <input
                     type="password"
                     id="password"
                     class="form-control"
                     required
                   />
-                  <div class="form-text">MÃ­nimo 6 caracteres, debe incluir al menos 1 nÃºmero y 1 mayÃºscula</div>
+                  <div class="form-text">Mínimo 6 caracteres, debe incluir al menos 1 número y 1 mayúscula</div>
                 </div>
 
-                <!-- Confirmar ContraseÃ±a -->
+                <!-- Confirmar Contraseña -->
                 <div class="mb-3">
-                  <label for="confirmPassword" class="form-label">Confirmar ContraseÃ±a *</label>
+                  <label for="confirmPassword" class="form-label">Confirmar Contraseña *</label>
                   <input
                     type="password"
                     id="confirmPassword"
@@ -100,11 +100,11 @@
                   />
                 </div>
 
-                <!-- RegiÃ³n -->
+                <!-- Región -->
                 <div class="mb-3">
-                  <label for="region" class="form-label">RegiÃ³n *</label>
+                  <label for="region" class="form-label">Región *</label>
                   <select id="region" class="form-select" required>
-                    <option value="">Selecciona una regiÃ³n</option>
+                    <option value="">Selecciona una región</option>
                   </select>
                 </div>
 
@@ -116,22 +116,46 @@
                   </select>
                 </div>
 
-                <!-- TelÃ©fono -->
+                <!-- Teléfono -->
                 <div class="mb-3">
-                  <label for="telefono" class="form-label">TelÃ©fono *</label>
+                  <label for="telefono" class="form-label">Teléfono *</label>
                   <input
                     type="tel"
                     id="telefono"
                     class="form-control"
                     required
-                    placeholder="+56912345678"
+                    placeholder="+56 9 1234 5678"
+                  />
+                  <div class="form-text">Formato: +56 9 1234 5678</div>
+                </div>
+
+                <!-- Fecha Nacimiento -->
+                <div class="mb-3">
+                  <label for="fechaNacimiento" class="form-label">Fecha de Nacimiento</label>
+                  <input
+                    type="date"
+                    id="fechaNacimiento"
+                    class="form-control"
+                  />
+                </div>
+
+                <!-- Dirección -->
+                <div class="mb-3">
+                  <label for="direccion" class="form-label">Dirección *</label>
+                  <input
+                    type="text"
+                    id="direccion"
+                    class="form-control"
+                    required
+                    placeholder="Calle, número, comuna"
+                    maxlength="300"
                   />
                 </div>
               </div>
 
               <!-- DATOS DE LA MASCOTA -->
               <div class="border rounded p-3 mb-4" style="background-color: #fff8f0;">
-                <h4 class="h6 mb-3 text-warning">ðŸ• Datos de la Mascota (Opcional)</h4>
+                <h4 class="h6 mb-3 text-warning">🐕 Datos de la Mascota (Opcional)</h4>
                 
                 <!-- Nombre de la mascota -->
                 <div class="mb-3">
@@ -149,13 +173,13 @@
                   <label for="tipoMascota" class="form-label">Tipo de Mascota</label>
                   <select id="tipoMascota" class="form-select">
                     <option value="">Selecciona el tipo</option>
-                    <option value="perro">ðŸ• Perro</option>
-                    <option value="gato">ðŸ± Gato</option>
-                    <option value="ave">ðŸ¦ Ave</option>
-                    <option value="pez">ðŸ  Pez</option>
-                    <option value="hamster">ðŸ¹ HÃ¡mster</option>
-                    <option value="conejo">ðŸ° Conejo</option>
-                    <option value="otro">ðŸ¾ Otro</option>
+                    <option value="perro">🐕 Perro</option>
+                    <option value="gato">🐱 Gato</option>
+                    <option value="ave">🦅 Ave</option>
+                    <option value="pez">🐠 Pez</option>
+                    <option value="hamster">🐹 Hámster</option>
+                    <option value="conejo">🐰 Conejo</option>
+                    <option value="otro">🐾 Otro</option>
                   </select>
                 </div>
 
@@ -164,29 +188,28 @@
                   <label for="edadMascota" class="form-label">Edad</label>
                   <select id="edadMascota" class="form-select">
                     <option value="">Selecciona la edad</option>
-                    <option value="cachorro">Cachorro (0-1 aÃ±o)</option>
-                    <option value="joven">Joven (1-3 aÃ±os)</option>
-                    <option value="adulto">Adulto (3-7 aÃ±os)</option>
-                    <option value="senior">Senior (7+ aÃ±os)</option>
+                    <option value="cachorro">Cachorro (0-1 año)</option>
+                    <option value="joven">Joven (1-3 años)</option>
+                    <option value="adulto">Adulto (3-7 años)</option>
+                    <option value="senior">Senior (7+ años)</option>
                   </select>
                 </div>
               </div>
 
-              <!-- BotÃ³n de envÃ­o -->
+              <!-- Botón de envío -->
               <div class="d-grid">
-                <button type="submit" class="btn btn-primary">
-                  ðŸ“ Registrar Cliente y Mascota
+                <button type="submit" class="btn btn-primary btn-lg">
+                  📝 Registrar Cliente y Mascota
                 </button>
               </div>
 
-              <!-- Enlace a login -->
               <div class="text-center mt-3">
-                <small>Â¿Ya tienes cuenta? <a href="iniciar-sesion.html">Inicia sesiÃ³n aquÃ­</a></small>
+                <small>¿Ya tienes cuenta? <a href="iniciar-sesion.html">Inicia sesión aquí</a></small>
               </div>
-
-              <!-- Alertas -->
-              <div id="alertaRegistro" class="mt-3"></div>
             </form>
+
+            <!-- Área para mostrar alertas -->
+            <div id="alertaRegistro" class="mt-3"></div>
           </div>
         </div>
       </div>
@@ -198,6 +221,8 @@
       </div>
     </footer>
 
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
     <script src="../../js/funciones-principales.js"></script>
   </body>
 </html>
