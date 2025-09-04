@@ -346,6 +346,17 @@ function cargarUsuarios() {
   contenedor.innerHTML = html;
 }
 
+// Función para eliminar usuario
+function eliminarUsuario(index) {
+  if (confirm('¿Estás seguro de eliminar este usuario?')) {
+    const usuarios = JSON.parse(localStorage.getItem('usuarios') || '[]');
+    usuarios.splice(index, 1);
+    localStorage.setItem('usuarios', JSON.stringify(usuarios));
+    cargarUsuarios();
+    cargarEstadisticas();
+  }
+}
+
 // Función para mostrar formulario de usuario
 function mostrarFormularioUsuario() {
   const formHtml = `
@@ -554,18 +565,30 @@ function cargarEstadisticas() {
   const carrito = JSON.parse(localStorage.getItem('carrito') || '[]');
   
   // Contar usuarios
-  document.getElementById('totalUsuarios').textContent = usuarios.length;
+  const totalUsuariosEl = document.getElementById('totalUsuarios');
+  if (totalUsuariosEl) {
+    totalUsuariosEl.textContent = usuarios.length;
+  }
   
   // Contar productos
-  document.getElementById('totalProductos').textContent = productos.length;
+  const totalProductosEl = document.getElementById('totalProductos');
+  if (totalProductosEl) {
+    totalProductosEl.textContent = productos.length;
+  }
   
   // Productos en carrito
-  const productosEnCarrito = carrito.reduce((total, item) => total + item.cantidad, 0);
-  document.getElementById('productosCarrito').textContent = productosEnCarrito;
+  const productosEnCarrito = carrito.reduce((total, item) => total + (item.cantidad || 0), 0);
+  const productosCarritoEl = document.getElementById('productosCarrito');
+  if (productosCarritoEl) {
+    productosCarritoEl.textContent = productosEnCarrito;
+  }
   
   // Valor total del carrito
-  const valorCarrito = carrito.reduce((total, item) => total + (item.precio * item.cantidad), 0);
-  document.getElementById('valorCarrito').textContent = `$${valorCarrito.toLocaleString()}`;
+  const valorCarrito = carrito.reduce((total, item) => total + ((item.precio || 0) * (item.cantidad || 0)), 0);
+  const valorCarritoEl = document.getElementById('valorCarrito');
+  if (valorCarritoEl) {
+    valorCarritoEl.textContent = `$${valorCarrito.toLocaleString()}`;
+  }
 }
 
 // ============= 5. EVENTOS GENERALES =============
@@ -574,13 +597,19 @@ function cargarEstadisticas() {
 function cerrarSesion() {
   if (confirm('¿Estás seguro de cerrar sesión?')) {
     localStorage.removeItem('usuarioActual');
-    window.location.href = 'login.html';
+    localStorage.removeItem('currentUser');
+    window.location.href = '../user/iniciar-sesion.html';
   }
+}
+
+// Función para cerrar sesión (alias de cerrarSesion)
+function logout() {
+  cerrarSesion();
 }
 
 // Volver a la tienda
 function volverTienda() {
-  window.location.href = 'index.html';
+  window.location.href = '../../index.html';
 }
 
 console.log('admin-simple.js cargado correctamente');
