@@ -1,0 +1,36 @@
+/* Copiado desde assets/css/styles.css - simplificado para proyecto de principiante */
+body { background: #f8f9fa; }
+
+/* Tarjetas limpias y sencillas */
+.card {
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  padding: 1rem;
+  border: 0;
+  background: #fff;
+}
+
+/* Header con gradiente y logo a la izquierda */
+header {
+  background: linear-gradient(90deg,#0d6efd,#6f42c1);
+}
+header a { color: #fff; }
+
+/* Ajustes del logo */
+header img { height: 48px; width: auto; }
+
+/* Formularios y botones */
+.form-control:focus {
+  box-shadow: 0 0 0 0.15rem rgba(13,110,253,0.12);
+  border-color: #0d6efd;
+}
+
+.form-label { font-weight: 600; }
+
+.btn-primary { border-radius: 6px; padding: .5rem .75rem; font-weight: 600; }
+
+/* Pequeños ajustes responsive */
+@media (max-width: 576px) {
+  header .h5 { font-size: 1rem; }
+  .card { padding: .75rem; }
+}
