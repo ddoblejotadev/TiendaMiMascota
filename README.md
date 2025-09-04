@@ -175,13 +175,6 @@ Este es un proyecto de desarrollo web fullstack desarrollado con **HTML5, CSS3 y
 - Catálogo completo de productos
 - Filtros por categoría
 - Búsqueda de productos
-## 📚 Documentación Adicional
-
-Este proyecto incluye documentación completa para facilitar el aprendizaje:
-
-- **`GUIA_PROYECTO.md`** - Guía completa con explicaciones detalladas
-- **`ARCHIVOS_RECOMENDADOS.md`** - Lista de archivos a usar vs archivos legacy
-- **`PROYECTO_FINAL_ORGANIZADO.md`** - Estructura final y comparaciones
 
 ## 🎯 Características para Principiantes
 
