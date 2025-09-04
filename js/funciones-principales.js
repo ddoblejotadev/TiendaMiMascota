@@ -329,7 +329,7 @@ document.addEventListener('DOMContentLoaded', function() {
       // Redirigir al login (breve espera para que el usuario vea el mensaje)
       setTimeout(() => {
         console.log('Redirigiendo a login...');
-        window.location.href = 'login.html';
+        window.location.href = 'iniciar-sesion.html';
       }, 1500);
     });
   }
