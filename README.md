@@ -24,7 +24,7 @@ Este es un proyecto de desarrollo web fullstack desarrollado con **HTML5, CSS3 y
 ### 👤 **Sistema de Usuarios**
 - **Registro simplificado** con validaciones claras
 - **Validación de RUT chileno** con algoritmo real
-- **Emails restringidos**: @duoc.cl, @profesor.duoc.cl, @gmail.com
+- **Emails restringidos**: @duoc.cl, @profesor.duoc.cl, @gmail.com, @admin.cl
 - **Contraseñas seguras**: 6+ caracteres, 1 número, 1 mayúscula
 - **Login con redirección** automática según tipo de usuario
 
@@ -119,7 +119,7 @@ Este es un proyecto de desarrollo web fullstack desarrollado con **HTML5, CSS3 y
 - `@duoc.cl` - Estudiantes
 - `@profesor.duoc.cl` - Profesores  
 - `@gmail.com` - Público general
-- `@admin.cl` - Administradores (acceso especial)
+- `@admin.cl` - Administradores (acceso especial al panel admin)
 
 ## 💻 Tecnologías Utilizadas
 
@@ -153,7 +153,7 @@ Este es un proyecto de desarrollo web fullstack desarrollado con **HTML5, CSS3 y
 - **Login seguro** con redirección automática
 - **Roles diferenciados**: usuario normal y administrador
 - **Sesiones persistentes** entre navegación
-- **Validación de emails** específicos (@duoc.cl, @profesor.duoc.cl, @gmail.com)
+- **Validación de emails** específicos (@duoc.cl, @profesor.duoc.cl, @gmail.com, @admin.cl)
 
 ### � **Validaciones de Seguridad**
 - **RUT chileno**: Algoritmo de validación del dígito verificador

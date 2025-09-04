@@ -40,7 +40,7 @@ function validarRUT(rut) {
 
 // Función simple para validar email
 function validarEmail(email) {
-  const dominiosPermitidos = ['duoc.cl', 'profesor.duoc.cl', 'gmail.com'];
+  const dominiosPermitidos = ['duoc.cl', 'profesor.duoc.cl', 'gmail.com', 'admin.cl'];
   const partes = email.split('@');
   
   if (partes.length !== 2) return false;
@@ -159,7 +159,7 @@ document.addEventListener('DOMContentLoaded', function() {
       
       // Validar email
       if (!validarEmail(email)) {
-        mostrarAlerta('danger', 'Solo se permiten emails @duoc.cl, @profesor.duoc.cl o @gmail.com', 'alertaRegistro');
+        mostrarAlerta('danger', 'Solo se permiten emails @duoc.cl, @profesor.duoc.cl, @gmail.com o @admin.cl', 'alertaRegistro');
         return;
       }
       
@@ -401,7 +401,7 @@ document.addEventListener('DOMContentLoaded', () => {
         errores.push('El email es obligatorio');
         esValido = false;
       } else if (!validarEmail(email)) {
-        errores.push('Solo se permiten emails @duoc.cl, @profesor.duoc.cl, @gmail.com');
+        errores.push('Solo se permiten emails @duoc.cl, @profesor.duoc.cl, @gmail.com o @admin.cl');
         esValido = false;
       }
 

@@ -54,7 +54,7 @@
                     <label for="email" class="form-label">Email *</label>
                     <input type="email" class="form-control" id="email" required>
                     <div class="invalid-feedback"></div>
-                    <div class="form-text">Solo se permiten emails @duoc.cl, @profesor.duoc.cl, @gmail.com</div>
+                    <div class="form-text">Solo se permiten emails @duoc.cl, @profesor.duoc.cl, @gmail.com o @admin.cl</div>
                   </div>
                 </div>
 
@@ -231,7 +231,7 @@
         const email = document.getElementById('email').value.trim();
         const emailPattern = /^[^\s@]+@(duoc\.cl|profesor\.duoc\.cl|gmail\.com)$/;
         if (!emailPattern.test(email)) {
-          mostrarError('email', 'Solo se permiten emails @duoc.cl, @profesor.duoc.cl o @gmail.com');
+          mostrarError('email', 'Solo se permiten emails @duoc.cl, @profesor.duoc.cl, @gmail.com o @admin.cl');
           esValido = false;
         }
         
