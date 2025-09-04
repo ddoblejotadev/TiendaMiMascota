@@ -1,73 +1,114 @@
 ﻿<!DOCTYPE html>
 <html lang="es">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Iniciar sesiÃ³n - Tienda MiMascota</title>
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" href="../../css/styles.css" />
-  </head>
-  <body>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar Sesión - Tienda MiMascota</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/styles.css">
+</head>
+<body>
+    <!-- Header -->
     <header class="bg-primary text-white py-3 mb-4">
-      <div class="container d-flex align-items-center justify-content-between">
-        <a href="../../index.html" class="d-flex align-items-center text-white text-decoration-none">
-          <img src="../../assets/img/logo1.png" alt="Tienda MiMascota" style="height:40px; width:auto;" class="me-2">
-          <span class="h6 mb-0">ðŸ¾ Tienda MiMascota</span>
-        </a>
-        <nav>
-          <a href="../catalogo-productos.html" class="text-white me-3">Productos</a>
-          <a href="../content/blog-articulos.html" class="text-white me-3">Blog</a>
-          <a href="../content/acerca-de-nosotros.html" class="text-white me-3">Nosotros</a>
-          <a href="../content/formulario-contacto.html" class="text-white me-3">Contacto</a>
-          <a href="registro-usuario.html" class="text-white me-3">Registrarse</a>
-          <a href="iniciar-sesion.html" class="text-white me-3">Iniciar sesiÃ³n</a>
-        </nav>
-      </div>
+        <div class="container d-flex align-items-center justify-content-between">
+            <a href="../../index.html" class="d-flex align-items-center text-white text-decoration-none">
+                <img src="../../assets/img/logo1.png" alt="Tienda MiMascota" style="height: 40px; width: auto;" class="me-2">
+                <span class="h6 mb-0">🐾 Tienda MiMascota</span>
+            </a>
+            <nav>
+                <a href="../catalogo-productos.html" class="text-white me-3">Productos</a>
+                <a href="../content/blog-articulos.html" class="text-white me-3">Blog</a>
+                <a href="../content/acerca-de-nosotros.html" class="text-white me-3">Nosotros</a>
+                <a href="../content/formulario-contacto.html" class="text-white me-3">Contacto</a>
+                <a href="registro-usuario.html" class="text-white me-3">Registrarse</a>
+                <a href="iniciar-sesion.html" class="text-white me-3">Iniciar Sesión</a>
+            </nav>
+        </div>
     </header>
 
+    <!-- Contenido Principal -->
     <main class="container py-5">
-      <div class="row justify-content-center">
-        <div class="col-12 col-md-6">
-          <div class="card p-4">
-            <h2 class="h5 mb-3">Iniciar sesiÃ³n</h2>
-            <form id="loginForm" novalidate>
-              <div class="mb-3">
-                <label for="loginId" class="form-label">Usuario o correo</label>
-                <input
-                  id="loginId"
-                  class="form-control"
-                  required
-                  autocomplete="username email"
-                />
-              </div>
-              <div class="mb-3">
-                <label for="loginPassword" class="form-label">ContraseÃ±a</label>
-                <input
-                  id="loginPassword"
-                  type="password"
-                  class="form-control"
-                  required
-                  autocomplete="current-password"
-                />
-              </div>
-              <div class="d-grid">
-                <button class="btn btn-primary" type="submit">Entrar</button>
-              </div>
-              <div id="loginAlert" class="mt-3" aria-live="polite"></div>
-            </form>
-            <div class="mt-3 text-center">
-              <small
-                >Â¿No tienes cuenta? <a href="registro-usuario.html">RegÃ­strate</a></small
-              >
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-6 col-lg-5">
+                <div class="card shadow-sm">
+                    <div class="card-body p-4">
+                        <h2 class="text-center mb-4">🔐 Iniciar Sesión</h2>
+                        
+                        <form id="loginForm" novalidate>
+                            <div class="mb-3">
+                                <label for="loginId" class="form-label">Usuario o Correo Electrónico</label>
+                                <input type="text" class="form-control" id="loginId" required autocomplete="username email">
+                                <div class="invalid-feedback">
+                                    Por favor ingresa tu usuario o correo electrónico.
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="loginPassword" class="form-label">Contraseña</label>
+                                <input type="password" class="form-control" id="loginPassword" required autocomplete="current-password">
+                                <div class="invalid-feedback">
+                                    Por favor ingresa tu contraseña.
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3 form-check">
+                                <input type="checkbox" class="form-check-input" id="rememberMe">
+                                <label class="form-check-label" for="rememberMe">
+                                    Recordarme
+                                </label>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary w-100 mb-3">Iniciar Sesión</button>
+                        </form>
+                        
+                        <div class="text-center">
+                            <p class="mb-0">¿No tienes una cuenta? 
+                                <a href="registro-usuario.html" class="text-decoration-none">Regístrate aquí</a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
             </div>
-          </div>
         </div>
-      </div>
     </main>
-    <script src="../../js/funciones-principales.js" defer></script>
-  </body>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white py-5 mt-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <div class="d-flex align-items-center mb-3">
+                        <img src="../../assets/img/logo1.png" alt="Tienda MiMascota" style="height: 30px; width: auto;" class="me-2">
+                        <span class="h6 mb-0">🐾 Tienda MiMascota</span>
+                    </div>
+                    <p class="text-light">Tu tienda de confianza para el cuidado y felicidad de tus mascotas.</p>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <h6>Enlaces Rápidos</h6>
+                    <ul class="list-unstyled">
+                        <li><a href="../catalogo-productos.html" class="text-light text-decoration-none">Productos</a></li>
+                        <li><a href="../content/blog-articulos.html" class="text-light text-decoration-none">Blog</a></li>
+                        <li><a href="../content/acerca-de-nosotros.html" class="text-light text-decoration-none">Nosotros</a></li>
+                        <li><a href="../content/formulario-contacto.html" class="text-light text-decoration-none">Contacto</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <h6>Contacto</h6>
+                    <p class="text-light mb-1">📧 info@mimascota.cl</p>
+                    <p class="text-light mb-1">📞 +56 9 1234 5678</p>
+                    <p class="text-light">📍 Santiago, Chile</p>
+                </div>
+            </div>
+            <hr class="border-light">
+            <div class="text-center">
+                <p class="mb-0">&copy; 2024 Tienda MiMascota. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../../js/login.js"></script>
+</body>
 </html>
 

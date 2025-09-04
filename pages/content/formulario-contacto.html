@@ -1,329 +1,91 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Contacto - Tienda MiMascota</title>
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" href="../../css/styles.css" />
-  </head>
-  <body>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/styles.css">
+</head>
+<body>
+    <!-- Header -->
     <header class="bg-primary text-white py-3 mb-4">
-      <div class="container d-flex align-items-center justify-content-between">
-        <a href="../../index.html" class="d-flex align-items-center text-white text-decoration-none">
-          <img src="../../assets/img/logo1.png" alt="Tienda MiMascota" style="height:48px; width:auto;" class="me-2">
-          <span class="h5 mb-0">ðŸ¾ Tienda MiMascota</span>
-        </a>
-        <nav>
-          <a href="../catalogo-productos.html" class="text-white me-3">Productos</a>
-          <a href="blog-articulos.html" class="text-white me-3">Blog</a>
-          <a href="acerca-de-nosotros.html" class="text-white me-3">Nosotros</a>
-          <a href="formulario-contacto.html" class="text-white me-3">Contacto</a>
-          <a href="../user/registro-usuario.html" class="text-white me-3">Registrarse</a>
-          <a href="../user/iniciar-sesion.html" class="text-white me-3">Iniciar sesiÃ³n</a>
-        </nav>
-      </div>
+        <div class="container d-flex align-items-center justify-content-between">
+            <a href="../../index.html" class="d-flex align-items-center text-white text-decoration-none">
+                <img src="../../assets/img/logo1.png" alt="Tienda MiMascota" style="height: 40px; width: auto;" class="me-2">
+                <span class="h6 mb-0">🐾 Tienda MiMascota</span>
+            </a>
+            <nav>
+                <a href="../catalogo-productos.html" class="text-white me-3">Productos</a>
+                <a href="blog-articulos.html" class="text-white me-3">Blog</a>
+                <a href="acerca-de-nosotros.html" class="text-white me-3">Nosotros</a>
+                <a href="formulario-contacto.html" class="text-white me-3">Contacto</a>
+                <a href="../user/registro-usuario.html" class="text-white me-3">Registrarse</a>
+                <a href="../user/iniciar-sesion.html" class="text-white me-3">Iniciar Sesión</a>
+            </nav>
+        </div>
     </header>
 
-    <main class="container mb-5">
-      <!-- Header de contacto -->
-      <section class="text-center mb-5">
-        <h1 class="display-4 mb-3">ContÃ¡ctanos</h1>
-        <p class="lead">Â¿Tienes alguna pregunta? Estamos aquÃ­ para ayudarte</p>
-      </section>
-
-      <div class="row">
-        <!-- Formulario de contacto -->
-        <div class="col-lg-8 mb-4">
-          <div class="card">
-            <div class="card-header">
-              <h3>EnvÃ­anos un mensaje</h3>
-            </div>
-            <div class="card-body">
-              <form id="contactForm">
-                <div class="row mb-3">
-                  <div class="col-md-6">
-                    <label for="nombre" class="form-label">Nombre completo *</label>
-                    <input type="text" class="form-control" id="nombre" required>
-                    <div class="invalid-feedback"></div>
-                  </div>
-                  <div class="col-md-6">
-                    <label for="email" class="form-label">Email *</label>
-                    <input type="email" class="form-control" id="email" required>
-                    <div class="invalid-feedback"></div>
-                    <div class="form-text">Solo se permiten emails @duoc.cl, @profesor.duoc.cl, @gmail.com o @admin.cl</div>
-                  </div>
-                </div>
-
-                <div class="row mb-3">
-                  <div class="col-md-6">
-                    <label for="telefono" class="form-label">TelÃ©fono</label>
-                    <input type="tel" class="form-control" id="telefono" placeholder="+56 9 1234 5678">
-                    <div class="invalid-feedback"></div>
-                  </div>
-                  <div class="col-md-6">
-                    <label for="asunto" class="form-label">Asunto *</label>
-                    <select class="form-select" id="asunto" required>
-                      <option value="">Selecciona un asunto</option>
-                      <option value="consulta-producto">Consulta sobre producto</option>
-                      <option value="problema-pedido">Problema con pedido</option>
-                      <option value="sugerencia">Sugerencia</option>
-                      <option value="reclamo">Reclamo</option>
-                      <option value="otro">Otro</option>
-                    </select>
-                    <div class="invalid-feedback"></div>
-                  </div>
-                </div>
-
-                <div class="mb-3">
-                  <label for="mensaje" class="form-label">Mensaje *</label>
-                  <textarea class="form-control" id="mensaje" rows="5" required placeholder="Escribe tu mensaje aquÃ­..."></textarea>
-                  <div class="invalid-feedback"></div>
-                </div>
-
-                <div class="mb-3 form-check">
-                  <input type="checkbox" class="form-check-input" id="aceptaTerminos" required>
-                  <label class="form-check-label" for="aceptaTerminos">
-                    Acepto los tÃ©rminos y condiciones y autorizo el tratamiento de mis datos personales *
-                  </label>
-                  <div class="invalid-feedback"></div>
-                </div>
-
-                <button type="submit" class="btn btn-primary">
-                  <i class="fas fa-paper-plane"></i> Enviar mensaje
-                </button>
-              </form>
-
-              <!-- Mensaje de Ã©xito -->
-              <div id="mensajeExito" class="alert alert-success mt-3 d-none">
-                <h5>Â¡Mensaje enviado correctamente!</h5>
-                <p>Gracias por contactarnos. Responderemos a tu mensaje lo antes posible.</p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- InformaciÃ³n de contacto -->
-        <div class="col-lg-4">
-          <div class="card mb-4">
-            <div class="card-header">
-              <h4>InformaciÃ³n de contacto</h4>
-            </div>
-            <div class="card-body">
-              <div class="mb-3">
-                <h6><i class="fas fa-envelope"></i> Email</h6>
-                <p class="text-muted">contacto@mimascota.cl</p>
-              </div>
-              
-              <div class="mb-3">
-                <h6><i class="fas fa-phone"></i> TelÃ©fono</h6>
-                <p class="text-muted">+56 2 1234 5678</p>
-              </div>
-              
-              <div class="mb-3">
-                <h6><i class="fas fa-whatsapp"></i> WhatsApp</h6>
-                <p class="text-muted">+56 9 8765 4321</p>
-              </div>
-              
-              <div class="mb-3">
-                <h6><i class="fas fa-map-marker-alt"></i> DirecciÃ³n</h6>
-                <p class="text-muted">
-                  Av. Providencia 123<br>
-                  Providencia, Santiago<br>
-                  Chile
-                </p>
-              </div>
-              
-              <div class="mb-3">
-                <h6><i class="fas fa-clock"></i> Horario de atenciÃ³n</h6>
-                <p class="text-muted">
-                  Lunes a Viernes: 9:00 - 18:00<br>
-                  SÃ¡bados: 9:00 - 14:00<br>
-                  Domingos: Cerrado
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <!-- Preguntas frecuentes -->
-          <div class="card">
-            <div class="card-header">
-              <h4>Preguntas frecuentes</h4>
-            </div>
-            <div class="card-body">
-              <div class="accordion" id="faqAccordion">
-                <div class="accordion-item">
-                  <h2 class="accordion-header">
-                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
-                      Â¿CuÃ¡nto demora el envÃ­o?
-                    </button>
-                  </h2>
-                  <div id="faq1" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
-                    <div class="accordion-body">
-                      Los envÃ­os dentro de Santiago llegan en 24-48 horas. A regiones, entre 3-5 dÃ­as hÃ¡biles.
+    <!-- Contenido Principal -->
+    <main class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-6">
+                <h1 class="text-center mb-4">📞 Contáctanos</h1>
+                
+                <div class="card">
+                    <div class="card-body">
+                        <form id="contactForm">
+                            <div class="mb-3">
+                                <label for="contactName" class="form-label">Nombre</label>
+                                <input type="text" class="form-control" id="contactName" required>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="contactEmail" class="form-label">Correo Electrónico</label>
+                                <input type="email" class="form-control" id="contactEmail" required>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="contactSubject" class="form-label">Asunto</label>
+                                <input type="text" class="form-control" id="contactSubject" required>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="contactMessage" class="form-label">Mensaje</label>
+                                <textarea class="form-control" id="contactMessage" rows="5" required></textarea>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary w-100">Enviar Mensaje</button>
+                        </form>
                     </div>
-                  </div>
                 </div>
                 
-                <div class="accordion-item">
-                  <h2 class="accordion-header">
-                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
-                      Â¿Puedo devolver un producto?
-                    </button>
-                  </h2>
-                  <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
-                    <div class="accordion-body">
-                      SÃ­, tienes 30 dÃ­as para devolver productos en perfecto estado con su empaque original.
+                <!-- Información de contacto -->
+                <div class="card mt-4">
+                    <div class="card-body text-center">
+                        <h5>Información de Contacto</h5>
+                        <p class="mb-1">📧 info@mimascota.cl</p>
+                        <p class="mb-1">📞 +56 9 1234 5678</p>
+                        <p class="mb-0">📍 Santiago, Chile</p>
                     </div>
-                  </div>
                 </div>
-                
-                <div class="accordion-item">
-                  <h2 class="accordion-header">
-                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
-                      Â¿Hacen envÃ­o gratis?
-                    </button>
-                  </h2>
-                  <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
-                    <div class="accordion-body">
-                      SÃ­, envÃ­o gratis en compras sobre $30.000 dentro de Santiago.
-                    </div>
-                  </div>
-                </div>
-              </div>
             </div>
-          </div>
         </div>
-      </div>
     </main>
 
-    <footer class="bg-light text-center py-4 mt-5">
-      <div class="container">
-        <p>&copy; 2023 Tienda MiMascota - Todo para tu mejor amigo</p>
-      </div>
+    <!-- Footer -->
+    <footer class="bg-dark text-white py-4 mt-5">
+        <div class="container text-center">
+            <div class="d-flex align-items-center justify-content-center mb-3">
+                <img src="../../assets/img/logo1.png" alt="Tienda MiMascota" style="height: 30px; width: auto;" class="me-2">
+                <span class="h6 mb-0">🐾 Tienda MiMascota</span>
+            </div>
+            <p class="mb-0">&copy; 2024 Tienda MiMascota. Todos los derechos reservados.</p>
+        </div>
     </footer>
 
-    <!-- Bootstrap JS -->
+    <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
-    
-    <script>
-      // Validaciones del formulario
-      document.getElementById('contactForm').addEventListener('submit', function(e) {
-        e.preventDefault();
-        
-        // Limpiar errores previos
-        limpiarErrores();
-        
-        // Validar campos
-        let esValido = true;
-        
-        // Validar nombre
-        const nombre = document.getElementById('nombre').value.trim();
-        if (nombre.length < 2) {
-          mostrarError('nombre', 'El nombre debe tener al menos 2 caracteres');
-          esValido = false;
-        }
-        
-        // Validar email
-        const email = document.getElementById('email').value.trim();
-        const emailPattern = /^[^\s@]+@(duoc\.cl|profesor\.duoc\.cl|gmail\.com)$/;
-        if (!emailPattern.test(email)) {
-          mostrarError('email', 'Solo se permiten emails @duoc.cl, @profesor.duoc.cl, @gmail.com o @admin.cl');
-          esValido = false;
-        }
-        
-        // Validar telÃ©fono (opcional, pero si se llena debe ser vÃ¡lido)
-        const telefono = document.getElementById('telefono').value.trim();
-        if (telefono && !/^\+56\s?[9]\s?\d{4}\s?\d{4}$/.test(telefono)) {
-          mostrarError('telefono', 'Formato: +56 9 1234 5678');
-          esValido = false;
-        }
-        
-        // Validar asunto
-        const asunto = document.getElementById('asunto').value;
-        if (!asunto) {
-          mostrarError('asunto', 'Selecciona un asunto');
-          esValido = false;
-        }
-        
-        // Validar mensaje
-        const mensaje = document.getElementById('mensaje').value.trim();
-        if (mensaje.length < 10) {
-          mostrarError('mensaje', 'El mensaje debe tener al menos 10 caracteres');
-          esValido = false;
-        }
-        
-        // Validar tÃ©rminos
-        const aceptaTerminos = document.getElementById('aceptaTerminos').checked;
-        if (!aceptaTerminos) {
-          mostrarError('aceptaTerminos', 'Debes aceptar los tÃ©rminos y condiciones');
-          esValido = false;
-        }
-        
-        if (esValido) {
-          enviarFormulario();
-        }
-      });
-      
-      function mostrarError(campo, mensaje) {
-        const input = document.getElementById(campo);
-        input.classList.add('is-invalid');
-        const feedback = input.nextElementSibling;
-        if (feedback && feedback.classList.contains('invalid-feedback')) {
-          feedback.textContent = mensaje;
-        }
-      }
-      
-      function limpiarErrores() {
-        const inputs = document.querySelectorAll('.form-control, .form-select, .form-check-input');
-        inputs.forEach(input => {
-          input.classList.remove('is-invalid');
-        });
-      }
-      
-      function enviarFormulario() {
-        // Simular envÃ­o del formulario
-        const formData = {
-          nombre: document.getElementById('nombre').value,
-          email: document.getElementById('email').value,
-          telefono: document.getElementById('telefono').value,
-          asunto: document.getElementById('asunto').value,
-          mensaje: document.getElementById('mensaje').value,
-          fecha: new Date().toISOString()
-        };
-        
-        // Guardar en localStorage (simulando base de datos)
-        const mensajes = JSON.parse(localStorage.getItem('mensajes_contacto')) || [];
-        mensajes.push(formData);
-        localStorage.setItem('mensajes_contacto', JSON.stringify(mensajes));
-        
-        // Mostrar mensaje de Ã©xito
-        document.getElementById('contactForm').style.display = 'none';
-        document.getElementById('mensajeExito').classList.remove('d-none');
-        
-        // Resetear formulario despuÃ©s de 3 segundos
-        setTimeout(() => {
-          document.getElementById('contactForm').reset();
-          document.getElementById('contactForm').style.display = 'block';
-          document.getElementById('mensajeExito').classList.add('d-none');
-        }, 3000);
-      }
-      
-      // ValidaciÃ³n en tiempo real del email
-      document.getElementById('email').addEventListener('input', function() {
-        const email = this.value.trim();
-        const emailPattern = /^[^\s@]+@(duoc\.cl|profesor\.duoc\.cl|gmail\.com)$/;
-        
-        if (email && !emailPattern.test(email)) {
-          this.classList.add('is-invalid');
-        } else {
-          this.classList.remove('is-invalid');
-        }
-      });
-    </script>
-  </body>
+    <script src="../../js/contact.js"></script>
+</body>
 </html>
-

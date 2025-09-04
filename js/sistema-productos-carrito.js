@@ -2,6 +2,20 @@
 // Archivo para manejar productos y carrito de compras
 // Código simple y comentado para nivel principiante
 
+// ============= 0. CONFIGURACIÓN DE RUTAS =============
+// Función para determinar la ruta correcta según la ubicación de la página
+function obtenerRutaAssets() {
+  const currentPath = window.location.pathname;
+  // Si estamos en una subcarpeta (pages/), usar ../assets/
+  if (currentPath.includes('/pages/')) {
+    return '../assets/img/';
+  }
+  // Si estamos en la raíz, usar assets/
+  return 'assets/img/';
+}
+
+const rutaAssets = obtenerRutaAssets();
+
 // ============= 1. LISTA DE PRODUCTOS =============
 // Usamos TODAS las imágenes disponibles en assets/img/
 
@@ -11,7 +25,7 @@ const productos = [
     nombre: "Alimento Premium para Perros",
     precio: 15990,
     categoria: "comida",
-    imagen: "assets/img/Comida.jpg",
+    imagen: rutaAssets + "Comida.jpg",
     descripcion: "Alimento balanceado premium para perros adultos. Rico en proteínas y vitaminas.",
     stock: 50
   },
@@ -20,7 +34,7 @@ const productos = [
     nombre: "Juguetes Divertidos",
     precio: 5990,
     categoria: "juguetes", 
-    imagen: "assets/img/jugetes.png",
+    imagen: rutaAssets + "jugetes.png",
     descripcion: "Set de pelotas y juguetes para mantener activa y feliz a tu mascota.",
     stock: 30
   },
@@ -29,7 +43,7 @@ const productos = [
     nombre: "Cama Super Cómoda",
     precio: 25990,
     categoria: "camas",
-    imagen: "assets/img/cama2.png", 
+    imagen: rutaAssets + "cama2.png",
     descripcion: "Cama ultra cómoda con relleno de espuma para el descanso perfecto.",
     stock: 15
   },
@@ -38,7 +52,7 @@ const productos = [
     nombre: "Productos de Salud",
     precio: 12990,
     categoria: "salud",
-    imagen: "assets/img/salud.png",
+    imagen: rutaAssets + "salud.png",
     descripcion: "Vitaminas, suplementos y medicamentos para la salud de tu mascota.",
     stock: 25
   },
@@ -47,7 +61,7 @@ const productos = [
     nombre: "Accesorios Fashion",
     precio: 8990,
     categoria: "accesorios",
-    imagen: "assets/img/accesorios.png",
+    imagen: rutaAssets + "accesorios.png",
     descripcion: "Collares, correas y accesorios fashion para que tu mascota luzca genial.",
     stock: 40
   },
@@ -56,7 +70,7 @@ const productos = [
     nombre: "Productos de Higiene",
     precio: 9990,
     categoria: "higiene",
-    imagen: "assets/img/higiene.png",
+    imagen: rutaAssets + "higiene.png",
     descripcion: "Shampoos, acondicionadores y productos de limpieza para tu mascota.",
     stock: 35
   },
@@ -65,7 +79,7 @@ const productos = [
     nombre: "Producto Especial",
     precio: 18990,
     categoria: "especial",
-    imagen: "assets/img/prod.png",
+    imagen: rutaAssets + "prod.png",
     descripcion: "Producto especial de la casa con múltiples beneficios para tu mascota.",
     stock: 20
   }
