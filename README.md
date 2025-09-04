@@ -221,7 +221,7 @@ Este proyecto incluye documentación completa para facilitar el aprendizaje:
 
 ## 📞 Información del Proyecto
 
-**Desarrollado por:** Estudiante de Desarrollo Web  
+**Desarrollado por:** Juan Llontop y Yasser Illanes  
 **Institución:** DUOC UC  
 **Tecnologías:** HTML5, CSS3, JavaScript ES6, Bootstrap 5  
 **Fecha:** Septiembre 2025  
