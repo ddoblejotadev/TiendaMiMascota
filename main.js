@@ -1,28 +1,21 @@
-// ============= FUNCIONES AUXILIARES =============
+// ============= MAIN.JS - PROYECTO TIENDA MIMASCOTA =============
+// Archivo principal para manejo de registro, login y validaciones
+// Código simple y comentado para nivel principiante
 
-// Datos de regiones y comunas de Chile
+// ============= 1. DATOS DE REGIONES Y COMUNAS =============
 const regionesYcomunas = {
-  "Región de Arica y Parinacota": ["Arica", "Camarones", "Putre", "General Lagos"],
-  "Región de Tarapacá": ["Iquique", "Alto Hospicio", "Pozo Almonte", "Camiña", "Colchane", "Huara", "Pica"],
-  "Región de Antofagasta": ["Antofagasta", "Mejillones", "Sierra Gorda", "Taltal", "Calama", "Ollagüe", "San Pedro de Atacama", "Tocopilla", "María Elena"],
-  "Región de Atacama": ["Copiapó", "Caldera", "Tierra Amarilla", "Chañaral", "Diego de Almagro", "Vallenar", "Alto del Carmen", "Freirina", "Huasco"],
-  "Región de Coquimbo": ["La Serena", "Coquimbo", "Andacollo", "La Higuera", "Paiguano", "Vicuña", "Illapel", "Canela", "Los Vilos", "Salamanca", "Ovalle", "Combarbalá", "Monte Patria", "Punitaqui", "Río Hurtado"],
-  "Región de Valparaíso": ["Valparaíso", "Casablanca", "Concón", "Juan Fernández", "Puchuncaví", "Quintero", "Viña del Mar", "Isla de Pascua", "Los Andes", "Calle Larga", "Rinconada", "San Esteban", "La Ligua", "Cabildo", "Papudo", "Petorca", "Zapallar", "Quillota", "Calera", "Hijuelas", "La Cruz", "Nogales", "San Antonio", "Algarrobo", "Cartagena", "El Quisco", "El Tabo", "Santo Domingo", "San Felipe", "Catemu", "Llaillay", "Panquehue", "Putaendo", "Santa María", "Limache", "Olmué", "Villa Alemana"],
-  "Región Metropolitana": ["Santiago", "Cerrillos", "Cerro Navia", "Conchalí", "El Bosque", "Estación Central", "Huechuraba", "Independencia", "La Cisterna", "La Florida", "La Granja", "La Pintana", "La Reina", "Las Condes", "Lo Barnechea", "Lo Espejo", "Lo Prado", "Macul", "Maipú", "Ñuñoa", "Pedro Aguirre Cerda", "Peñalolén", "Providencia", "Pudahuel", "Quilicura", "Quinta Normal", "Recoleta", "Renca", "Santiago", "San Joaquín", "San Miguel", "San Ramón", "Vitacura", "Puente Alto", "Pirque", "San José de Maipo", "Colina", "Lampa", "Tiltil", "San Bernardo", "Buin", "Calera de Tango", "Paine", "Melipilla", "Alhué", "Curacaví", "María Pinto", "San Pedro", "Talagante", "El Monte", "Isla de Maipo", "Padre Hurtado", "Peñaflor"],
-  "Región del Libertador General Bernardo O'Higgins": ["Rancagua", "Codegua", "Coinco", "Coltauco", "Doñihue", "Graneros", "Las Cabras", "Machalí", "Malloa", "Mostazal", "Olivar", "Peumo", "Pichidegua", "Quinta de Tilcoco", "Rengo", "Requínoa", "San Vicente", "Pichilemu", "La Estrella", "Litueche", "Marchihue", "Navidad", "Paredones", "San Fernando", "Chépica", "Chimbarongo", "Lolol", "Nancagua", "Palmilla", "Peralillo", "Placilla", "Pumanque", "Santa Cruz"],
-  "Región del Maule": ["Talca", "ConsVtución", "Curepto", "Empedrado", "Maule", "Pelarco", "Pencahue", "Río Claro", "San Clemente", "San Rafael", "Cauquenes", "Chanco", "Pelluhue", "Curicó", "Hualañé", "Licantén", "Molina", "Rauco", "Romeral", "Sagrada Familia", "Teno", "Vichuquén", "Linares", "Colbún", "Longaví", "Parral", "Retiro", "San Javier", "Villa Alegre", "Yerbas Buenas"],
-  "Región del Ñuble": ["Chillán", "Bulnes", "Cobquecura", "Coelemu", "Coihueco", "Chillán Viejo", "El Carmen", "Ninhue", "Ñiquén", "Pemuco", "Pinto", "Portezuelo", "Quillón", "Quirihue", "Ránquil", "San Carlos", "San Fabián", "San Ignacio", "San Nicolás", "Treguaco", "Yungay"],
-  "Región del Biobío": ["Concepción", "Coronel", "Chiguayante", "Florida", "Hualqui", "Lota", "Penco", "San Pedro de la Paz", "Santa Juana", "Talcahuano", "Tomé", "Hualpén", "Lebu", "Arauco", "Cañete", "Contulmo", "Curanilahue", "Los Álamos", "Tirúa", "Los Ángeles", "Antuco", "Cabrero", "Laja", "Mulchén", "Nacimiento", "Negrete", "Quilaco", "Quilleco", "San Rosendo", "Santa Bárbara", "Tucapel", "Yumbel"],
-  "Región de La Araucanía": ["Temuco", "Carahue", "Cunco", "Curarrehue", "Freire", "Galvarino", "Gorbea", "Lautaro", "Loncoche", "Melipeuco", "Nueva Imperial", "Padre Las Casas", "Perquenco", "Pitrufquén", "Pucón", "Saavedra", "Teodoro Schmidt", "Toltén", "Vilcún", "Villarrica", "Cholchol", "Angol", "Collipulli", "Curacautín", "Ercilla", "Lonquimay", "Los Sauces", "Lumaco", "Purén", "Renaico", "Traiguén", "Victoria"],
-  "Región de Los Ríos": ["Valdivia", "Corral", "Lanco", "Los Lagos", "Máfil", "Mariquina", "Paillaco", "Panguipulli", "La Unión", "Futrono", "Lago Ranco", "Río Bueno"],
-  "Región de Los Lagos": ["Puerto Montt", "Calbuco", "Cochamó", "Fresia", "Frutillar", "Los Muermos", "Llanquihue", "Maullín", "Puerto Varas", "Castro", "Ancud", "Chonchi", "Curaco de Vélez", "Dalcahue", "Puqueldón", "Queilén", "Quellón", "Quemchi", "Quinchao", "Osorno", "Puerto Octay", "Purranque", "Puyehue", "Río Negro", "San Juan de la Costa", "San Pablo", "Chaitén", "Futaleufú", "Hualaihué", "Palena"],
-  "Región de Aysén del General Carlos Ibáñez del Campo": ["Coyhaique", "Lago Verde", "Aysén", "Cisnes", "Guaitecas", "Cochrane", "O'Higgins", "Tortel", "Chile Chico", "Río Ibáñez"],
-  "Región de Magallanes y de la Antártica Chilena": ["Punta Arenas", "Laguna Blanca", "Río Verde", "San Gregorio", "Cabo de Hornos", "Antártica", "Porvenir", "Primavera", "Timaukel", "Natales", "Torres del Paine"]
+  "Región Metropolitana": ["Santiago", "Las Condes", "Providencia", "Maipú", "Puente Alto", "La Florida"],
+  "Región de Valparaíso": ["Valparaíso", "Viña del Mar", "Concón", "Quilpué", "Villa Alemana"],
+  "Región del Biobío": ["Concepción", "Talcahuano", "Los Ángeles", "Chillán"],
+  "Región de La Araucanía": ["Temuco", "Villarrica", "Pucón", "Angol"],
+  "Región de Los Lagos": ["Puerto Montt", "Osorno", "Castro", "Puerto Varas"]
 };
 
-// Función para validar RUT chileno (SIN puntos ni guión)
+// ============= 2. FUNCIONES DE VALIDACIÓN =============
+
+// Función simple para validar RUT chileno
 function validarRUT(rut) {
-  // El RUT debe venir sin puntos ni guión como lo requiere la evaluación
+  // El RUT debe venir sin puntos ni guión: 12345678K
   if (!/^\d{7,8}[0-9Kk]$/.test(rut)) {
     return false;
   }
@@ -45,61 +38,240 @@ function validarRUT(rut) {
   return dv === dvCalculado;
 }
 
-// Función para validar email según los dominios permitidos
+// Función simple para validar email
 function validarEmail(email) {
   const dominiosPermitidos = ['duoc.cl', 'profesor.duoc.cl', 'gmail.com'];
-  const emailPattern = /^[^\s@]+@([^\s@]+)$/;
+  const partes = email.split('@');
   
-  const match = email.match(emailPattern);
-  if (!match) return false;
+  if (partes.length !== 2) return false;
   
-  const dominio = match[1];
+  const dominio = partes[1];
   return dominiosPermitidos.includes(dominio);
 }
 
-// Función para validar contraseña (mínimo 6 caracteres, al menos 1 número y 1 mayúscula)
+// Función simple para validar contraseña
 function validarPassword(password) {
-  const minLength = 6;
-  const hasNumber = /\d/.test(password);
-  const hasUppercase = /[A-Z]/.test(password);
+  // Mínimo 6 caracteres, al menos 1 número y 1 mayúscula
+  const tieneNumero = /\d/.test(password);
+  const tieneMayuscula = /[A-Z]/.test(password);
   
-  return password.length >= minLength && hasNumber && hasUppercase;
+  return password.length >= 6 && tieneNumero && tieneMayuscula;
 }
 
-// Función para poblar selectores de región y comuna
-function poblarRegiones(selectRegion, selectComuna) {
-  const regionSelect = document.getElementById(selectRegion);
-  const comunaSelect = document.getElementById(selectComuna);
+// ============= 3. FUNCIONES PARA LLENAR SELECTORES =============
+
+// Función para llenar selector de regiones
+function llenarRegiones() {
+  const selectRegion = document.getElementById('region');
+  const selectComuna = document.getElementById('comuna');
   
-  if (!regionSelect || !comunaSelect) return;
+  if (!selectRegion || !selectComuna) return;
   
   // Limpiar selectores
-  regionSelect.innerHTML = '<option value="">Selecciona una región</option>';
-  comunaSelect.innerHTML = '<option value="">Selecciona una comuna</option>';
+  selectRegion.innerHTML = '<option value="">Selecciona una región</option>';
+  selectComuna.innerHTML = '<option value="">Selecciona una comuna</option>';
   
-  // Poblar regiones
+  // Agregar regiones
   Object.keys(regionesYcomunas).forEach(region => {
     const option = document.createElement('option');
     option.value = region;
     option.textContent = region;
-    regionSelect.appendChild(option);
+    selectRegion.appendChild(option);
   });
   
-  // Evento para cargar comunas cuando se selecciona una región
-  regionSelect.addEventListener('change', function() {
+  // Cuando cambie la región, cargar comunas
+  selectRegion.addEventListener('change', function() {
     const regionSeleccionada = this.value;
-    comunaSelect.innerHTML = '<option value="">Selecciona una comuna</option>';
+    selectComuna.innerHTML = '<option value="">Selecciona una comuna</option>';
     
     if (regionSeleccionada && regionesYcomunas[regionSeleccionada]) {
       regionesYcomunas[regionSeleccionada].forEach(comuna => {
         const option = document.createElement('option');
         option.value = comuna;
         option.textContent = comuna;
-        comunaSelect.appendChild(option);
+        selectComuna.appendChild(option);
       });
     }
   });
 }
+
+// ============= 4. FUNCIONES PARA MOSTRAR MENSAJES =============
+
+// Función simple para mostrar alertas
+function mostrarAlerta(tipo, mensaje, contenedorId) {
+  const contenedor = document.getElementById(contenedorId);
+  if (contenedor) {
+    contenedor.innerHTML = `<div class="alert alert-${tipo}">${mensaje}</div>`;
+    // Ocultar el mensaje después de 4 segundos
+    setTimeout(() => {
+      contenedor.innerHTML = '';
+    }, 4000);
+  }
+}
+
+// ============= 5. CÓDIGO PRINCIPAL - CUANDO LA PÁGINA ESTÉ LISTA =============
+
+document.addEventListener('DOMContentLoaded', function() {
+  
+  // Llenar selectores de región y comuna si existen
+  llenarRegiones();
+  
+  // ============= FORMULARIO DE REGISTRO =============
+  const formularioRegistro = document.getElementById('registroForm');
+  
+  if (formularioRegistro) {
+    console.log('Formulario de registro encontrado');
+    
+    // Manejar envío del formulario
+    formularioRegistro.addEventListener('submit', function(e) {
+      e.preventDefault(); // Evitar que se envíe el formulario
+      
+      console.log('Formulario enviado');
+      
+      // Obtener datos del formulario
+      const rut = document.getElementById('rut').value.trim();
+      const nombre = document.getElementById('nombreCompleto').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+      const confirmPassword = document.getElementById('confirmPassword').value;
+      const region = document.getElementById('region').value;
+      const comuna = document.getElementById('comuna').value;
+      const telefono = document.getElementById('telefono').value.trim();
+      
+      // Variables para datos de mascota
+      const nombreMascota = document.getElementById('nombreMascota')?.value.trim() || '';
+      const tipoMascota = document.getElementById('tipoMascota')?.value || '';
+      const edadMascota = document.getElementById('edadMascota')?.value || '';
+      
+      // ============= VALIDACIONES =============
+      
+      // Validar campos obligatorios
+      if (!rut || !nombre || !email || !password || !confirmPassword || !region || !comuna || !telefono) {
+        mostrarAlerta('danger', 'Todos los campos marcados con * son obligatorios', 'alertaRegistro');
+        return;
+      }
+      
+      // Validar RUT
+      if (!validarRUT(rut)) {
+        mostrarAlerta('danger', 'El RUT ingresado no es válido', 'alertaRegistro');
+        return;
+      }
+      
+      // Validar email
+      if (!validarEmail(email)) {
+        mostrarAlerta('danger', 'Solo se permiten emails @duoc.cl, @profesor.duoc.cl o @gmail.com', 'alertaRegistro');
+        return;
+      }
+      
+      // Validar contraseña
+      if (!validarPassword(password)) {
+        mostrarAlerta('danger', 'La contraseña debe tener mínimo 6 caracteres, 1 número y 1 mayúscula', 'alertaRegistro');
+        return;
+      }
+      
+      // Validar confirmación de contraseña
+      if (password !== confirmPassword) {
+        mostrarAlerta('danger', 'Las contraseñas no coinciden', 'alertaRegistro');
+        return;
+      }
+      
+      // ============= GUARDAR DATOS =============
+      
+      // Crear objeto con datos del usuario
+      const nuevoUsuario = {
+        rut: rut,
+        nombre: nombre,
+        email: email,
+        password: password,
+        region: region,
+        comuna: comuna,
+        telefono: telefono,
+        mascota: {
+          nombre: nombreMascota,
+          tipo: tipoMascota,
+          edad: edadMascota
+        },
+        fechaRegistro: new Date().toISOString()
+      };
+      
+      // Obtener usuarios existentes del localStorage
+      const usuariosExistentes = JSON.parse(localStorage.getItem('usuarios') || '[]');
+      
+      // Verificar si el email ya está registrado
+      const emailExiste = usuariosExistentes.find(usuario => usuario.email === email);
+      if (emailExiste) {
+        mostrarAlerta('danger', 'Ya existe un usuario registrado con este email', 'alertaRegistro');
+        return;
+      }
+      
+      // Agregar nuevo usuario
+      usuariosExistentes.push(nuevoUsuario);
+      
+      // Guardar en localStorage
+      localStorage.setItem('usuarios', JSON.stringify(usuariosExistentes));
+      
+      // Mostrar mensaje de éxito
+      mostrarAlerta('success', '¡Registro exitoso! Ahora puedes iniciar sesión', 'alertaRegistro');
+      
+      // Limpiar formulario
+      formularioRegistro.reset();
+      
+      // Redireccionar al login después de 2 segundos
+      setTimeout(() => {
+        window.location.href = 'login.html';
+      }, 2000);
+    });
+  }
+  
+  // ============= FORMULARIO DE LOGIN =============
+  const formularioLogin = document.getElementById('loginForm');
+  
+  if (formularioLogin) {
+    console.log('Formulario de login encontrado');
+    
+    formularioLogin.addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      const usuario = document.getElementById('loginId').value.trim();
+      const password = document.getElementById('loginPassword').value;
+      
+      // Validar campos
+      if (!usuario || !password) {
+        mostrarAlerta('danger', 'Ingresa usuario/email y contraseña', 'loginAlert');
+        return;
+      }
+      
+      // Obtener usuarios del localStorage
+      const usuarios = JSON.parse(localStorage.getItem('usuarios') || '[]');
+      
+      // Buscar usuario por email
+      const usuarioEncontrado = usuarios.find(u => u.email === usuario);
+      
+      if (!usuarioEncontrado) {
+        mostrarAlerta('danger', 'Usuario no encontrado', 'loginAlert');
+        return;
+      }
+      
+      if (usuarioEncontrado.password !== password) {
+        mostrarAlerta('danger', 'Contraseña incorrecta', 'loginAlert');
+        return;
+      }
+      
+      // Login exitoso
+      localStorage.setItem('usuarioActual', JSON.stringify(usuarioEncontrado));
+      
+      // Verificar si es admin (email termina en @admin.cl)
+      if (usuarioEncontrado.email.includes('@admin.cl')) {
+        window.location.href = 'admin.html';
+      } else {
+        window.location.href = 'dashboard.html';
+      }
+    });
+  }
+  
+});
+
+console.log('main.js cargado correctamente');
 
 // Función para mostrar alertas
 function mostrarAlerta(tipo, mensaje, contenedorId) {
