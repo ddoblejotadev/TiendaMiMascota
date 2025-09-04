@@ -1,5 +1,63 @@
-﻿<!DOCTYPE html>
-<html lang="es">
+﻿<!DOCTYPE html      <div class="container d-fl        <div class="col-md-3">        <div class="co      <ul class      <div class="tab-cont                  <tbody id="listaProductosAdmin">
+                    <!-- Se cargarán aquí con JavaScript -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Pestaña de Usuarios -->
+        <div class="tab-pane fade" id="usuarios">
+          <div class="card">
+            <div class="card-header">
+              <h5>👥 Usuarios Registrados</h5>
+            </div><!-- Pestaña de Productos -->
+        <div class="tab-pane fade show active" id="productos">
+          <div class="card">
+            <div class="card-header">
+              <h5>📦 Gestión de Productos</h5>
+            </div>av-tabs mb-4">
+        <li class="nav-item">
+          <a class="nav-link active" data-bs-toggle="tab" href="#productos">📦 Productos</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" data-bs-toggle="tab" href="#usuarios">👥 Usuarios</a>
+        </li>>
+          <div class="card text-center bg-info text-white">
+            <div class="card-body">
+              <h5 class="card-title">💰 Valor Carrito</h5>
+              <h6 id="valorCarrito">$0</h6>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pestañas -->
+      <ul class="nav nav-tabs mb-4">div class="card text-center bg-success text-white">
+            <div class="card-body">
+              <h5 class="card-title">👥 Usuarios</h5>
+              <h2 id="totalUsuarios">0</h2>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card text-center bg-warning text-white">
+            <div class="card-body">
+              <h5 class="card-title">🛒 En Carrito</h5>
+              <h2 id="productosCarrito">0</h2>
+            </div>
+          </div>
+        </div>enter justify-content-between">
+        <div class="d-flex align-items-center">
+          <img src="../../assets/img/logo1.png" alt="MiMascota" style="height:40px; width:auto;" class="me-2">
+          <h1 class="h6 mb-0">🔧 Panel de Administrador</h1>
+        </div>
+        <nav class="d-flex align-items-center">
+          <span id="adminNombre" class="me-3 text-light"></span>
+          <button class="btn btn-outline-light btn-sm me-2" onclick="volverTienda()">Volver a la tienda</button>
+          <button class="btn btn-outline-light btn-sm" onclick="cerrarSesion()">Cerrar sesión</button>
+        </nav>ang="es">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -26,7 +84,7 @@
     </header>
 
     <main class="container mb-5">
-      <!-- EstadÃ­sticas -->
+      <!-- Estadísticas -->
       <div class="row mb-4">
                 <div class="col-md-3">
           <div class="card text-center bg-primary text-white">
@@ -87,7 +145,7 @@
                       <th>Imagen</th>
                       <th>Nombre</th>
                       <th>Precio</th>
-                      <th>CategorÃ­a</th>
+                      <th>Categoría</th>
                       <th>Stock</th>
                       <th>Acciones</th>
                     </tr>
@@ -114,14 +172,14 @@
                     <tr>
                       <th>Nombre</th>
                       <th>Email</th>
-                      <th>TelÃ©fono</th>
-                      <th>RegiÃ³n</th>
+                      <th>Teléfono</th>
+                      <th>Región</th>
                       <th>Comuna</th>
                       <th>Acciones</th>
                     </tr>
                   </thead>
                   <tbody id="listaUsuariosAdmin">
-                    <!-- Se cargarÃ¡n aquÃ­ con JavaScript -->
+                    <!-- Se cargarán aquí con JavaScript -->
                   </tbody>
                 </table>
               </div>
