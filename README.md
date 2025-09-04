@@ -1,6 +1,20 @@
 # 🐾 Tienda MiMascota - Proyecto Final Organizado
-
-Un sitio web completo para una tienda de productos para mascotas con sistema de registro, carrito de compras y panel de administrador. **Proyecto optimizado para nivel principiante** con código simple y bien documentado.
+│   ├── 📄 README.md   ├── 📁 js/                           # ⚙️ TODOS LOS ARCHIVOS JAVASCRIPT
+│   ├── 📄 README.md                 # 📖 Explicación de scripts
+│   ├── 📄 funciones-principales.js  # ⚙️ JavaScript principal del proyecto
+│   ├── 📄 sistema-productos-carrito.js # 🛒 Sistema de productos y carrito
+│   └── 📄 panel-administrador.js    # 🔧 Funcionalidad del panel administrador         # 📖 Explicación de páginas
+│   ├── 📄 catalogo-productos.html   # 🛍️ Catálogo completo con filtros y carrito
+│   ├── 📁 admin/                    # 🔧 PÁGINAS DE ADMINISTRADOR
+│   │   └── 📄 panel-administrador.html # 👨‍💼 Panel de administrador completo
+│   ├── 📁 user/                     # 👤 PÁGINAS DE USUARIO
+│   │   ├── 📄 iniciar-sesion.html   # 🔐 Inicio de sesión
+│   │   ├── 📄 registro-usuario.html # 📝 Registro de usuarios
+│   │   └── 📄 panel-usuario.html    # 👤 Panel del usuario logueado
+│   └── 📁 content/                  # 📰 PÁGINAS DE CONTENIDO
+│       ├── 📄 blog-articulos.html   # 📰 Blog con 3 artículos
+│       ├── 📄 acerca-de-nosotros.html # ℹ️ Información de la empresa
+│       └── 📄 formulario-contacto.html # 📧 Formulario de contactob completo para una tienda de productos para mascotas con sistema de registro, carrito de compras y panel de administrador. **Proyecto optimizado para nivel principiante** con código simple, bien documentado y **estructura de carpetas organizada**.
 
 ## 📋 Descripción del Proyecto
 
@@ -9,8 +23,10 @@ Este es un proyecto de desarrollo web fullstack desarrollado con **HTML5, CSS3 y
 **✨ Características destacadas:**
 - **Código nivel principiante** con comentarios explicativos
 - **Todas las imágenes utilizadas** (7 productos + logo)
-- **Estructura organizada** para fácil comprensión
+- **Estructura organizada en carpetas** para fácil navegación
+- **Nombres de archivos descriptivos** que explican su función
 - **Documentación completa** para explicar en clase
+- **Separación clara** de HTML, CSS y JavaScript
 
 ## 🌟 Características Principales
 
@@ -42,58 +58,88 @@ Este es un proyecto de desarrollo web fullstack desarrollado con **HTML5, CSS3 y
 - **Navegación consistente** en todas las páginas
 - **Diseño responsivo** con Bootstrap 5
 
-## 📁 Archivos del Proyecto
+## 📁 Estructura del Proyecto ORGANIZADA CON NOMBRES DESCRIPTIVOS
 
 ```
-📦 Tienda MiMascota (Estructura Final Organizada)
-├── 📄 index.html                    # 🏠 Página principal con productos destacados
-├── 📄 productos.html                # 🛍️ Catálogo completo con filtros y carrito
-├── 📄 registro-simple.html          # 📝 Registro simplificado ✨ NUEVO
-├── 📄 login.html                    # 🔐 Inicio de sesión
-├── 📄 dashboard.html                # 👤 Panel del usuario logueado
-├── 📄 admin-simple.html             # 🔧 Panel admin simplificado ✨ NUEVO
-├── 📄 blogs.html                    # 📰 Blog con 3 artículos (simplificado)
-├── 📄 nosotros.html                 # ℹ️ Información de la empresa
-├── 📄 contacto.html                 # 📧 Formulario de contacto
-├── 📄 main.js                       # ⚙️ JavaScript principal ✨ SIMPLIFICADO
-├── 📄 productos-simple.js           # 🛒 Productos y carrito ✨ NUEVO
-├── 📄 admin-simple.js               # 👨‍💼 Panel administrador ✨ NUEVO
-├── 📄 README.md                     # 📋 Este archivo (actualizado)├── 📁 css/
-│   └── 📄 styles.css                # 🎨 Estilos únicos simplificados
-└── 📁 assets/img/                   # 🖼️ TODAS las imágenes utilizadas
-    ├── 🖼️ Comida.jpg               # ✅ Producto 1: Alimento Premium
-    ├── 🖼️ jugetes.png              # ✅ Producto 2: Juguetes Divertidos  
-    ├── 🖼️ cama2.png               # ✅ Producto 3: Cama Super Cómoda
-    ├── 🖼️ salud.png               # ✅ Producto 4: Productos de Salud
-    ├── 🖼️ accesorios.png          # ✅ Producto 5: Accesorios Fashion
-    ├── 🖼️ higiene.png             # ✅ Producto 6: Productos de Higiene
-    ├── 🖼️ prod.png                # ✅ Producto 7: Producto Especial ✨
-    └── 🖼️ logo1.png               # ✅ Logo de la empresa
+📦 EvaluacionFormativaFullstack/
+├── 📄 index.html                    # 🏠 PÁGINA PRINCIPAL (raíz del proyecto)
+├── 📄 README.md                     # 📖 Documentación principal del proyecto
+├── 📁 pages/                        # 📄 TODAS LAS PÁGINAS HTML ORGANIZADAS
+│   ├── 📄 README.md                 # 📖 Explicación de páginas
+│   ├── 📄 productos.html            # 🛍️ Catálogo completo con filtros y carrito
+│   ├── 📁 admin/                    # 🔧 PÁGINAS DE ADMINISTRADOR
+│   │   └── 📄 admin-simple.html     # 👨‍� Panel de administrador completo
+│   ├── 📁 user/                     # 👤 PÁGINAS DE USUARIO
+│   │   ├── 📄 login.html            # 🔐 Inicio de sesión
+│   │   ├── 📄 registro-simple.html  # 📝 Registro de usuarios simplificado
+│   │   └── 📄 dashboard.html        # 👤 Panel del usuario logueado
+│   └── � content/                  # � PÁGINAS DE CONTENIDO
+│       ├── 📄 blogs.html            # 📰 Blog con 3 artículos
+│       ├── 📄 nosotros.html         # ℹ️ Información de la empresa
+│       └── 📄 contacto.html         # 📧 Formulario de contacto
+├── 📁 js/                           # ⚙️ TODOS LOS ARCHIVOS JAVASCRIPT
+│   ├── 📄 README.md                 # 📖 Explicación de scripts
+│   ├── 📄 main.js                   # ⚙️ JavaScript principal del proyecto
+│   ├── 📄 productos-simple.js       # 🛒 Sistema de productos y carrito
+│   └── 📄 admin-simple.js           # � Funcionalidad del panel administrador
+├── � css/                          # 🎨 ESTILOS DEL PROYECTO
+│   └── 📄 styles.css                # 🎨 Estilos únicos y personalizados
+├── 📁 assets/                       # 🖼️ RECURSOS MULTIMEDIA
+│   └── 📁 img/                      # 🖼️ TODAS LAS IMÁGENES DEL PROYECTO
+│       ├── 🖼️ Comida.jpg           # ✅ Producto 1: Alimento Premium
+│       ├── 🖼️ jugetes.png          # ✅ Producto 2: Juguetes Divertidos
+│       ├── 🖼️ cama2.png           # ✅ Producto 3: Cama Super Cómoda
+│       ├── 🖼️ salud.png           # ✅ Producto 4: Productos de Salud
+│       ├── 🖼️ accesorios.png      # ✅ Producto 5: Accesorios Fashion
+│       ├── � higiene.png         # ✅ Producto 6: Productos de Higiene
+│       ├── 🖼️ prod.png            # ✅ Producto 7: Producto Especial
+│       └── 🖼️ logo1.png           # ✅ Logo oficial de la empresa
+└── 📁 docs/                         # 📚 DOCUMENTACIÓN ADICIONAL
+    └── 📄 README.md                 # 📖 Guías y manuales adicionales
 ```
+
+### 🎯 **VENTAJAS DE LOS NUEVOS NOMBRES DESCRIPTIVOS:**
+
+✅ **Nombres Auto-Explicativos**: Sabes exactamente qué hace cada archivo al leerlo  
+✅ **Fácil Identificación**: No hay confusión sobre la función de cada página  
+✅ **Profesional**: Nombres claros como en proyectos reales de la industria  
+✅ **Educativo**: Estudiantes comprenden inmediatamente el propósito de cada archivo  
+✅ **Navegación Intuitiva**: Encuentras lo que buscas sin abrir archivos  
+✅ **Mantenible**: Fácil de expandir y organizar el proyecto  
+✅ **Estructura Profesional**: Carpetas separadas por función (páginas, scripts, estilos)  
+✅ **Escalable**: Fácil agregar nuevas funcionalidades
 
 ## 🚀 Cómo usar el proyecto
 
-### �‍🎓 **Para Estudiantes/Usuarios:**
-1. **Abrir la tienda**: Hacer doble clic en `index.html` o abrir en navegador
+### 🎯 **Navegar la Nueva Estructura:**
+1. **`index.html`** - PÁGINA PRINCIPAL (abrir aquí para empezar)
+2. **`pages/`** - Todas las páginas HTML organizadas por función
+3. **`js/`** - Todo el JavaScript separado y comentado
+4. **`css/`** - Estilos únicos del proyecto
+5. **`assets/img/`** - Todas las imágenes utilizadas
+
+### 👨‍🎓 **Para Estudiantes/Usuarios:**
+1. **Abrir la tienda**: Hacer doble clic en `index.html` en la raíz del proyecto
 2. **Explorar productos**: Página principal con productos destacados y carrito funcional
-3. **Ver catálogo completo**: Ir a `productos.html` para ver todos los productos con filtros
-4. **Registrarse**: Usar `registro-simple.html` con validaciones de RUT, email y contraseña
-5. **Iniciar sesión**: Login en `login.html` con redirección automática
-6. **Navegar contenido**: Explorar blog, nosotros y contacto
+3. **Ver catálogo completo**: Ir a `pages/catalogo-productos.html` para todos los productos con filtros
+4. **Registrarse**: Usar `pages/user/registro-usuario.html` con validaciones completas
+5. **Iniciar sesión**: Login en `pages/user/iniciar-sesion.html` con redirección automática
+6. **Navegar contenido**: Explorar blog, nosotros y contacto en `pages/content/`
 
 ### 🔧 **Para Administradores:**
 1. **Crear cuenta admin**: Registrarse con email `admin@admin.cl` (o cualquier @admin.cl)
-2. **Login automático**: Al iniciar sesión, redirección automática a `admin-simple.html`
+2. **Login automático**: Al iniciar sesión, redirección automática a `pages/admin/panel-administrador.html`
 3. **Gestionar productos**: Editar precios, nombres, stock con prompts simples
 4. **Ver usuarios**: Lista de todos los usuarios registrados
 5. **Estadísticas**: Ver totales de productos, usuarios y carrito
 
 ### 👨‍🏫 **Para Profesores/Explicación:**
-1. **Estructura HTML**: Mostrar páginas principales y su organización
-2. **JavaScript modular**: Explicar `main.js`, `productos-simple.js`, `admin-simple.js`
-3. **Validaciones**: Demostrar RUT, email y contraseñas
-4. **localStorage**: Mostrar persistencia de datos
-5. **Bootstrap**: Explicar diseño responsivo
+1. **Estructura clara**: Mostrar organización de carpetas profesional con nombres descriptivos
+2. **JavaScript modular**: Explicar `js/funciones-principales.js`, `js/sistema-productos-carrito.js`, `js/panel-administrador.js`
+3. **HTML organizado**: Páginas separadas por función en `pages/` con nombres auto-explicativos
+4. **Validaciones**: Demostrar RUT, email y contraseñas
+5. **localStorage**: Mostrar persistencia de datos
+6. **Bootstrap**: Explicar diseño responsivo
 
 ## 🧪 Datos de Prueba
 
@@ -200,16 +246,19 @@ Este es un proyecto de desarrollo web fullstack desarrollado con **HTML5, CSS3 y
 
 ✅ **Todas las imágenes utilizadas** (7 productos + logo)  
 ✅ **Código nivel principiante** con comentarios abundantes  
-✅ **Estructura organizada** y limpia  
-✅ **40% menos archivos** que la versión original  
-✅ **Funcionalidades completas** pero simples  
+✅ **Estructura profesional organizada** en carpetas lógicas  
+✅ **Nombres de archivos descriptivos** que explican su función  
+✅ **Navegación actualizada** para nueva estructura  
+✅ **Funcionalidades completas** pero simples de entender  
 ✅ **Validaciones reales** (RUT, email, contraseñas)  
 ✅ **Navegación consistente** en todas las páginas  
 ✅ **Panel admin funcional** con CRUD básico  
 ✅ **Carrito persistente** en localStorage  
 ✅ **Blog operativo** con 3 artículos  
 ✅ **Responsive design** con Bootstrap 5  
-✅ **Documentación completa** para clase  
+✅ **Documentación completa** con README en cada carpeta  
+✅ **Separación clara** de HTML, CSS y JavaScript  
+✅ **Fácil de explicar** y navegar para principiantes  
 
 ## 📞 Información del Proyecto
 
@@ -217,13 +266,17 @@ Este es un proyecto de desarrollo web fullstack desarrollado con **HTML5, CSS3 y
 **Institución:** DUOC UC  
 **Tecnologías:** HTML5, CSS3, JavaScript ES6, Bootstrap 5  
 **Fecha:** Septiembre 2025  
-**Versión:** 2.0 - Simplificada y Organizada  
+**Versión:** 4.0 - Estructura Organizada con Nombres Descriptivos  
 
 **🎓 Perfecto para explicar paso a paso en clase!**
+- ✅ **Nombres descriptivos**: Archivos auto-explicativos que muestran su función
+- ✅ **Estructura profesional**: Carpetas organizadas como proyectos reales
 - ✅ **Carrito desde página principal**: No requiere ir a otra página
 - ✅ **Imágenes de productos**: Todas las imágenes se muestran correctamente
 - ✅ **Logo mejorado**: Posición visualmente atractiva
 - ✅ **Código principiante**: Simple y fácil de explicar
+- ✅ **Navegación actualizada**: Referencias correctas entre páginas
+- ✅ **Fácil identificación**: Sabes qué hace cada archivo sin abrirlo
 
 ## 🐛 Consideraciones Técnicas
 

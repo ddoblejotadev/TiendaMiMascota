@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
@@ -8,21 +8,21 @@
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="css/styles.css" />
+    <link rel="stylesheet" href="../../css/styles.css" />
   </head>
   <body>
     <header class="bg-primary text-white py-3 mb-4">
       <div class="container d-flex justify-content-between align-items-center">
-        <a href="index.html" class="text-white text-decoration-none">
-          <h1 class="h5 mb-0">🐾 Tienda MiMascota</h1>
+        <a href="../../index.html" class="text-white text-decoration-none">
+          <h1 class="h5 mb-0">ðŸ¾ Tienda MiMascota</h1>
         </a>
         <nav>
-          <a href="productos.html" class="text-white me-3">Productos</a>
-          <a href="blogs.html" class="text-white me-3">Blog</a>
-          <a href="nosotros.html" class="text-white me-3">Nosotros</a>
-          <a href="contacto.html" class="text-white me-3">Contacto</a>
-          <a href="registro-simple.html" class="text-white me-3">Registrarse</a>
-          <a href="login.html" class="text-white me-3">Iniciar sesión</a>
+          <a href="../catalogo-productos.html" class="text-white me-3">Productos</a>
+          <a href="../content/blog-articulos.html" class="text-white me-3">Blog</a>
+          <a href="../content/acerca-de-nosotros.html" class="text-white me-3">Nosotros</a>
+          <a href="../content/formulario-contacto.html" class="text-white me-3">Contacto</a>
+          <a href="registro-usuario.html" class="text-white me-3">Registrarse</a>
+          <a href="iniciar-sesion.html" class="text-white me-3">Iniciar sesiÃ³n</a>
         </nav>
       </div>
     </header>
@@ -31,12 +31,12 @@
       <div class="row justify-content-center">
         <div class="col-12 col-md-8 col-lg-6">
           <div class="card p-4">
-            <h2 class="h5 mb-4 text-center">📋 Registro de Cliente y Mascota</h2>
+            <h2 class="h5 mb-4 text-center">ðŸ“‹ Registro de Cliente y Mascota</h2>
             
             <form id="registroForm">
               <!-- DATOS DE LA PERSONA -->
               <div class="border rounded p-3 mb-4" style="background-color: #f8f9ff;">
-                <h4 class="h6 mb-3 text-primary">👤 Datos del Propietario</h4>
+                <h4 class="h6 mb-3 text-primary">ðŸ‘¤ Datos del Propietario</h4>
                 
                 <!-- RUT -->
                 <div class="mb-3">
@@ -46,10 +46,10 @@
                     id="rut"
                     class="form-control"
                     required
-                    placeholder="12345678K (sin puntos ni guión)"
+                    placeholder="12345678K (sin puntos ni guiÃ³n)"
                     maxlength="9"
                   />
-                  <div class="form-text">Ingresa el RUT sin puntos ni guión. Ejemplo: 12345678K</div>
+                  <div class="form-text">Ingresa el RUT sin puntos ni guiÃ³n. Ejemplo: 12345678K</div>
                 </div>
 
                 <!-- Nombre completo -->
@@ -60,7 +60,7 @@
                     id="nombreCompleto"
                     class="form-control"
                     required
-                    placeholder="Juan Pérez González"
+                    placeholder="Juan PÃ©rez GonzÃ¡lez"
                   />
                 </div>
 
@@ -77,21 +77,21 @@
                   <div class="form-text">Solo se permiten: @duoc.cl, @profesor.duoc.cl, @gmail.com, @admin.cl</div>
                 </div>
 
-                <!-- Contraseña -->
+                <!-- ContraseÃ±a -->
                 <div class="mb-3">
-                  <label for="password" class="form-label">Contraseña *</label>
+                  <label for="password" class="form-label">ContraseÃ±a *</label>
                   <input
                     type="password"
                     id="password"
                     class="form-control"
                     required
                   />
-                  <div class="form-text">Mínimo 6 caracteres, debe incluir al menos 1 número y 1 mayúscula</div>
+                  <div class="form-text">MÃ­nimo 6 caracteres, debe incluir al menos 1 nÃºmero y 1 mayÃºscula</div>
                 </div>
 
-                <!-- Confirmar Contraseña -->
+                <!-- Confirmar ContraseÃ±a -->
                 <div class="mb-3">
-                  <label for="confirmPassword" class="form-label">Confirmar Contraseña *</label>
+                  <label for="confirmPassword" class="form-label">Confirmar ContraseÃ±a *</label>
                   <input
                     type="password"
                     id="confirmPassword"
@@ -100,11 +100,11 @@
                   />
                 </div>
 
-                <!-- Región -->
+                <!-- RegiÃ³n -->
                 <div class="mb-3">
-                  <label for="region" class="form-label">Región *</label>
+                  <label for="region" class="form-label">RegiÃ³n *</label>
                   <select id="region" class="form-select" required>
-                    <option value="">Selecciona una región</option>
+                    <option value="">Selecciona una regiÃ³n</option>
                   </select>
                 </div>
 
@@ -116,9 +116,9 @@
                   </select>
                 </div>
 
-                <!-- Teléfono -->
+                <!-- TelÃ©fono -->
                 <div class="mb-3">
-                  <label for="telefono" class="form-label">Teléfono *</label>
+                  <label for="telefono" class="form-label">TelÃ©fono *</label>
                   <input
                     type="tel"
                     id="telefono"
@@ -131,7 +131,7 @@
 
               <!-- DATOS DE LA MASCOTA -->
               <div class="border rounded p-3 mb-4" style="background-color: #fff8f0;">
-                <h4 class="h6 mb-3 text-warning">🐕 Datos de la Mascota (Opcional)</h4>
+                <h4 class="h6 mb-3 text-warning">ðŸ• Datos de la Mascota (Opcional)</h4>
                 
                 <!-- Nombre de la mascota -->
                 <div class="mb-3">
@@ -149,13 +149,13 @@
                   <label for="tipoMascota" class="form-label">Tipo de Mascota</label>
                   <select id="tipoMascota" class="form-select">
                     <option value="">Selecciona el tipo</option>
-                    <option value="perro">🐕 Perro</option>
-                    <option value="gato">🐱 Gato</option>
-                    <option value="ave">🐦 Ave</option>
-                    <option value="pez">🐠 Pez</option>
-                    <option value="hamster">🐹 Hámster</option>
-                    <option value="conejo">🐰 Conejo</option>
-                    <option value="otro">🐾 Otro</option>
+                    <option value="perro">ðŸ• Perro</option>
+                    <option value="gato">ðŸ± Gato</option>
+                    <option value="ave">ðŸ¦ Ave</option>
+                    <option value="pez">ðŸ  Pez</option>
+                    <option value="hamster">ðŸ¹ HÃ¡mster</option>
+                    <option value="conejo">ðŸ° Conejo</option>
+                    <option value="otro">ðŸ¾ Otro</option>
                   </select>
                 </div>
 
@@ -164,24 +164,24 @@
                   <label for="edadMascota" class="form-label">Edad</label>
                   <select id="edadMascota" class="form-select">
                     <option value="">Selecciona la edad</option>
-                    <option value="cachorro">Cachorro (0-1 año)</option>
-                    <option value="joven">Joven (1-3 años)</option>
-                    <option value="adulto">Adulto (3-7 años)</option>
-                    <option value="senior">Senior (7+ años)</option>
+                    <option value="cachorro">Cachorro (0-1 aÃ±o)</option>
+                    <option value="joven">Joven (1-3 aÃ±os)</option>
+                    <option value="adulto">Adulto (3-7 aÃ±os)</option>
+                    <option value="senior">Senior (7+ aÃ±os)</option>
                   </select>
                 </div>
               </div>
 
-              <!-- Botón de envío -->
+              <!-- BotÃ³n de envÃ­o -->
               <div class="d-grid">
                 <button type="submit" class="btn btn-primary">
-                  📝 Registrar Cliente y Mascota
+                  ðŸ“ Registrar Cliente y Mascota
                 </button>
               </div>
 
               <!-- Enlace a login -->
               <div class="text-center mt-3">
-                <small>¿Ya tienes cuenta? <a href="login.html">Inicia sesión aquí</a></small>
+                <small>Â¿Ya tienes cuenta? <a href="iniciar-sesion.html">Inicia sesiÃ³n aquÃ­</a></small>
               </div>
 
               <!-- Alertas -->
@@ -198,6 +198,7 @@
       </div>
     </footer>
 
-    <script src="main.js"></script>
+    <script src="../../js/funciones-principales.js"></script>
   </body>
 </html>
+
