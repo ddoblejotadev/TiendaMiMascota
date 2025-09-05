@@ -92,13 +92,17 @@ function mostrarCarrito() {
   var suma = 0;
   
   if (carrito.length === 0) {
-    html = '<p>El carrito está vacío</p>';
+    html = '<p class="text-center">El carrito está vacío</p>';
   } else {
     for (var i = 0; i < carrito.length; i++) {
       var item = carrito[i];
-      html += '<div class="d-flex justify-content-between">';
-      html += '  <span>' + item.nombre + '</span>';
-      html += '  <span>$' + item.precio + '</span>';
+      html += '<div class="d-flex align-items-center mb-3 p-2 border rounded">';
+      html += '  <img src="' + item.imagen + '" alt="' + item.nombre + '" style="width: 60px; height: 60px; object-fit: cover; border-radius: 8px;" class="me-3">';
+      html += '  <div class="flex-grow-1">';
+      html += '    <h6 class="mb-1">' + item.nombre + '</h6>';
+      html += '    <small class="text-muted">Precio: $' + item.precio + '</small>';
+      html += '  </div>';
+      html += '  <strong>$' + item.precio + '</strong>';
       html += '</div>';
       suma += item.precio;
     }
