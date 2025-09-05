@@ -1,57 +1,162 @@
-// Sistema simple de productos para principiantes
-// Tienda MiMascota
+// ========================================
+// TIENDA SUPER SIMPLE - SOLO 6 FUNCIONES
+// ========================================
 
-// Lista de productos (como una base de datos simple)
+// Lista básica de productos
 var productos = [
-  {
-    id: 1,
-    nombre: "Alimento Premium para Perros",
-    precio: 15990,
-    categoria: "comida",
-    imagen: "assets/img/Comida.jpg",
-    descripcion: "Alimento balanceado para perros"
-  },
-  {
-    id: 2,
-    nombre: "Juguetes Divertidos",
-    precio: 5990,
-    categoria: "juguetes",
-    imagen: "assets/img/jugetes.png",
-    descripcion: "Pelotas y juguetes para mascotas"
-  },
-  {
-    id: 3,
-    nombre: "Cama Super Cómoda",
-    precio: 25990,
-    categoria: "camas",
-    imagen: "assets/img/cama2.png",
-    descripcion: "Cama cómoda con relleno"
-  },
-  {
-    id: 4,
-    nombre: "Productos de Salud",
-    precio: 12990,
-    categoria: "salud",
-    imagen: "assets/img/salud.png",
-    descripcion: "Vitaminas para mascotas"
-  },
-  {
-    id: 5,
-    nombre: "Accesorios Fashion",
-    precio: 8990,
-    categoria: "accesorios",
-    imagen: "assets/img/accesorios.png",
-    descripcion: "Collares y accesorios"
-  },
-  {
-    id: 6,
-    nombre: "Productos de Higiene",
-    precio: 7990,
-    categoria: "higiene",
-    imagen: "assets/img/higiene.png",
-    descripcion: "Champús y productos de limpieza"
-  }
+  { id: 1, nombre: "Comida para Perros", precio: 5000, categoria: "comida", imagen: "assets/img/Comida.jpg" },
+  { id: 2, nombre: "Pelota Divertida", precio: 3000, categoria: "juguetes", imagen: "assets/img/jugetes.png" },
+  { id: 3, nombre: "Cama Cómoda", precio: 8000, categoria: "camas", imagen: "assets/img/cama2.png" },
+  { id: 4, nombre: "Vitaminas", precio: 4000, categoria: "salud", imagen: "assets/img/salud.png" },
+  { id: 5, nombre: "Collar Bonito", precio: 2000, categoria: "accesorios", imagen: "assets/img/accesorios.png" },
+  { id: 6, nombre: "Champú", precio: 3500, categoria: "higiene", imagen: "assets/img/higiene.png" }
 ];
+
+// Carrito simple
+var carrito = [];
+
+// FUNCIÓN 1: Mostrar productos en la página
+function mostrarProductos() {
+  var lista = document.getElementById('listaProductos');
+  if (!lista) return;
+  
+  var html = '';
+  for (var i = 0; i < productos.length; i++) {
+    var p = productos[i];
+    html += '<div class="col-md-4 mb-3">';
+    html += '  <div class="card">';
+    html += '    <img src="' + p.imagen + '" class="card-img-top" style="height:200px">';
+    html += '    <div class="card-body">';
+    html += '      <h5>' + p.nombre + '</h5>';
+    html += '      <p>$' + p.precio + '</p>';
+    html += '      <button class="btn btn-primary" onclick="agregarAlCarrito(' + p.id + ')">Agregar</button>';
+    html += '    </div>';
+    html += '  </div>';
+    html += '</div>';
+  }
+  lista.innerHTML = html;
+}
+
+// FUNCIÓN 2: Agregar producto al carrito
+function agregarAlCarrito(id) {
+  var producto = null;
+  for (var i = 0; i < productos.length; i++) {
+    if (productos[i].id === id) {
+      producto = productos[i];
+      break;
+    }
+  }
+  
+  if (producto) {
+    carrito.push(producto);
+    
+    // Alerta moderna y bonita
+    var mensaje = document.createElement('div');
+    mensaje.innerHTML = '✅ ' + producto.nombre + ' agregado al carrito';
+    mensaje.style.cssText = 'position:fixed; top:20px; right:20px; background:#28a745; color:white; padding:15px; border-radius:10px; z-index:9999; font-weight:bold; box-shadow:0 4px 8px rgba(0,0,0,0.3);';
+    document.body.appendChild(mensaje);
+    
+    setTimeout(function() {
+      document.body.removeChild(mensaje);
+    }, 2000);
+    
+    actualizarContador();
+  }
+}
+
+// FUNCIÓN 3: Actualizar contador del carrito
+function actualizarContador() {
+  var contador = document.getElementById('contadorCarrito');
+  if (contador) {
+    contador.textContent = carrito.length;
+  }
+}
+
+// FUNCIÓN 4: Mostrar carrito en modal
+function mostrarCarrito() {
+  var lista = document.getElementById('contenidoCarrito');
+  var total = document.getElementById('totalCarrito');
+  
+  if (!lista || !total) return;
+  
+  var html = '';
+  var suma = 0;
+  
+  if (carrito.length === 0) {
+    html = '<p>El carrito está vacío</p>';
+  } else {
+    for (var i = 0; i < carrito.length; i++) {
+      var item = carrito[i];
+      html += '<div class="d-flex justify-content-between">';
+      html += '  <span>' + item.nombre + '</span>';
+      html += '  <span>$' + item.precio + '</span>';
+      html += '</div>';
+      suma += item.precio;
+    }
+  }
+  
+  lista.innerHTML = html;
+  total.textContent = suma;
+}
+
+// FUNCIÓN 5: Vaciar carrito
+function vaciarCarrito() {
+  carrito = [];
+  actualizarContador();
+  mostrarCarrito();
+}
+
+// FUNCIÓN 6: Filtrar productos por categoría
+function filtrarProductos(categoria) {
+  var lista = document.getElementById('listaProductos');
+  if (!lista) return;
+  
+  var productosFiltrados = [];
+  
+  if (categoria === 'todos') {
+    productosFiltrados = productos;
+  } else {
+    for (var i = 0; i < productos.length; i++) {
+      if (productos[i].categoria === categoria) {
+        productosFiltrados.push(productos[i]);
+      }
+    }
+  }
+  
+  var html = '';
+  for (var i = 0; i < productosFiltrados.length; i++) {
+    var p = productosFiltrados[i];
+    html += '<div class="col-md-4 mb-3">';
+    html += '  <div class="card">';
+    html += '    <img src="' + p.imagen + '" class="card-img-top" style="height:200px">';
+    html += '    <div class="card-body">';
+    html += '      <h5>' + p.nombre + '</h5>';
+    html += '      <p>$' + p.precio + '</p>';
+    html += '      <button class="btn btn-primary" onclick="agregarAlCarrito(' + p.id + ')">Agregar</button>';
+    html += '    </div>';
+    html += '  </div>';
+    html += '</div>';
+  }
+  lista.innerHTML = html;
+}
+
+// Inicializar cuando carga la página
+document.addEventListener('DOMContentLoaded', function() {
+  mostrarProductos();
+  actualizarContador();
+  
+  // Event listeners para botones del carrito
+  var btnVaciar = document.getElementById('btnVaciarCarrito');
+  if (btnVaciar) {
+    btnVaciar.addEventListener('click', vaciarCarrito);
+  }
+  
+  // Cuando se abre el modal, mostrar el carrito
+  var modalCarrito = document.getElementById('modalCarrito');
+  if (modalCarrito) {
+    modalCarrito.addEventListener('show.bs.modal', mostrarCarrito);
+  }
+});
 
 // Variable para el carrito (empieza vacío)
 var carrito = [];
