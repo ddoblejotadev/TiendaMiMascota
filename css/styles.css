@@ -29,8 +29,71 @@ header img { height: 48px; width: auto; }
 
 .btn-primary { border-radius: 6px; padding: .5rem .75rem; font-weight: 600; }
 
+/* Notificación del carrito */
+.notificacion-carrito {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: #28a745;
+  color: white;
+  padding: 15px 20px;
+  border-radius: 10px;
+  z-index: 9999;
+  font-weight: bold;
+  box-shadow: 0 4px 15px rgba(40, 167, 69, 0.4);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 250px;
+  /* Animación de entrada */
+  animation: deslizarEntrada 0.4s ease-out;
+}
+
+/* Icono dentro de la notificación */
+.notificacion-carrito .icono {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  width: 35px;
+  height: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+}
+
+/* Animación de entrada (desliza desde la derecha) */
+@keyframes deslizarEntrada {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* Animación de salida */
+@keyframes deslizarSalida {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
 /* Pequeños ajustes responsive */
 @media (max-width: 576px) {
   header .h5 { font-size: 1rem; }
   .card { padding: .75rem; }
+  
+  /* Notificación más pequeña en móviles */
+  .notificacion-carrito {
+    right: 10px;
+    left: 10px;
+    min-width: auto;
+  }
 }

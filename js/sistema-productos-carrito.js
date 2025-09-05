@@ -50,15 +50,24 @@ function agregarAlCarrito(id) {
   if (producto) {
     carrito.push(producto);
     
-    // Alerta moderna y bonita
-    var mensaje = document.createElement('div');
-    mensaje.innerHTML = '✅ ' + producto.nombre + ' agregado al carrito';
-    mensaje.style.cssText = 'position:fixed; top:20px; right:20px; background:#28a745; color:white; padding:15px; border-radius:10px; z-index:9999; font-weight:bold; box-shadow:0 4px 8px rgba(0,0,0,0.3);';
-    document.body.appendChild(mensaje);
+    // Notificación usando CSS del archivo styles.css
+    var notificacion = document.createElement('div');
+    notificacion.className = 'notificacion-carrito';
+    notificacion.innerHTML = 
+      '<div class="icono">🛒</div>' +
+      '<div>Producto agregado: ' + producto.nombre + '</div>';
     
+    document.body.appendChild(notificacion);
+    
+    // Quitar después de 3 segundos con animación
     setTimeout(function() {
-      document.body.removeChild(mensaje);
-    }, 2000);
+      notificacion.style.animation = 'deslizarSalida 0.4s ease-in';
+      setTimeout(function() {
+        if (document.body.contains(notificacion)) {
+          document.body.removeChild(notificacion);
+        }
+      }, 400);
+    }, 3000);
     
     actualizarContador();
   }
