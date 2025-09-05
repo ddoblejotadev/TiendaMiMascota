@@ -1,94 +1,71 @@
-// ===========================================
-// FUNCIONES PRINCIPALES - TIENDA MIMASCOTA
-// Código simple para principiantes
-// ===========================================
+// Funciones básicas para principiantes - Tienda MiMascota
 
-// Lista de regiones y comunas para los formularios
-const regiones = {
-  "Región Metropolitana": ["Santiago", "Las Condes", "Providencia", "Maipú"],
-  "Región de Valparaíso": ["Valparaíso", "Viña del Mar", "Concón"],
-  "Región del Biobío": ["Concepción", "Talcahuano", "Los Ángeles"],
-  "Región de La Araucanía": ["Temuco", "Villarrica", "Pucón"],
-  "Región de Los Lagos": ["Puerto Montt", "Osorno", "Castro"]
+// Lista simple de regiones y comunas
+var regiones = {
+  "Región Metropolitana": ["Santiago", "Las Condes", "Providencia"],
+  "Región de Valparaíso": ["Valparaíso", "Viña del Mar"],
+  "Región del Biobío": ["Concepción", "Talcahuano"]
 };
-
-// ===========================================
-// FUNCIONES SIMPLES PARA VALIDAR DATOS
-// ===========================================
-
-// Función simple para validar RUT
-function validarRUT(rut) {
-  // Solo validar que tenga números y una letra al final
-  if (rut.length < 8 || rut.length > 12) {
-    return false;
-  }
-  
-  // Debe terminar en número o K
-  const ultimoCaracter = rut.slice(-1).toLowerCase();
-  if (ultimoCaracter !== 'k' && isNaN(ultimoCaracter)) {
-    return false;
-  }
-  
-  return true;
-}
 
 // Función simple para validar email
 function validarEmail(email) {
-  // Lista de dominios permitidos
-  const dominiosPermitidos = ['duoc.cl', 'profesor.duoc.cl', 'gmail.com'];
-  
-  // Verificar que tenga @
+  // Solo verificar que tenga @ y termine en los dominios permitidos
   if (!email.includes('@')) {
     return false;
   }
   
-  // Obtener la parte después del @
-  const dominio = email.split('@')[1];
+  if (email.endsWith('@duoc.cl') || email.endsWith('@profesor.duoc.cl') || email.endsWith('@gmail.com')) {
+    return true;
+  }
   
-  // Verificar si el dominio está permitido
-  return dominiosPermitidos.includes(dominio);
+  return false;
 }
 
 // Función simple para validar contraseña
 function validarPassword(password) {
-  // Debe tener entre 4 y 10 caracteres
+  // Solo verificar que tenga entre 4 y 10 caracteres
   return password.length >= 4 && password.length <= 10;
 }
 
-// ===========================================
-// FUNCIONES PARA LLENAR FORMULARIOS
-// ===========================================
+// Función simple para validar RUT
+function validarRUT(rut) {
+  // Solo verificar longitud básica
+  if (rut.length < 8 || rut.length > 12) {
+    return false;
+  }
+  return true;
+}
 
-// Función simple para llenar regiones
+// Función para llenar select de regiones
 function llenarRegiones() {
-  const selectRegion = document.getElementById('region');
-  const selectComuna = document.getElementById('comuna');
+  var selectRegion = document.getElementById('region');
+  var selectComuna = document.getElementById('comuna');
   
   if (!selectRegion || !selectComuna) {
     return;
   }
   
   // Limpiar opciones
-  selectRegion.innerHTML = '<option value="">Selecciona una región</option>';
-  selectComuna.innerHTML = '<option value="">Selecciona una comuna</option>';
+  selectRegion.innerHTML = '<option value="">Selecciona región</option>';
+  selectComuna.innerHTML = '<option value="">Selecciona comuna</option>';
   
   // Agregar regiones
-  for (let nombreRegion in regiones) {
-    const option = document.createElement('option');
+  for (var nombreRegion in regiones) {
+    var option = document.createElement('option');
     option.value = nombreRegion;
     option.textContent = nombreRegion;
     selectRegion.appendChild(option);
   }
   
-  // Cuando cambie la región, cargar comunas
+  // Cuando cambie región, cargar comunas
   selectRegion.addEventListener('change', function() {
-    const regionSeleccionada = selectRegion.value;
-    selectComuna.innerHTML = '<option value="">Selecciona una comuna</option>';
+    var regionSeleccionada = selectRegion.value;
+    selectComuna.innerHTML = '<option value="">Selecciona comuna</option>';
     
     if (regionSeleccionada && regiones[regionSeleccionada]) {
-      const comunas = regiones[regionSeleccionada];
-      for (let i = 0; i < comunas.length; i++) {
-        const option = document.createElement('option');
+      var comunas = regiones[regionSeleccionada];
+      for (var i = 0; i < comunas.length; i++) {
+        var option = document.createElement('option');
         option.value = comunas[i];
         option.textContent = comunas[i];
         selectComuna.appendChild(option);
@@ -97,31 +74,34 @@ function llenarRegiones() {
   });
 }
 
-// ===========================================
-// FUNCIONES PARA GUARDAR Y OBTENER USUARIOS
-// ===========================================
+// Función simple para mostrar mensajes
+function mostrarMensaje(tipo, mensaje, contenedorId) {
+  var contenedor = document.getElementById(contenedorId);
+  if (contenedor) {
+    if (tipo === 'success') {
+      contenedor.innerHTML = '<div style="color: green; padding: 10px; background: lightgreen;">' + mensaje + '</div>';
+    } else {
+      contenedor.innerHTML = '<div style="color: red; padding: 10px; background: lightcoral;">' + mensaje + '</div>';
+    }
+    
+    // Limpiar después de 3 segundos
+    setTimeout(function() {
+      contenedor.innerHTML = '';
+    }, 3000);
+  }
+}
 
-// Función simple para guardar un usuario
+// Función simple para guardar usuario
 function guardarUsuario(usuario) {
-  // Obtener usuarios existentes
-  let usuarios = JSON.parse(localStorage.getItem('usuarios') || '[]');
-  
-  // Agregar el nuevo usuario
+  var usuarios = JSON.parse(localStorage.getItem('usuarios') || '[]');
   usuarios.push(usuario);
-  
-  // Guardar en localStorage
   localStorage.setItem('usuarios', JSON.stringify(usuarios));
 }
 
-// Función simple para obtener usuarios
-function obtenerUsuarios() {
-  return JSON.parse(localStorage.getItem('usuarios') || '[]');
-}
-
-// Función simple para verificar si un email ya existe
-function emailYaExiste(email) {
-  const usuarios = obtenerUsuarios();
-  for (let i = 0; i < usuarios.length; i++) {
+// Función simple para verificar si email existe
+function emailExiste(email) {
+  var usuarios = JSON.parse(localStorage.getItem('usuarios') || '[]');
+  for (var i = 0; i < usuarios.length; i++) {
     if (usuarios[i].email === email) {
       return true;
     }
@@ -129,87 +109,59 @@ function emailYaExiste(email) {
   return false;
 }
 
-// Función simple para iniciar sesión
-function iniciarSesion(email, password) {
-  const usuarios = obtenerUsuarios();
+// Función simple para login
+function hacerLogin(email, password) {
+  var usuarios = JSON.parse(localStorage.getItem('usuarios') || '[]');
   
-  for (let i = 0; i < usuarios.length; i++) {
+  for (var i = 0; i < usuarios.length; i++) {
     if (usuarios[i].email === email && usuarios[i].password === password) {
-      // Guardar usuario actual
       localStorage.setItem('usuarioActual', JSON.stringify(usuarios[i]));
       return usuarios[i];
     }
   }
   
-  return null; // No encontrado
+  return null;
 }
 
-// ===========================================
-// FUNCIONES PARA MOSTRAR MENSAJES
-// ===========================================
-
-// Función simple para mostrar mensajes al usuario
-function mostrarMensaje(tipo, mensaje, contenedorId) {
-  const contenedor = document.getElementById(contenedorId);
-  if (contenedor) {
-    if (tipo === 'success') {
-      contenedor.innerHTML = `<div style="color: green; padding: 10px; border: 1px solid green; background: #d4edda; margin: 10px 0;">${mensaje}</div>`;
-    } else {
-      contenedor.innerHTML = `<div style="color: red; padding: 10px; border: 1px solid red; background: #f8d7da; margin: 10px 0;">${mensaje}</div>`;
-    }
-    
-    // Limpiar mensaje después de 3 segundos
-    setTimeout(function() {
-      contenedor.innerHTML = '';
-    }, 3000);
-  }
-}
-
-// ===========================================
-// CÓDIGO QUE SE EJECUTA CUANDO CARGA LA PÁGINA
-// ===========================================
-
+// Cuando carga la página
 document.addEventListener('DOMContentLoaded', function() {
   console.log('Página cargada');
   
-  // Llenar regiones si existe el formulario
+  // Llenar regiones si existen
   llenarRegiones();
   
-  // ===========================================
-  // FORMULARIO DE REGISTRO
-  // ===========================================
-  
-  const formRegistro = document.getElementById('registroForm');
+  // Manejar formulario de registro
+  var formRegistro = document.getElementById('registroForm');
   if (formRegistro) {
     formRegistro.addEventListener('submit', function(event) {
       event.preventDefault();
       
-      // Obtener datos del formulario
-      const rut = document.getElementById('rut').value.trim();
-      const nombre = document.getElementById('nombreCompleto').value.trim();
-      const email = document.getElementById('email').value.trim();
-      const password = document.getElementById('password').value;
-      const confirmPassword = document.getElementById('confirmPassword').value;
-      const region = document.getElementById('region').value;
-      const comuna = document.getElementById('comuna').value;
-      const telefono = document.getElementById('telefono').value.trim();
-      const direccion = document.getElementById('direccion').value.trim();
+      // Obtener datos
+      var rut = document.getElementById('rut').value.trim();
+      var nombre = document.getElementById('nombreCompleto').value.trim();
+      var email = document.getElementById('email').value.trim();
+      var password = document.getElementById('password').value;
+      var confirmPassword = document.getElementById('confirmPassword').value;
+      var region = document.getElementById('region').value;
+      var comuna = document.getElementById('comuna').value;
+      var telefono = document.getElementById('telefono').value.trim();
+      var direccion = document.getElementById('direccion').value.trim();
       
-      // Validar campos obligatorios
+      // Validar campos vacíos
       if (!rut || !nombre || !email || !password || !confirmPassword || !region || !comuna || !telefono || !direccion) {
-        mostrarMensaje('error', 'Todos los campos marcados con * son obligatorios', 'alertaRegistro');
+        mostrarMensaje('error', 'Todos los campos son obligatorios', 'alertaRegistro');
         return;
       }
       
       // Validar RUT
       if (!validarRUT(rut)) {
-        mostrarMensaje('error', 'El RUT no es válido', 'alertaRegistro');
+        mostrarMensaje('error', 'RUT no válido', 'alertaRegistro');
         return;
       }
       
       // Validar email
       if (!validarEmail(email)) {
-        mostrarMensaje('error', 'Solo se permiten emails @duoc.cl, @profesor.duoc.cl, @gmail.com', 'alertaRegistro');
+        mostrarMensaje('error', 'Email no válido. Use @duoc.cl, @profesor.duoc.cl o @gmail.com', 'alertaRegistro');
         return;
       }
       
@@ -219,20 +171,20 @@ document.addEventListener('DOMContentLoaded', function() {
         return;
       }
       
-      // Validar que las contraseñas coincidan
+      // Validar confirmación
       if (password !== confirmPassword) {
         mostrarMensaje('error', 'Las contraseñas no coinciden', 'alertaRegistro');
         return;
       }
       
-      // Validar que el email no esté registrado
-      if (emailYaExiste(email)) {
-        mostrarMensaje('error', 'Ya existe un usuario con este email', 'alertaRegistro');
+      // Validar email único
+      if (emailExiste(email)) {
+        mostrarMensaje('error', 'Este email ya está registrado', 'alertaRegistro');
         return;
       }
       
-      // Crear objeto usuario
-      const nuevoUsuario = {
+      // Crear usuario
+      var nuevoUsuario = {
         rut: rut,
         nombre: nombre,
         email: email,
@@ -248,8 +200,8 @@ document.addEventListener('DOMContentLoaded', function() {
       // Guardar usuario
       guardarUsuario(nuevoUsuario);
       
-      // Mostrar mensaje de éxito
-      mostrarMensaje('success', '¡Usuario registrado exitosamente!', 'alertaRegistro');
+      // Mostrar éxito
+      mostrarMensaje('success', '¡Usuario registrado correctamente!', 'alertaRegistro');
       
       // Limpiar formulario
       formRegistro.reset();
@@ -261,17 +213,14 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
   
-  // ===========================================
-  // FORMULARIO DE LOGIN
-  // ===========================================
-  
-  const formLogin = document.getElementById('loginForm');
+  // Manejar formulario de login
+  var formLogin = document.getElementById('loginForm');
   if (formLogin) {
     formLogin.addEventListener('submit', function(event) {
       event.preventDefault();
       
-      const email = document.getElementById('loginId').value.trim();
-      const password = document.getElementById('loginPassword').value;
+      var email = document.getElementById('loginId').value.trim();
+      var password = document.getElementById('loginPassword').value;
       
       // Validar campos
       if (!email || !password) {
@@ -279,8 +228,8 @@ document.addEventListener('DOMContentLoaded', function() {
         return;
       }
       
-      // Intentar iniciar sesión
-      const usuario = iniciarSesion(email, password);
+      // Intentar login
+      var usuario = hacerLogin(email, password);
       
       if (!usuario) {
         mostrarMensaje('error', 'Email o contraseña incorrectos', 'loginAlert');
@@ -290,12 +239,10 @@ document.addEventListener('DOMContentLoaded', function() {
       // Login exitoso
       mostrarMensaje('success', 'Ingresando...', 'loginAlert');
       
-      // Redirigir según tipo de usuario
+      // Redirigir según tipo
       setTimeout(function() {
         if (email.includes('@admin.cl') || usuario.tipoUsuario === 'administrador') {
           window.location.href = '../admin/panel-administrador.html';
-        } else if (usuario.tipoUsuario === 'vendedor') {
-          window.location.href = '../admin/panel-vendedor.html';
         } else {
           window.location.href = 'panel-usuario.html';
         }
@@ -303,61 +250,53 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
   
-  // ===========================================
-  // FORMULARIO DE CONTACTO
-  // ===========================================
-  
-  const formContacto = document.getElementById('contactForm');
+  // Manejar formulario de contacto
+  var formContacto = document.getElementById('contactForm');
   if (formContacto) {
     formContacto.addEventListener('submit', function(event) {
       event.preventDefault();
       
-      const nombre = document.getElementById('contactName').value.trim();
-      const email = document.getElementById('contactEmail').value.trim();
-      const mensaje = document.getElementById('contactMessage').value.trim();
+      var nombre = document.getElementById('contactName').value.trim();
+      var email = document.getElementById('contactEmail').value.trim();
+      var mensaje = document.getElementById('contactMessage').value.trim();
       
-      // Validar campos obligatorios
+      // Validar campos
       if (!nombre || !email || !mensaje) {
         mostrarMensaje('error', 'Todos los campos son obligatorios', 'contactAlert');
         return;
       }
       
-      // Validar longitud del nombre (máx 100 caracteres)
+      // Validar longitudes
       if (nombre.length > 100) {
         mostrarMensaje('error', 'El nombre no puede tener más de 100 caracteres', 'contactAlert');
         return;
       }
       
-      // Validar email
-      if (!validarEmail(email)) {
-        mostrarMensaje('error', 'Solo se permiten emails @duoc.cl, @profesor.duoc.cl, @gmail.com', 'contactAlert');
-        return;
-      }
-      
-      // Validar longitud del mensaje (máx 500 caracteres)
       if (mensaje.length > 500) {
         mostrarMensaje('error', 'El mensaje no puede tener más de 500 caracteres', 'contactAlert');
         return;
       }
       
-      // Simular envío exitoso
+      // Validar email
+      if (!validarEmail(email)) {
+        mostrarMensaje('error', 'Email no válido', 'contactAlert');
+        return;
+      }
+      
+      // Simular envío
       mostrarMensaje('success', 'Mensaje enviado correctamente', 'contactAlert');
       formContacto.reset();
     });
   }
 });
 
-// ===========================================
-// CREAR USUARIO ADMINISTRADOR POR DEFECTO
-// ===========================================
-
-// Función para crear usuario admin si no existe
-function crearUsuarioAdmin() {
-  const usuarios = obtenerUsuarios();
+// Crear usuario admin por defecto
+function crearAdmin() {
+  var usuarios = JSON.parse(localStorage.getItem('usuarios') || '[]');
   
-  // Verificar si ya existe el admin
-  let adminExiste = false;
-  for (let i = 0; i < usuarios.length; i++) {
+  // Verificar si admin ya existe
+  var adminExiste = false;
+  for (var i = 0; i < usuarios.length; i++) {
     if (usuarios[i].email === 'admin@admin.cl') {
       adminExiste = true;
       break;
@@ -366,7 +305,7 @@ function crearUsuarioAdmin() {
   
   // Si no existe, crearlo
   if (!adminExiste) {
-    const usuarioAdmin = {
+    var admin = {
       rut: '12345678-9',
       nombre: 'Administrador',
       email: 'admin@admin.cl',
@@ -379,12 +318,13 @@ function crearUsuarioAdmin() {
       fechaRegistro: new Date().toISOString()
     };
     
-    guardarUsuario(usuarioAdmin);
-    console.log('Usuario admin creado: admin@admin.cl / admin123');
+    usuarios.push(admin);
+    localStorage.setItem('usuarios', JSON.stringify(usuarios));
+    console.log('Admin creado: admin@admin.cl / admin123');
   }
 }
 
-// Crear el usuario admin al cargar
-crearUsuarioAdmin();
+// Crear admin al cargar
+crearAdmin();
 
-console.log('Funciones principales cargadas');
+console.log('Funciones básicas cargadas');
