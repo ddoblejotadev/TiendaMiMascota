@@ -245,8 +245,24 @@ function agregarAlCarrito(idProducto) {
   // Actualizar contador
   actualizarContador();
   
-  // Avisar al usuario
-  alert('Agregado: ' + producto.nombre);
+  // Notificación moderna usando CSS del archivo styles.css
+  var notificacion = document.createElement('div');
+  notificacion.className = 'notificacion-carrito';
+  notificacion.innerHTML = 
+    '<div class="icono">🛒</div>' +
+    '<div>Producto agregado: ' + producto.nombre + '</div>';
+  
+  document.body.appendChild(notificacion);
+  
+  // Quitar después de 3 segundos con animación
+  setTimeout(function() {
+    notificacion.style.animation = 'deslizarSalida 0.4s ease-in';
+    setTimeout(function() {
+      if (document.body.contains(notificacion)) {
+        document.body.removeChild(notificacion);
+      }
+    }, 400);
+  }, 3000);
 }
 
 // Función para actualizar el contador del carrito
@@ -308,7 +324,25 @@ function vaciarCarrito() {
     localStorage.removeItem('carrito');
     actualizarContador();
     mostrarCarrito();
-    alert('Carrito vaciado');
+    
+    // Notificación moderna para carrito vaciado
+    var notificacion = document.createElement('div');
+    notificacion.className = 'notificacion-carrito';
+    notificacion.style.background = '#dc3545'; // Color rojo para "vaciar"
+    notificacion.innerHTML = 
+      '<div class="icono">🗑️</div>' +
+      '<div>Carrito vaciado correctamente</div>';
+    
+    document.body.appendChild(notificacion);
+    
+    setTimeout(function() {
+      notificacion.style.animation = 'deslizarSalida 0.4s ease-in';
+      setTimeout(function() {
+        if (document.body.contains(notificacion)) {
+          document.body.removeChild(notificacion);
+        }
+      }, 400);
+    }, 3000);
   }
 }
 
