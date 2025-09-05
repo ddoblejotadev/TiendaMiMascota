@@ -75,7 +75,7 @@ function agregarAlCarrito(id) {
 
 // FUNCIÓN 3: Actualizar contador del carrito
 function actualizarContador() {
-  var contador = document.getElementById('contadorCarrito');
+  var contador = document.getElementById('cantidadCarrito');
   if (contador) {
     contador.textContent = carrito.length;
   }
@@ -365,7 +365,13 @@ document.addEventListener('DOMContentLoaded', function() {
   // Configurar botón del carrito
   var btnCarrito = document.getElementById('btnCarrito');
   if (btnCarrito) {
-    btnCarrito.addEventListener('click', mostrarCarrito);
+    btnCarrito.addEventListener('click', function() {
+      mostrarCarrito(); // Actualizar contenido del carrito
+      
+      // Abrir el modal de Bootstrap
+      var modal = new bootstrap.Modal(document.getElementById('modalCarrito'));
+      modal.show();
+    });
   }
   
   // Configurar botón vaciar
