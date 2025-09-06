@@ -297,15 +297,29 @@ function eliminarProducto(id) {
 // Función para mostrar sección
 function showSection(seccion) {
   // Ocultar todas las secciones
+  document.getElementById('seccion-dashboard').style.display = 'none';
   document.getElementById('seccion-usuarios').style.display = 'none';
   document.getElementById('seccion-productos').style.display = 'none';
   
-  // Mostrar sección seleccionada
-  if (seccion === 'usuarios') {
+  // Remover clase active de todos los menús
+  var menus = ['menu-dashboard', 'menu-usuarios', 'menu-productos'];
+  menus.forEach(function(menuId) {
+    var menu = document.getElementById(menuId);
+    if (menu) menu.classList.remove('active');
+  });
+  
+  // Mostrar sección seleccionada y activar menú
+  if (seccion === 'dashboard') {
+    document.getElementById('seccion-dashboard').style.display = 'block';
+    document.getElementById('menu-dashboard').classList.add('active');
+    actualizarEstadisticas();
+  } else if (seccion === 'usuarios') {
     document.getElementById('seccion-usuarios').style.display = 'block';
+    document.getElementById('menu-usuarios').classList.add('active');
     mostrarUsuarios();
   } else if (seccion === 'productos') {
     document.getElementById('seccion-productos').style.display = 'block';
+    document.getElementById('menu-productos').classList.add('active');
     mostrarProductosAdmin();
   }
 }
