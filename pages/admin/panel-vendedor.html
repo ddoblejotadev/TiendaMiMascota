@@ -25,10 +25,10 @@
     <!-- Contenido Principal -->
     <main class="container py-4">
         <h1 class="mb-4">💼 Panel de Vendedor</h1>
-        
+
         <!-- Estadísticas -->
         <div class="row mb-4">
-            <div class="col-md-4">
+            <div class="col-md-6">
                 <div class="card text-center">
                     <div class="card-body">
                         <h5 class="card-title">📦 Total Productos</h5>
@@ -36,24 +36,16 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-6">
                 <div class="card text-center">
                     <div class="card-body">
-                        <h5 class="card-title">� Usuarios Activos</h5>
-                        <h2 class="text-info" id="totalUsuarios">0</h2>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card text-center">
-                    <div class="card-body">
-                        <h5 class="card-title">🔍 Mi Acceso</h5>
-                        <h2 class="text-warning">Solo Lectura</h2>
+                        <h5 class="card-title">📋 Órdenes Totales</h5>
+                        <h2 class="text-info" id="totalOrdenes">0</h2>
                     </div>
                 </div>
             </div>
         </div>
-        
+
         <!-- Tabs de navegación -->
         <ul class="nav nav-tabs" id="vendedorTabs" role="tablist">
             <li class="nav-item" role="presentation">
@@ -62,12 +54,12 @@
                 </button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="usuarios-tab" data-bs-toggle="tab" data-bs-target="#usuarios" type="button" role="tab">
-                    👥 Usuarios
+                <button class="nav-link" id="ordenes-tab" data-bs-toggle="tab" data-bs-target="#ordenes" type="button" role="tab">
+                    📋 Órdenes
                 </button>
             </li>
         </ul>
-        
+
         <!-- Contenido de tabs -->
         <div class="tab-content" id="vendedorTabsContent">
             <!-- Tab Productos -->
@@ -80,7 +72,7 @@
                         <div class="alert alert-info">
                             <strong>📋 Rol de Vendedor:</strong> Puedes ver todos los productos del sistema, pero no editarlos ni eliminarlos. Solo los administradores pueden hacer cambios.
                         </div>
-                        
+
                         <div class="table-responsive">
                             <table class="table table-striped">
                                 <thead class="table-dark">
@@ -102,32 +94,33 @@
                     </div>
                 </div>
             </div>
-            
-            <!-- Tab Usuarios -->
-            <div class="tab-pane fade" id="usuarios" role="tabpanel">
+
+            <!-- Tab Órdenes -->
+            <div class="tab-pane fade" id="ordenes" role="tabpanel">
                 <div class="card">
-                    <div class="card-header bg-info text-white">
-                        <h5 class="mb-0">� Lista de Usuarios (Solo Lectura)</h5>
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0">📋 Lista de Órdenes (Solo Lectura)</h5>
                     </div>
                     <div class="card-body">
-                        <div class="alert alert-warning">
-                            <strong>⚠️ Acceso Limitado:</strong> Como vendedor puedes ver la lista de usuarios registrados, pero no puedes editarlos, eliminarlos ni cambiar roles. Solo consulta.
+                        <div class="alert alert-info">
+                            <strong>📋 Rol de Vendedor:</strong> Puedes ver todas las órdenes del sistema y sus detalles, pero no puedes modificarlas. Solo los administradores pueden gestionar órdenes.
                         </div>
-                        
+
                         <div class="table-responsive">
                             <table class="table table-striped">
                                 <thead class="table-dark">
                                     <tr>
-                                        <th>ID</th>
-                                        <th>Nombre</th>
-                                        <th>Email</th>
-                                        <th>Rol</th>
+                                        <th>ID Orden</th>
+                                        <th>Cliente</th>
+                                        <th>Fecha</th>
+                                        <th>Total</th>
                                         <th>Estado</th>
-                                        <th>Fecha Registro</th>
+                                        <th>Productos</th>
+                                        <th>Acciones</th>
                                     </tr>
                                 </thead>
-                                <tbody id="tablaUsuariosVendedor">
-                                    <!-- Usuarios se cargan aquí con JavaScript -->
+                                <tbody id="tablaOrdenesVendedor">
+                                    <!-- Órdenes se cargan aquí con JavaScript -->
                                 </tbody>
                             </table>
                         </div>
@@ -163,6 +156,7 @@
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
     <script src="../../js/utilidades.js"></script>
+    <script src="../../js/productos.js"></script>
     <script src="../../js/panel-vendedor.js"></script>
 </body>
 </html>
