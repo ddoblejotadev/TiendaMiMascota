@@ -6,161 +6,272 @@
     <title>Panel Administrador - Tienda MiMascota</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../../css/styles.css">
+    <style>
+        .admin-sidebar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 10px;
+            padding: 20px 0;
+            min-height: 400px;
+        }
+        .admin-sidebar a {
+            color: white !important;
+            text-decoration: none;
+            padding: 12px 20px;
+            display: block;
+            transition: all 0.3s ease;
+            border-radius: 5px;
+            margin: 5px 15px;
+        }
+        .admin-sidebar a:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateX(5px);
+        }
+        .admin-sidebar .active {
+            background: rgba(255, 255, 255, 0.3);
+            font-weight: bold;
+        }
+        .content-section {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+        .stats-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .stats-card h3 {
+            font-size: 2.5rem;
+            margin-bottom: 5px;
+        }
+        .table-responsive {
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .btn-custom {
+            border-radius: 25px;
+            padding: 8px 20px;
+            font-weight: 500;
+        }
+        .form-section {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+        .admin-header {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            padding: 20px 0;
+            margin-bottom: 30px;
+            border-radius: 10px;
+        }
+    </style>
 </head>
 <body>
     <!-- Header -->
-    <header class="bg-primary text-white py-3 mb-4">
-        <div class="container d-flex align-items-center justify-content-between">
-            <a href="../../index.html" class="d-flex align-items-center text-white text-decoration-none">
-                <img src="../../assets/img/logo1.png" alt="Tienda MiMascota" style="height: 40px; width: auto;" class="me-2">
-                <span class="h6 mb-0">🐾 Tienda MiMascota</span>
-            </a>
-            <nav>
-                <span class="text-light me-3">🛡️ <span id="nombreAdmin">Administrador</span></span>
-                <button class="btn btn-outline-light btn-sm" onclick="cerrarSesion()">Cerrar Sesión</button>
-            </nav>
+    <header class="admin-header">
+        <div class="container">
+            <div class="d-flex align-items-center justify-content-between">
+                <div class="d-flex align-items-center">
+                    <img src="../../assets/img/logo1.png" alt="Tienda MiMascota" style="height: 50px; width: auto;" class="me-3">
+                    <div>
+                        <h4 class="mb-0">🐾 Tienda MiMascota</h4>
+                        <small>Panel de Administración</small>
+                    </div>
+                </div>
+                <div class="d-flex align-items-center">
+                    <span class="me-3">👤 <span id="nombreAdmin">Administrador</span></span>
+                    <button class="btn btn-light btn-custom" onclick="cerrarSesion()">
+                        🚪 Cerrar Sesión
+                    </button>
+                </div>
+            </div>
         </div>
     </header>
 
-    <!-- Contenido Principal -->
-    <main class="container py-4">
-        <h1 class="mb-4">⚙️ Panel de Administración</h1>
-
+    <div class="container-fluid">
         <div class="row">
             <!-- Sidebar -->
-            <div class="col-md-3 mb-4">
-                <div class="card">
-                    <div class="card-body">
-                        <h6 class="fw-bold">Menú</h6>
-                        <ul class="list-unstyled admin-sidebar mt-3">
-                            <li><a href="#" onclick="showSection('usuarios')">👥 Usuarios</a></li>
-                            <li><a href="#" onclick="showSection('productos')">📦 Productos</a></li>
-                            <li><a href="#" onclick="cerrarSesion()">🔒 Cerrar Sesión</a></li>
-                        </ul>
-                    </div>
+            <div class="col-lg-3 col-md-4 mb-4">
+                <div class="admin-sidebar">
+                    <h5 class="text-center mb-4 text-white">📊 Menú Principal</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#" onclick="showSection('dashboard')" id="menu-dashboard" class="active">🏠 Dashboard</a></li>
+                        <li><a href="#" onclick="showSection('usuarios')" id="menu-usuarios">👥 Usuarios</a></li>
+                        <li><a href="#" onclick="showSection('productos')" id="menu-productos">📦 Productos</a></li>
+                        <li><a href="#" onclick="cerrarSesion()">🔒 Cerrar Sesión</a></li>
+                    </ul>
                 </div>
             </div>
 
-            <!-- Contenido central -->
-            <div class="col-md-9">
-        
-        <!-- Estadísticas -->
-        <div class="row mb-4">
-            <div class="col-md-4">
-                <div class="card text-center">
-                    <div class="card-body">
-                        <h5 class="card-title">� Total Usuarios</h5>
-                        <h2 class="text-primary" id="totalUsuarios">0</h2>
-                    </div>
-                </div>
+            <!-- Contenido Principal -->
+            <div class="col-lg-9 col-md-8">
+                <!-- Dashboard -->
+                <div id="seccion-dashboard" class="content-section">
+                    <h2 class="mb-4">📊 Dashboard</h2>
 
-                <div id="seccion-usuarios">
-                    <div class="card mb-4">
-                        <div class="card-header bg-danger text-white">
-                            <h5 class="mb-0">📋 Gestión de Usuarios y Roles</h5>
-                        </div>
-                        <div class="card-body">
-                            <div class="alert alert-info">
-                                <strong>📋 Usuarios Predefinidos:</strong>
-                                <br>• <strong>admin@duoc.cl</strong> / admin123 (Administrador)
-                                <br>• <strong>vendedor1@duoc.cl</strong> / vende123 (Vendedor)
-                                <br>• <strong>vendedor2@duoc.cl</strong> / vende456 (Vendedor)
-                                <br>• <strong>cliente1@gmail.com</strong> / cliente123 (Cliente)
-                                <br>• <strong>cliente2@duoc.cl</strong> / cliente456 (Cliente)
+                    <!-- Estadísticas -->
+                    <div class="row mb-4">
+                        <div class="col-md-6 col-lg-3 mb-3">
+                            <div class="stats-card">
+                                <h3 id="totalUsuarios">0</h3>
+                                <p class="mb-0">👥 Total Usuarios</p>
                             </div>
-
-                            <div class="table-responsive">
-                                <table class="table table-striped">
-                                    <thead class="table-dark">
-                                        <tr>
-                                            <th>ID</th>
-                                            <th>Nombre</th>
-                                            <th>Email</th>
-                                            <th>Rol</th>
-                                            <th>Estado</th>
-                                            <th>Acciones</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="tablaUsuarios">
-                                        <!-- Usuarios se cargan aquí con JavaScript -->
-                                    </tbody>
-                                </table>
+                        </div>
+                        <div class="col-md-6 col-lg-3 mb-3">
+                            <div class="stats-card">
+                                <h3 id="totalProductos">0</h3>
+                                <p class="mb-0">📦 Total Productos</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-3 mb-3">
+                            <div class="stats-card">
+                                <h3 id="productosStockBajo">0</h3>
+                                <p class="mb-0">⚠️ Stock Bajo</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-3 mb-3">
+                            <div class="stats-card">
+                                <h3 id="productosActivos">0</h3>
+                                <p class="mb-0">✅ Productos Activos</p>
                             </div>
                         </div>
                     </div>
+
+                    <div class="alert alert-info">
+                        <h5>👋 Bienvenido al Panel de Administración</h5>
+                        <p class="mb-0">Aquí puedes gestionar usuarios, productos y configurar tu tienda online.</p>
+                    </div>
                 </div>
 
-                <div id="seccion-productos" style="display:none;">
-                    <div class="card mb-4">
-                        <div class="card-header bg-success text-white">
-                            <h5 class="mb-0">📦 Mantenedor de Productos</h5>
-                        </div>
-                        <div class="card-body">
-                            <div class="mb-3">
-                                <button class="btn btn-sm btn-primary" onclick="abrirNuevoProducto()">+ Nuevo Producto</button>
-                            </div>
+                <!-- Sección Usuarios -->
+                <div id="seccion-usuarios" class="content-section" style="display: none;">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h2 class="mb-0">👥 Gestión de Usuarios</h2>
+                        <button class="btn btn-primary btn-custom" onclick="abrirNuevoUsuario()">
+                            ➕ Nuevo Usuario
+                        </button>
+                    </div>
 
-                            <!-- Formulario simple para crear/editar -->
-                            <form id="productoForm" style="max-width:800px;" onsubmit="event.preventDefault(); guardarProductoFromForm();">
-                                <input type="hidden" id="productoId" value="" />
-                                <div class="row g-2">
-                                    <div class="col-md-4">
-                                        <label class="form-label">Código *</label>
-                                        <input id="productoCodigo" class="form-control" maxlength="50" required />
-                                    </div>
-                                    <div class="col-md-8">
-                                        <label class="form-label">Nombre *</label>
-                                        <input id="productoNombre" class="form-control" maxlength="100" required />
-                                    </div>
-                                    <div class="col-12">
-                                        <label class="form-label">Descripción</label>
-                                        <textarea id="productoDescripcion" class="form-control" maxlength="500" rows="2"></textarea>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <label class="form-label">Precio *</label>
-                                        <input id="productoPrecio" type="number" step="0.01" min="0" class="form-control" required />
-                                    </div>
-                                    <div class="col-md-4">
-                                        <label class="form-label">Stock *</label>
-                                        <input id="productoStock" type="number" min="0" step="1" class="form-control" required />
-                                    </div>
-                                    <div class="col-md-4">
-                                        <label class="form-label">Stock Crítico</label>
-                                        <input id="productoStockCritico" type="number" min="0" step="1" class="form-control" />
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label class="form-label">Categoría *</label>
-                                        <input id="productoCategoria" class="form-control" required />
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label class="form-label">Imagen (ruta)</label>
-                                        <input id="productoImagen" class="form-control" placeholder="assets/img/ejemplo.png" />
-                                    </div>
-                                    <div class="col-12 mt-2">
-                                        <button class="btn btn-success btn-sm" type="submit">Guardar Producto</button>
-                                        <button class="btn btn-secondary btn-sm" type="button" onclick="cancelarProducto()">Cancelar</button>
-                                    </div>
+                    <div class="alert alert-info mb-4">
+                        <strong>📋 Usuarios Predefinidos:</strong>
+                        <br>• <strong>admin@duoc.cl</strong> / admin123 (Administrador)
+                        <br>• <strong>vendedor1@duoc.cl</strong> / vende123 (Vendedor)
+                        <br>• <strong>cliente1@gmail.com</strong> / cliente123 (Cliente)
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nombre</th>
+                                    <th>Email</th>
+                                    <th>Rol</th>
+                                    <th>Estado</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tablaUsuarios">
+                                <!-- Usuarios se cargan aquí con JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Sección Productos -->
+                <div id="seccion-productos" class="content-section" style="display: none;">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h2 class="mb-0">📦 Gestión de Productos</h2>
+                        <button class="btn btn-success btn-custom" onclick="abrirNuevoProducto()">
+                            ➕ Nuevo Producto
+                        </button>
+                    </div>
+
+                    <!-- Formulario de Producto -->
+                    <div id="productoFormContainer" class="form-section" style="display: none;">
+                        <h4 id="formTitle">📝 Nuevo Producto</h4>
+                        <form id="productoForm" onsubmit="event.preventDefault(); guardarProductoFromForm();">
+                            <input type="hidden" id="productoId" value="" />
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label class="form-label">Código *</label>
+                                    <input id="productoCodigo" class="form-control" maxlength="50" required />
                                 </div>
-                            </form>
-
-                            <hr />
-
-                            <div class="table-responsive">
-                                <table class="table table-striped">
-                                    <thead class="table-dark">
-                                        <tr><th>ID</th><th>Nombre</th><th>Precio</th><th>Stock</th><th>Categoría</th><th>Acciones</th></tr>
-                                    </thead>
-                                    <tbody id="tablaProductosAdmin"></tbody>
-                                </table>
+                                <div class="col-md-6">
+                                    <label class="form-label">Nombre *</label>
+                                    <input id="productoNombre" class="form-control" maxlength="100" required />
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label">Descripción</label>
+                                    <textarea id="productoDescripcion" class="form-control" maxlength="500" rows="3"></textarea>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label">Precio *</label>
+                                    <input id="productoPrecio" type="number" step="0.01" min="0" class="form-control" required />
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label">Stock *</label>
+                                    <input id="productoStock" type="number" min="0" step="1" class="form-control" required />
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label">Stock Crítico</label>
+                                    <input id="productoStockCritico" type="number" min="0" step="1" class="form-control" />
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Categoría *</label>
+                                    <select id="productoCategoria" class="form-control" required>
+                                        <option value="">Seleccionar categoría</option>
+                                        <option value="Comida">Comida</option>
+                                        <option value="Accesorios">Accesorios</option>
+                                        <option value="Juguetes">Juguetes</option>
+                                        <option value="Higiene">Higiene</option>
+                                        <option value="Salud">Salud</option>
+                                        <option value="Premium">Premium</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Imagen (ruta)</label>
+                                    <input id="productoImagen" class="form-control" placeholder="assets/img/ejemplo.png" />
+                                </div>
+                                <div class="col-12">
+                                    <button class="btn btn-success btn-custom me-2" type="submit">💾 Guardar Producto</button>
+                                    <button class="btn btn-secondary btn-custom" type="button" onclick="cancelarProducto()">❌ Cancelar</button>
+                                </div>
                             </div>
-                        </div>
+                        </form>
+                    </div>
+
+                    <!-- Tabla de Productos -->
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Imagen</th>
+                                    <th>Nombre</th>
+                                    <th>Precio</th>
+                                    <th>Stock</th>
+                                    <th>Categoría</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tablaProductosAdmin">
+                                <!-- Productos se cargan aquí con JavaScript -->
+                            </tbody>
+                        </table>
                     </div>
                 </div>
-
-                    </div> <!-- end col-md-9 -->
-                </div> <!-- end row -->
+            </div>
         </div>
-    </main>
+    </div>
 
     <!-- Footer -->
     <footer class="bg-dark text-white py-4 mt-5">
@@ -171,16 +282,16 @@
                         <img src="../../assets/img/logo1.png" alt="Tienda MiMascota" style="height: 30px; width: auto;" class="me-2">
                         <span class="h6 mb-0">🐾 Tienda MiMascota</span>
                     </div>
-                    <p class="mb-0">Tu tienda de confianza para el cuidado y felicidad de tus mascotas.</p>
+                    <p class="mb-0">Sistema de Administración - Tu tienda de confianza para el cuidado y felicidad de tus mascotas.</p>
                 </div>
                 <div class="col-md-4 text-md-end">
-                    <p class="mb-1">📧 info@mimascota.cl</p>
+                    <p class="mb-1">📧 admin@mimascota.cl</p>
                     <p class="mb-0">📞 +56 9 1234 5678</p>
                 </div>
             </div>
             <hr class="border-light mt-4">
             <div class="text-center">
-                <p class="mb-0">&copy; 2024 Tienda MiMascota. Todos los derechos reservados.</p>
+                <p class="mb-0">&copy; 2024 Tienda MiMascota - Panel Administrativo. Todos los derechos reservados.</p>
             </div>
         </div>
     </footer>

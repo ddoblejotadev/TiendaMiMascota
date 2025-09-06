@@ -313,8 +313,67 @@ function showSection(seccion) {
 // Inicializar
 document.addEventListener('DOMContentLoaded', function() {
   if (verificarAdmin()) {
-    mostrarUsuarios();
-    // Mostrar sección de usuarios por defecto
-    showSection('usuarios');
+    // Mostrar dashboard por defecto
+    showSection('dashboard');
   }
 });
+
+// ========================================
+// NUEVAS FUNCIONES PARA DASHBOARD
+// ========================================
+
+// FUNCIÓN PARA MOSTRAR SECCIONES CON DASHBOARD
+function showSection(seccion) {
+  // Ocultar todas las secciones
+  document.getElementById('seccion-dashboard').style.display = 'none';
+  document.getElementById('seccion-usuarios').style.display = 'none';
+  document.getElementById('seccion-productos').style.display = 'none';
+  
+  // Remover clase active de todos los menús
+  var menus = ['menu-dashboard', 'menu-usuarios', 'menu-productos'];
+  menus.forEach(function(menuId) {
+    var menu = document.getElementById(menuId);
+    if (menu) menu.classList.remove('active');
+  });
+  
+  // Mostrar sección seleccionada y activar menú
+  if (seccion === 'dashboard') {
+    document.getElementById('seccion-dashboard').style.display = 'block';
+    document.getElementById('menu-dashboard').classList.add('active');
+    actualizarEstadisticas();
+  } else if (seccion === 'usuarios') {
+    document.getElementById('seccion-usuarios').style.display = 'block';
+    document.getElementById('menu-usuarios').classList.add('active');
+    mostrarUsuarios();
+  } else if (seccion === 'productos') {
+    document.getElementById('seccion-productos').style.display = 'block';
+    document.getElementById('menu-productos').classList.add('active');
+    mostrarProductosAdmin();
+  }
+}
+
+// FUNCIÓN PARA ACTUALIZAR ESTADÍSTICAS DEL DASHBOARD
+function actualizarEstadisticas() {
+  var usuarios = JSON.parse(localStorage.getItem('usuarios') || '[]');
+  var productos = JSON.parse(localStorage.getItem('productos') || '[]');
+  
+  // Contar usuarios por rol
+  var totalUsuarios = usuarios.length;
+  var productosStockBajo = productos.filter(function(p) {
+    return p.stock <= (p.stockCritico || 0);
+  }).length;
+  var productosActivos = productos.filter(function(p) {
+    return p.stock > 0;
+  }).length;
+  
+  // Actualizar elementos del DOM
+  var elementos = ['totalUsuarios', 'totalProductos', 'productosStockBajo', 'productosActivos'];
+  var valores = [totalUsuarios, productos.length, productosStockBajo, productosActivos];
+  
+  elementos.forEach(function(id, index) {
+    var elemento = document.getElementById(id);
+    if (elemento) {
+      elemento.textContent = valores[index];
+    }
+  });
+}
