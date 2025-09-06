@@ -274,5 +274,20 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // FUNCIÓN ADICIONAL: Ir a página de detalle
 function verDetalle(id) {
-  window.location.href = 'detalle-producto.html?id=' + id;
+  // Detectar desde qué página se está llamando
+  var rutaActual = window.location.pathname;
+  var rutaDetalle;
+  
+  if (rutaActual.includes('index.html') || rutaActual.endsWith('/')) {
+    // Desde la página principal
+    rutaDetalle = 'pages/content/detalle-producto.html?id=' + id;
+  } else if (rutaActual.includes('pages/content/')) {
+    // Desde una página dentro de content
+    rutaDetalle = 'detalle-producto.html?id=' + id;
+  } else {
+    // Por defecto, asumir ruta relativa
+    rutaDetalle = 'detalle-producto.html?id=' + id;
+  }
+  
+  window.location.href = rutaDetalle;
 }
