@@ -1,54 +1,8 @@
 // =============================================
-// FUNCIONES BÁSICAS - SOLO 4 FUNCIONES SIMPLES
+// FUNCIONES DE REGISTRO Y LOGIN - SOLO 2 FUNCIONES
 // =============================================
 
-// FUNCIÓN 1: Validar email básico
-function validarEmail(email) {
-  return email.includes('@') && (email.includes('duoc.cl') || email.includes('gmail.com') || email.includes('admin.cl'));
-}
-
-// FUNCIÓN 2: Validar contraseña básica
-function validarPassword(password) {
-  return password.length >= 4 && password.length <= 10;
-}
-
-// FUNCIÓN EXTRA: Mostrar notificación moderna
-function mostrarNotificacion(mensaje, tipo) {
-  var notificacion = document.createElement('div');
-  notificacion.className = 'notificacion-carrito';
-  
-  // Cambiar color según el tipo
-  if (tipo === 'error') {
-    notificacion.style.background = '#dc3545';
-  } else if (tipo === 'success') {
-    notificacion.style.background = '#198754';
-  }
-  
-  var icono = '🛒';
-  if (tipo === 'error') {
-    icono = '❌';
-  } else if (tipo === 'success') {
-    icono = '✅';
-  }
-  
-  notificacion.innerHTML = 
-    '<div class="icono">' + icono + '</div>' +
-    '<div>' + mensaje + '</div>';
-  
-  document.body.appendChild(notificacion);
-  
-  // Quitar después de 2 segundos con animación
-  setTimeout(function() {
-    notificacion.style.animation = 'deslizarSalida 0.3s ease-in';
-    setTimeout(function() {
-      if (document.body.contains(notificacion)) {
-        document.body.removeChild(notificacion);
-      }
-    }, 300);
-  }, 2000);
-}
-
-// FUNCIÓN 3: Registrar usuario nuevo
+// FUNCIÓN 1: Registrar usuario nuevo
 function registrarUsuario() {
   var nombre = document.getElementById('nombre').value;
   var email = document.getElementById('email').value;
@@ -98,7 +52,7 @@ function registrarUsuario() {
   }, 1500);
 }
 
-// FUNCIÓN 4: Iniciar sesión
+// FUNCIÓN 2: Iniciar sesión
 function iniciarSesion() {
   var email = document.getElementById('email').value;
   var password = document.getElementById('password').value;
@@ -130,41 +84,3 @@ function iniciarSesion() {
   
   mostrarNotificacion('❌ Email o contraseña incorrectos', 'error');
 }
-
-// Inicializar cuando carga la página
-document.addEventListener('DOMContentLoaded', function() {
-  
-  // Llenar regiones si existe el select
-  var selectRegion = document.getElementById('region');
-  if (selectRegion) {
-    selectRegion.innerHTML = '<option value="">Selecciona región</option>' +
-                             '<option value="Metropolitana">Región Metropolitana</option>' +
-                             '<option value="Valparaiso">Región de Valparaíso</option>' +
-                             '<option value="Biobio">Región del Biobío</option>';
-  }
-  
-  // Llenar comunas cuando cambie región
-  if (selectRegion) {
-    selectRegion.addEventListener('change', function() {
-      var selectComuna = document.getElementById('comuna');
-      if (selectComuna) {
-        if (this.value === 'Metropolitana') {
-          selectComuna.innerHTML = '<option value="">Selecciona comuna</option>' +
-                                   '<option value="Santiago">Santiago</option>' +
-                                   '<option value="Las Condes">Las Condes</option>' +
-                                   '<option value="Providencia">Providencia</option>';
-        } else if (this.value === 'Valparaiso') {
-          selectComuna.innerHTML = '<option value="">Selecciona comuna</option>' +
-                                   '<option value="Valparaiso">Valparaíso</option>' +
-                                   '<option value="Vina del Mar">Viña del Mar</option>';
-        } else if (this.value === 'Biobio') {
-          selectComuna.innerHTML = '<option value="">Selecciona comuna</option>' +
-                                   '<option value="Concepcion">Concepción</option>' +
-                                   '<option value="Talcahuano">Talcahuano</option>';
-        } else {
-          selectComuna.innerHTML = '<option value="">Selecciona comuna</option>';
-        }
-      }
-    });
-  }
-});
