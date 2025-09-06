@@ -152,6 +152,7 @@ function vaciarCarrito() {
   // Confirmación moderna usando CSS del archivo styles.css
   mostrarConfirmacion('¿Vaciar el carrito?', 'Se eliminarán todos los productos', function() {
     carrito = [];
+    localStorage.setItem('carrito', JSON.stringify(carrito)); // ¡GUARDAR EN LOCALSTORAGE!
     actualizarContador();
     mostrarCarrito();
     
@@ -191,6 +192,7 @@ function cambiarCantidad(id, cambio) {
     }
   }
   
+  localStorage.setItem('carrito', JSON.stringify(carrito)); // ¡GUARDAR EN LOCALSTORAGE!
   actualizarContador();
   mostrarCarrito();
 }
@@ -204,6 +206,7 @@ function eliminarDelCarrito(id) {
     }
   }
   
+  localStorage.setItem('carrito', JSON.stringify(carrito)); // ¡GUARDAR EN LOCALSTORAGE!
   actualizarContador();
   mostrarCarrito();
 }
