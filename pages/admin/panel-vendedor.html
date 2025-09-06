@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel Vendedor - Tienda MiMascota</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/styles.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="bg-primary text-white py-3 mb-4">
+        <div class="container d-flex align-items-center justify-content-between">
+            <a href="../../index.html" class="d-flex align-items-center text-white text-decoration-none">
+                <img src="../../assets/img/logo1.png" alt="Tienda MiMascota" style="height: 40px; width: auto;" class="me-2">
+                <span class="h6 mb-0">🐾 Tienda MiMascota</span>
+            </a>
+            <nav>
+                <span class="text-light me-3"> <span id="nombreVendedor">Vendedor</span></span>
+                <button class="btn btn-outline-light btn-sm" onclick="cerrarSesion()">Cerrar Sesión</button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Contenido Principal -->
+    <main class="container py-4">
+        <h1 class="mb-4">💼 Panel de Vendedor</h1>
+        
+        <!-- Estadísticas -->
+        <div class="row mb-4">
+            <div class="col-md-4">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <h5 class="card-title">📦 Total Productos</h5>
+                        <h2 class="text-success" id="totalProductos">8</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <h5 class="card-title">� Usuarios Activos</h5>
+                        <h2 class="text-info" id="totalUsuarios">0</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <h5 class="card-title">🔍 Mi Acceso</h5>
+                        <h2 class="text-warning">Solo Lectura</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Tabs de navegación -->
+        <ul class="nav nav-tabs" id="vendedorTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="productos-tab" data-bs-toggle="tab" data-bs-target="#productos" type="button" role="tab">
+                    📦 Productos
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="usuarios-tab" data-bs-toggle="tab" data-bs-target="#usuarios" type="button" role="tab">
+                    👥 Usuarios
+                </button>
+            </li>
+        </ul>
+        
+        <!-- Contenido de tabs -->
+        <div class="tab-content" id="vendedorTabsContent">
+            <!-- Tab Productos -->
+            <div class="tab-pane fade show active" id="productos" role="tabpanel">
+                <div class="card">
+                    <div class="card-header bg-success text-white">
+                        <h5 class="mb-0">📦 Lista de Productos (Solo Lectura)</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="alert alert-info">
+                            <strong>📋 Rol de Vendedor:</strong> Puedes ver todos los productos del sistema, pero no editarlos ni eliminarlos. Solo los administradores pueden hacer cambios.
+                        </div>
+                        
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Imagen</th>
+                                        <th>Nombre</th>
+                                        <th>Precio</th>
+                                        <th>Categoría</th>
+                                        <th>Stock</th>
+                                        <th>Descripción</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tablaProductosVendedor">
+                                    <!-- Productos se cargan aquí con JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Tab Usuarios -->
+            <div class="tab-pane fade" id="usuarios" role="tabpanel">
+                <div class="card">
+                    <div class="card-header bg-info text-white">
+                        <h5 class="mb-0">� Lista de Usuarios (Solo Lectura)</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="alert alert-warning">
+                            <strong>⚠️ Acceso Limitado:</strong> Como vendedor puedes ver la lista de usuarios registrados, pero no puedes editarlos, eliminarlos ni cambiar roles. Solo consulta.
+                        </div>
+                        
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Nombre</th>
+                                        <th>Email</th>
+                                        <th>Rol</th>
+                                        <th>Estado</th>
+                                        <th>Fecha Registro</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tablaUsuariosVendedor">
+                                    <!-- Usuarios se cargan aquí con JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white py-4 mt-5">
+        <div class="container text-center">
+            <div class="d-flex align-items-center justify-content-center mb-3">
+                <img src="../../assets/img/logo1.png" alt="Tienda MiMascota" style="height: 30px; width: auto;" class="me-2">
+                <span class="h6 mb-0">🐾 Tienda MiMascota</span>
+            </div>
+            <p class="mb-0">&copy; 2024 Tienda MiMascota. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../../js/utils/utilidades.js"></script>
+    <script src="../../js/vendedor/panel-vendedor.js"></script>
+</body>
+</html>

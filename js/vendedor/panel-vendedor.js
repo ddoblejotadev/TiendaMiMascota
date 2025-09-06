@@ -1,89 +1,87 @@
-// =============================================
-// PANEL VENDEDOR - SOLO LECTURA (3 FUNCIONES)
-// =============================================
+// ========================================
+// PANEL VENDEDOR BÁSICO - SOLO LECTURA
+// ========================================
 
-// FUNCIÓN 1: Verificar que es vendedor
+// FUNCIÓN 1: Verificar si es vendedor
 function verificarVendedor() {
   var usuario = JSON.parse(localStorage.getItem('usuarioActual') || '{}');
   
-  if (!usuario.rol || (usuario.rol !== 'vendedor' && usuario.rol !== 'administrador')) {
-    mostrarNotificacion('❌ Acceso denegado. Solo vendedores', 'error');
-    setTimeout(function() {
-      window.location.href = '../user/iniciar-sesion.html';
-    }, 2000);
+  if (!usuario.tipoUsuario || usuario.tipoUsuario !== 'Vendedor') {
+    alert('Solo vendedores pueden acceder');
+    window.location.href = '../user/iniciar-sesion.html';
     return false;
   }
   
-  // Mostrar nombre del vendedor
-  var nombreVendedor = document.getElementById('nombreVendedor');
-  if (nombreVendedor) {
-    nombreVendedor.textContent = usuario.nombre;
-  }
-  
+  document.getElementById('nombreVendedor').textContent = usuario.nombre;
   return true;
 }
 
-// FUNCIÓN 2: Mostrar productos (solo lectura)
+// FUNCIÓN 2: Mostrar productos (lista fija para principiantes)
 function mostrarProductosVendedor() {
-  var productos = JSON.parse(localStorage.getItem('productos') || '[]');
+  var productos = [
+    {id: 1, nombre: 'Collar para Perro', precio: 15000, categoria: 'Accesorios', stock: 25},
+    {id: 2, nombre: 'Cama para Mascota', precio: 35000, categoria: 'Camas', stock: 12},
+    {id: 3, nombre: 'Alimento Premium', precio: 28000, categoria: 'Comida', stock: 30},
+    {id: 4, nombre: 'Shampoo para Mascotas', precio: 18000, categoria: 'Higiene', stock: 20}
+  ];
+  
   var tabla = document.getElementById('tablaProductosVendedor');
-  var totalProductos = document.getElementById('totalProductos');
   
   if (!tabla) return;
   
   var html = '';
   
-  if (productos.length === 0) {
-    html = '<tr><td colspan="5" class="text-center">No hay productos registrados</td></tr>';
+  for (var i = 0; i < productos.length; i++) {
+    var p = productos[i];
+    
+    html += '<tr>';
+    html += '<td>' + p.id + '</td>';
+    html += '<td>' + p.nombre + '</td>';
+    html += '<td>$' + p.precio.toLocaleString() + '</td>';
+    html += '<td>' + p.categoria + '</td>';
+    html += '<td>' + p.stock + '</td>';
+    html += '</tr>';
+  }
+  
+  tabla.innerHTML = html;
+  
+  document.getElementById('totalProductos').textContent = productos.length;
+}
+
+// FUNCIÓN 3: Mostrar usuarios (solo lectura)
+function mostrarUsuariosVendedor() {
+  var usuarios = JSON.parse(localStorage.getItem('usuarios') || '[]');
+  var tabla = document.getElementById('tablaUsuariosVendedor');
+  
+  if (!tabla) return;
+  
+  var html = '';
+  
+  if (usuarios.length === 0) {
+    html = '<tr><td colspan="5" class="text-center">No hay usuarios registrados</td></tr>';
   } else {
-    for (var i = 0; i < productos.length; i++) {
-      var p = productos[i];
+    for (var i = 0; i < usuarios.length; i++) {
+      var u = usuarios[i];
+      
       html += '<tr>';
-      html += '<td>' + p.id + '</td>';
-      html += '<td>' + p.nombre + '</td>';
-      html += '<td>$' + p.precio + '</td>';
-      html += '<td>' + p.categoria + '</td>';
-      html += '<td>' + (p.stock || 'Sin stock') + '</td>';
+      html += '<td>' + u.id + '</td>';
+      html += '<td>' + u.nombre + '</td>';
+      html += '<td>' + u.email + '</td>';
+      html += '<td>' + u.tipoUsuario + '</td>';
+      html += '<td>Activo</td>';
       html += '</tr>';
     }
   }
   
   tabla.innerHTML = html;
   
-  if (totalProductos) {
-    totalProductos.textContent = productos.length;
-  }
-}
-
-// FUNCIÓN 3: Cambiar sección visible
-function mostrarSeccion(seccion) {
-  // Ocultar todas las secciones
-  var secciones = document.querySelectorAll('.seccion-vendedor');
-  for (var i = 0; i < secciones.length; i++) {
-    secciones[i].style.display = 'none';
-  }
-  
-  // Quitar clase active de botones
-  var botones = document.querySelectorAll('.list-group-item');
-  for (var i = 0; i < botones.length; i++) {
-    botones[i].classList.remove('active');
-  }
-  
-  // Mostrar sección seleccionada
-  if (seccion === 'productos') {
-    document.getElementById('seccionProductos').style.display = 'block';
-    mostrarProductosVendedor();
-  } else if (seccion === 'ordenes') {
-    document.getElementById('seccionOrdenes').style.display = 'block';
-  }
-  
-  // Marcar botón como activo
-  event.target.classList.add('active');
+  document.getElementById('totalUsuarios').textContent = usuarios.length;
 }
 
 // Inicializar cuando carga la página
 document.addEventListener('DOMContentLoaded', function() {
   if (verificarVendedor()) {
     mostrarProductosVendedor();
+    mostrarUsuariosVendedor();
   }
 });

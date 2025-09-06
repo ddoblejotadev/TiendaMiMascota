@@ -35,41 +35,31 @@
             </div>
         </div>
 
-        <div class="row">
-            <!-- Artículo 1 -->
-            <div class="col-md-6 col-lg-4 mb-4">
-                <article class="card h-100">
-                    <div class="card-body">
-                        <h5 class="card-title">� Cuidados Básicos para Perros</h5>
-                        <p class="text-muted small mb-3">15 de Enero, 2024</p>
-                        <p class="card-text">Aprende los cuidados esenciales que tu perro necesita para mantenerse saludable y feliz.</p>
-                        <a href="#" class="btn btn-outline-primary btn-sm">Leer más</a>
-                    </div>
-                </article>
+        <!-- Barra de búsqueda y filtros -->
+        <div class="row mb-4">
+            <div class="col-md-6 mb-3">
+                <div class="input-group">
+                    <input type="text" class="form-control" id="buscadorBlog" placeholder="Buscar artículos...">
+                    <span class="input-group-text">🔍</span>
+                </div>
             </div>
-
-            <!-- Artículo 2 -->
-            <div class="col-md-6 col-lg-4 mb-4">
-                <article class="card h-100">
-                    <div class="card-body">
-                        <h5 class="card-title">🐱 Alimentación para Gatos</h5>
-                        <p class="text-muted small mb-3">12 de Enero, 2024</p>
-                        <p class="card-text">Descubre qué alimentos son mejores para la salud de tu gato según su edad y necesidades.</p>
-                        <a href="#" class="btn btn-outline-primary btn-sm">Leer más</a>
-                    </div>
-                </article>
+            <div class="col-md-6 mb-3">
+                <div class="btn-group w-100" role="group">
+                    <button type="button" class="btn btn-outline-primary active" data-categoria="todos">Todos</button>
+                    <button type="button" class="btn btn-outline-primary" data-categoria="cuidados">Cuidados</button>
+                    <button type="button" class="btn btn-outline-primary" data-categoria="entretenimiento">Entretenimiento</button>
+                    <button type="button" class="btn btn-outline-primary" data-categoria="higiene">Higiene</button>
+                </div>
             </div>
+        </div>
 
-            <!-- Artículo 3 -->
-            <div class="col-md-6 col-lg-4 mb-4">
-                <article class="card h-100">
-                    <div class="card-body">
-                        <h5 class="card-title">🎾 Juguetes Seguros</h5>
-                        <p class="text-muted small mb-3">10 de Enero, 2024</p>
-                        <p class="card-text">Cómo elegir los juguetes más seguros y divertidos para tu mascota.</p>
-                        <a href="#" class="btn btn-outline-primary btn-sm">Leer más</a>
-                    </div>
-                </article>
+        <!-- Lista de artículos (dinámico) -->
+        <div class="row" id="listaArticulos">
+            <!-- Los artículos se cargan dinámicamente con JavaScript -->
+            <div class="col-12 text-center">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Cargando artículos...</span>
+                </div>
             </div>
         </div>
     </main>
@@ -110,5 +100,6 @@
 
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../../js/blog/blog-articulos.js"></script>
 </body>
 </html>

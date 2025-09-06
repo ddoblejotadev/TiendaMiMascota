@@ -25,11 +25,14 @@ function mostrarProductos() {
     var p = productos[i];
     html += '<div class="col-md-4 mb-3">';
     html += '  <div class="card">';
-    html += '    <img src="' + p.imagen + '" class="card-img-top" style="height:200px">';
+    html += '    <img src="' + p.imagen + '" class="card-img-top" style="height:200px; cursor: pointer;" onclick="verDetalle(' + p.id + ')">';
     html += '    <div class="card-body">';
-    html += '      <h5>' + p.nombre + '</h5>';
-    html += '      <p>$' + p.precio + '</p>';
-    html += '      <button class="btn btn-primary" onclick="agregarAlCarrito(' + p.id + ')">Agregar</button>';
+    html += '      <h5 class="card-title" style="cursor: pointer;" onclick="verDetalle(' + p.id + ')">' + p.nombre + '</h5>';
+    html += '      <p class="card-text">$' + p.precio + '</p>';
+    html += '      <div class="d-flex gap-2">';
+    html += '        <button class="btn btn-primary" onclick="agregarAlCarrito(' + p.id + ')">Agregar</button>';
+    html += '        <button class="btn btn-outline-info" onclick="verDetalle(' + p.id + ')">Ver Detalle</button>';
+    html += '      </div>';
     html += '    </div>';
     html += '  </div>';
     html += '</div>';
@@ -268,3 +271,8 @@ document.addEventListener('DOMContentLoaded', function() {
     modalCarrito.addEventListener('show.bs.modal', mostrarCarrito);
   }
 });
+
+// FUNCIÓN ADICIONAL: Ir a página de detalle
+function verDetalle(id) {
+  window.location.href = 'detalle-producto.html?id=' + id;
+}

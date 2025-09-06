@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="es">
-<head>
+<he                                <label for="nombre" class="form-label">Nombre Completo *</label>
+                                <input type="text" class="form-control" id="nombre" required maxlength="100" 
+                                       placeholder="Tu nombre completo">>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Contacto - Tienda MiMascota</title>
@@ -34,21 +36,39 @@
                 
                 <div class="card">
                     <div class="card-body">
-                        <form id="contactForm">
+                        <form id="formularioContacto">
                             <div class="mb-3">
                                 <label for="contactName" class="form-label">Nombre *</label>
                                 <input type="text" class="form-control" id="contactName" required maxlength="100">
                             </div>
                             
                             <div class="mb-3">
-                                <label for="contactEmail" class="form-label">Correo Electrónico *</label>
-                                <input type="email" class="form-control" id="contactEmail" required>
-                                <div class="form-text">Solo se permiten: @duoc.cl, @profesor.duoc.cl, @gmail.com</div>
+                                <label for="email" class="form-label">Correo Electrónico *</label>
+                                <input type="email" class="form-control" id="email" required 
+                                       placeholder="correo@ejemplo.com">
+                                <div class="form-text">Ejemplo: correo@duocuc.cl, correo@gmail.com</div>
                             </div>
                             
                             <div class="mb-3">
-                                <label for="contactMessage" class="form-label">Comentario *</label>
-                                <textarea class="form-control" id="contactMessage" rows="5" required maxlength="500"></textarea>
+                                <label for="telefono" class="form-label">Teléfono (opcional)</label>
+                                <input type="tel" class="form-control" id="telefono" 
+                                       placeholder="+56 9 1234 5678">
+                                <div class="form-text">Formato chileno: +56 9 XXXX XXXX</div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="asunto" class="form-label">Asunto *</label>
+                                <input type="text" class="form-control" id="asunto" required maxlength="200" 
+                                       placeholder="Motivo de tu consulta">
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="mensaje" class="form-label">Mensaje *</label>
+                                <textarea class="form-control" id="mensaje" rows="5" required maxlength="1000" 
+                                          placeholder="Escribe tu mensaje aquí..."></textarea>
+                                <div class="form-text">
+                                    <span id="contadorCaracteres">0/1000</span> caracteres
+                                </div>
                             </div>
                             
                             <button type="submit" class="btn btn-primary w-100">Enviar Mensaje</button>
@@ -85,6 +105,6 @@
 
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="../../js/funciones-principales.js"></script>
+    <script src="../../js/contacto/formulario-contacto.js"></script>
 </body>
 </html>

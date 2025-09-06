@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalle del Producto - Tienda MiMascota</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/styles.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="bg-primary text-white py-3">
+        <div class="container">
+            <div class="d-flex align-items-center justify-content-between">
+                <a href="../../index.html" class="d-flex align-items-center text-white text-decoration-none">
+                    <img src="../../assets/img/logo1.png" alt="Tienda MiMascota" style="height: 40px; width: auto;" class="me-2">
+                    <span class="h6 mb-0">🐾 Tienda MiMascota</span>
+                </a>
+                <nav>
+                    <a href="../../index.html" class="text-white me-3">Inicio</a>
+                    <a href="productos.html" class="text-white me-3">Productos</a>
+                    <a href="blog-articulos.html" class="text-white me-3">Blog</a>
+                    <a href="acerca-de-nosotros.html" class="text-white me-3">Nosotros</a>
+                    <a href="formulario-contacto.html" class="text-white me-3">Contacto</a>
+                    <a href="../user/registro-usuario.html" class="text-white me-3">Registrarse</a>
+                    <a href="../user/iniciar-sesion.html" class="text-white me-3">Iniciar sesión</a>
+                    <button id="btnCarrito" class="btn btn-outline-light btn-sm">🛒 Carrito (<span id="cantidadCarrito">0</span>)</button>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Detalle del Producto -->
+    <main class="container py-5">
+        <div class="row">
+            <div class="col-md-6">
+                <img id="imagenProducto" src="" alt="Producto" class="img-fluid rounded">
+            </div>
+            <div class="col-md-6">
+                <h1 id="nombreProducto">Cargando...</h1>
+                <p class="h3 text-success mb-3">$<span id="precioProducto">0</span></p>
+                <p id="descripcionProducto">Cargando descripción...</p>
+                
+                <div class="mb-3">
+                    <label for="cantidadCompra" class="form-label">Cantidad:</label>
+                    <input type="number" id="cantidadCompra" class="form-control" value="1" min="1" style="width: 100px;">
+                </div>
+                
+                <button class="btn btn-primary btn-lg" onclick="agregarAlCarritoDetalle()">
+                    🛒 Agregar al Carrito
+                </button>
+                
+                <a href="productos.html" class="btn btn-secondary btn-lg ms-2">
+                    ← Volver a Productos
+                </a>
+            </div>
+        </div>
+        
+        <!-- Sección de Comentarios -->
+        <div class="row mt-5">
+            <div class="col-12">
+                <h3>💬 Comentarios</h3>
+                
+                <!-- Formulario para nuevo comentario -->
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h5>Deja tu comentario</h5>
+                        <form id="formComentario">
+                            <div class="mb-3">
+                                <label for="nombreComentario" class="form-label">Tu nombre:</label>
+                                <input type="text" id="nombreComentario" class="form-control" maxlength="100" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="textoComentario" class="form-label">Comentario:</label>
+                                <textarea id="textoComentario" class="form-control" rows="3" maxlength="500" required></textarea>
+                                <small class="text-muted">Máximo 500 caracteres</small>
+                            </div>
+                            <button type="button" class="btn btn-primary" onclick="agregarComentario()">
+                                💬 Publicar Comentario
+                            </button>
+                        </form>
+                    </div>
+                </div>
+                
+                <!-- Lista de comentarios -->
+                <div id="listaComentarios">
+                    <!-- Los comentarios se cargan aquí -->
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal del Carrito -->
+    <div class="modal fade" id="modalCarrito" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">🛒 Mi Carrito</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="contenidoCarrito">
+                        <!-- El contenido del carrito se carga aquí -->
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="me-auto">
+                        <strong>Total: $<span id="totalCarrito">0</span></strong>
+                    </div>
+                    <button type="button" class="btn btn-danger" id="btnVaciarCarrito">🗑️ Vaciar Carrito</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white py-4">
+        <div class="container text-center">
+            <p>&copy; 2024 Tienda MiMascota - Todo para tu mejor amigo</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+      <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="../../js/tienda/detalle-producto.js"></script>
+    <script src="../../js/utils/utilidades.js"></script>
+    <script src="../../js/tienda/sistema-productos-carrito.js"></script>
+    <script src="../../js/tienda/detalle-producto.js"></script>
+</body>
+</html>
