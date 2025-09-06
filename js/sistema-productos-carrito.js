@@ -1,7 +1,3 @@
-// ========================================
-// TIENDA SUPER SIMPLE - SOLO 6 FUNCIONES
-// ========================================
-
 // Lista básica de productos
 var productos = [
   { id: 1, nombre: "Comida para Perros", precio: 5000, categoria: "comida", imagen: "assets/img/Comida.jpg" },
