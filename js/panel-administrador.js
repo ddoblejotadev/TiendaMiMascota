@@ -79,6 +79,21 @@ function inicializarDatosPrueba() {
   }
 }
 
+// FUNCIÓN PARA GENERAR OPCIONES DE ROL DINÁMICAMENTE
+function generarOpcionesRol(rolActual) {
+  var opciones = '';
+  var rolesDisponibles = ['cliente', 'vendedor', 'administrador'];
+  
+  for (var i = 0; i < rolesDisponibles.length; i++) {
+    var rol = rolesDisponibles[i];
+    if (rol !== rolActual) { // No mostrar el rol actual
+      opciones += '<option value="' + rol + '">' + rol.charAt(0).toUpperCase() + rol.slice(1) + '</option>';
+    }
+  }
+  
+  return opciones;
+}
+
 // FUNCIÓN 2: Mostrar usuarios con roles
 function mostrarUsuarios() {
   var usuarios = JSON.parse(localStorage.getItem('usuarios') || '[]');
@@ -87,38 +102,43 @@ function mostrarUsuarios() {
   if (!tabla) return;
   
   var html = '';
+  var usuarioActual = JSON.parse(localStorage.getItem('usuarioActual') || '{}');
   
-  if (usuarios.length === 0) {
+  // Mostrar todos los usuarios, pero el admin actual verá "Tu cuenta" en acciones
+  var usuariosFiltrados = usuarios;
+  
+  if (usuariosFiltrados.length === 0) {
     html = '<tr><td colspan="6" class="text-center">No hay usuarios registrados</td></tr>';
   } else {
-    for (var i = 0; i < usuarios.length; i++) {
-      var u = usuarios[i];
+    for (var i = 0; i < usuariosFiltrados.length; i++) {
+      var u = usuariosFiltrados[i];
       var colorRol = '';
       
       if (u.rol === 'administrador') colorRol = 'bg-danger text-white';
       else if (u.rol === 'vendedor') colorRol = 'bg-warning';
       else colorRol = 'bg-info text-white';
       
+      // Determinar estado correctamente
+      var estadoActivo = u.activo !== false; // Por defecto true si no está definido
+      
       html += '<tr>';
       html += '<td>' + u.id + '</td>';
       html += '<td>' + u.nombre + '</td>';
       html += '<td>' + u.email + '</td>';
       html += '<td><span class="badge ' + colorRol + '">' + u.rol.toUpperCase() + '</span></td>';
-      html += '<td>' + (u.activo ? '✅ Activo' : '❌ Inactivo') + '</td>';
+      html += '<td>' + (estadoActivo ? '✅ Activo' : '❌ Inactivo') + '</td>';
       html += '<td>';
       
       // Solo mostrar acciones si no es el admin actual
-      var usuarioActual = JSON.parse(localStorage.getItem('usuarioActual') || '{}');
       if (u.email !== usuarioActual.email) {
+        // Selector de roles dinámico
         html += '<select class="form-select form-select-sm d-inline-block me-2" style="width:auto" onchange="cambiarRol(' + u.id + ', this.value)">';
         html += '<option value="">Cambiar rol</option>';
-        html += '<option value="cliente"' + (u.rol === 'cliente' ? ' selected' : '') + '>Cliente</option>';
-        html += '<option value="vendedor"' + (u.rol === 'vendedor' ? ' selected' : '') + '>Vendedor</option>';
-        html += '<option value="administrador"' + (u.rol === 'administrador' ? ' selected' : '') + '>Administrador</option>';
+        html += generarOpcionesRol(u.rol);
         html += '</select>';
         
-        html += '<button class="btn btn-sm ' + (u.activo ? 'btn-warning' : 'btn-success') + ' me-1" onclick="cambiarEstado(' + u.id + ')">';
-        html += u.activo ? 'Desactivar' : 'Activar';
+        html += '<button class="btn btn-sm ' + (estadoActivo ? 'btn-warning' : 'btn-success') + ' me-1" onclick="cambiarEstado(' + u.id + ')">';
+        html += estadoActivo ? 'Desactivar' : 'Activar';
         html += '</button>';
         
         html += '<button class="btn btn-danger btn-sm" onclick="eliminarUsuario(' + u.id + ')">Eliminar</button>';
@@ -136,7 +156,7 @@ function mostrarUsuarios() {
   // Actualizar contador
   var totalUsuarios = document.getElementById('totalUsuarios');
   if (totalUsuarios) {
-    totalUsuarios.textContent = usuarios.length;
+    totalUsuarios.textContent = usuariosFiltrados.length;
   }
 }
 
