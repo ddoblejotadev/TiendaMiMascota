@@ -265,9 +265,9 @@ Este proyecto está bajo la Licencia MIT. Ver el archivo `LICENSE` para más det
 
 ## 👨‍💻 Autor
 
-**Desarrollado por:** [Tu Nombre]
+**Desarrollado por:** 
 - **GitHub:** [@ddoblejotadev](https://github.com/ddoblejotadev)
-- **Email:** [tu-email@ejemplo.com]
+- **GitHub:** [@yasser-duoc](https://github.com/yasser-duoc)
 
 ---
 
