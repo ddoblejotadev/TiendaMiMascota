@@ -152,6 +152,7 @@ function cambiarRol(id, nuevoRol) {
       localStorage.setItem('usuarios', JSON.stringify(usuarios));
       mostrarNotificacion('✅ Rol cambiado a ' + nuevoRol.toUpperCase(), 'success');
       mostrarUsuarios();
+      actualizarEstadisticas();
       return;
     }
   }
@@ -169,6 +170,7 @@ function cambiarEstado(id) {
       var estado = usuarios[i].activo ? 'ACTIVADO' : 'DESACTIVADO';
       mostrarNotificacion('✅ Usuario ' + estado, 'success');
       mostrarUsuarios();
+      actualizarEstadisticas();
       return;
     }
   }
@@ -201,6 +203,7 @@ function eliminarUsuario(id) {
     localStorage.setItem('usuarios', JSON.stringify(nuevosUsuarios));
     mostrarNotificacion('✅ Usuario eliminado correctamente', 'success');
     mostrarUsuarios();
+    actualizarEstadisticas();
   });
 }
 
@@ -605,6 +608,7 @@ function guardarProductoFromForm() {
   
   guardarProductos(productos);
   mostrarProductosAdmin();
+  actualizarEstadisticas();
   cancelarProducto();
 }
 
@@ -622,6 +626,7 @@ function eliminarProducto(id) {
     guardarProductos(nuevosProductos);
     mostrarNotificacion('✅ Producto eliminado', 'success');
     mostrarProductosAdmin();
+    actualizarEstadisticas();
   });
 }
 
@@ -726,31 +731,4 @@ function actualizarEstadisticas() {
       elemento.textContent = valores[index];
     }
   });
-}
-
-// ========================================
-// FUNCIÓN DE PRUEBA PARA DEBUG
-// ========================================
-
-function probarAgregarProducto() {
-  console.log('🔧 Probando agregar producto...');
-  
-  // Verificar que las funciones existen
-  console.log('✅ Función obtenerProductos:', typeof obtenerProductos);
-  console.log('✅ Función guardarProductos:', typeof guardarProductos);
-  console.log('✅ Función mostrarNotificacion:', typeof mostrarNotificacion);
-  
-  // Simular datos del formulario
-  document.getElementById('productoCodigo').value = 'TEST001';
-  document.getElementById('productoNombre').value = 'Producto de Prueba';
-  document.getElementById('productoPrecio').value = '9999';
-  document.getElementById('productoStock').value = '10';
-  document.getElementById('productoCategoria').value = 'Comida';
-  
-  console.log('✅ Datos simulados en formulario');
-  
-  // Llamar a la función de guardar
-  guardarProductoFromForm();
-  
-  console.log('✅ Función guardarProductoFromForm() ejecutada');
 }
