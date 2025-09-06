@@ -55,8 +55,16 @@
                   class="form-control"
                   required
                   placeholder="ejemplo@duoc.cl"
+                  oninput="mostrarAyudaRol()"
                 />
-                <small class="text-muted">Acepta: @duoc.cl, @gmail.com, @admin.cl</small>
+                <div id="ayudaRol" class="mt-2">
+                  <small class="text-muted">
+                    💡 <strong>Roles automáticos según email:</strong><br>
+                    🛡️ <code>admin@duoc.cl</code> = Administrador<br>
+                    💼 <code>vendedor@duoc.cl</code> = Vendedor<br>
+                    👤 Otros emails = Cliente
+                  </small>
+                </div>
               </div>
 
               <!-- Contraseña -->
@@ -95,7 +103,25 @@
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="../../js/utilidades.js"></script>
-    <script src="../../js/funciones-principales.js"></script>
+    <script src="../../js/utils/utilidades.js"></script>
+    <script src="../../js/auth/funciones-principales.js"></script>
+    
+    <script>
+      // Función para mostrar ayuda de rol según el email (para principiantes)
+      function mostrarAyudaRol() {
+        var email = document.getElementById('email').value;
+        var ayuda = document.getElementById('ayudaRol');
+        
+        if (email === 'admin@duoc.cl') {
+          ayuda.innerHTML = '<small class="text-success"><strong>🛡️ Rol: ADMINISTRADOR</strong> - Acceso completo al sistema</small>';
+        } else if (email.includes('vendedor') && email.endsWith('@duoc.cl')) {
+          ayuda.innerHTML = '<small class="text-info"><strong>💼 Rol: VENDEDOR</strong> - Acceso a productos y órdenes (solo lectura)</small>';
+        } else if (email.length > 0) {
+          ayuda.innerHTML = '<small class="text-primary"><strong>👤 Rol: CLIENTE</strong> - Acceso a la tienda pública</small>';
+        } else {
+          ayuda.innerHTML = '<small class="text-muted">💡 <strong>Roles automáticos según email:</strong><br>🛡️ <code>admin@duoc.cl</code> = Administrador<br>💼 <code>vendedor@duoc.cl</code> = Vendedor<br>👤 Otros emails = Cliente</small>';
+        }
+      }
+    </script>
   </body>
 </html>

@@ -14,7 +14,7 @@ function registrarUsuario() {
   }
   
   if (!validarEmail(email)) {
-    mostrarNotificacion('❌ Email debe ser @duoc.cl, @gmail.com o @admin.cl', 'error');
+    mostrarNotificacion('❌ Email debe ser @duoc.cl, @gmail.com o @profesor.duoc.cl', 'error');
     return;
   }
   
@@ -34,17 +34,30 @@ function registrarUsuario() {
     }
   }
   
+  // Asignar rol automáticamente según el email
+  var rol = 'cliente'; // Por defecto
+  if (email === 'admin@duoc.cl') {
+    rol = 'administrador';
+  } else if (email.includes('vendedor') && email.endsWith('@duoc.cl')) {
+    rol = 'vendedor';
+  }
+  
+  var proximoId = usuarios.length + 1;
+  
   var nuevoUsuario = {
+    id: proximoId,
     nombre: nombre,
     email: email,
     password: password,
+    rol: rol,
+    activo: true,
     fechaRegistro: new Date().toISOString()
   };
   
   usuarios.push(nuevoUsuario);
   localStorage.setItem('usuarios', JSON.stringify(usuarios));
   
-  mostrarNotificacion('✅ Usuario registrado correctamente', 'success');
+  mostrarNotificacion('✅ Usuario registrado como ' + rol.toUpperCase(), 'success');
   
   // Esperar un poco antes de redirigir
   setTimeout(function() {
@@ -52,7 +65,7 @@ function registrarUsuario() {
   }, 1500);
 }
 
-// FUNCIÓN 2: Iniciar sesión
+// FUNCIÓN 2: Iniciar sesión con roles
 function iniciarSesion() {
   var email = document.getElementById('email').value;
   var password = document.getElementById('password').value;
@@ -64,17 +77,30 @@ function iniciarSesion() {
   
   var usuarios = JSON.parse(localStorage.getItem('usuarios') || '[]');
   
+  // Buscar usuario
   for (var i = 0; i < usuarios.length; i++) {
     if (usuarios[i].email === email && usuarios[i].password === password) {
+      
+      // Verificar si el usuario está activo
+      if (!usuarios[i].activo) {
+        mostrarNotificacion('❌ Usuario desactivado. Contacta al administrador', 'error');
+        return;
+      }
+      
+      // Guardar sesión
       localStorage.setItem('usuarioActual', JSON.stringify(usuarios[i]));
-      mostrarNotificacion('✅ Bienvenido ' + usuarios[i].nombre, 'success');
+      
+      mostrarNotificacion('✅ Bienvenido ' + usuarios[i].nombre + ' (' + usuarios[i].rol.toUpperCase() + ')', 'success');
       
       // Esperar un poco antes de redirigir
       setTimeout(function() {
-        // Redirigir según tipo de usuario
-        if (email.includes('@admin.cl')) {
+        // Redirigir según ROL del usuario
+        if (usuarios[i].rol === 'administrador') {
           window.location.href = '../admin/panel-administrador.html';
+        } else if (usuarios[i].rol === 'vendedor') {
+          window.location.href = '../vendedor/panel-vendedor.html';
         } else {
+          // Cliente va al panel de usuario
           window.location.href = '../user/panel-usuario.html';
         }
       }, 1500);

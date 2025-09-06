@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel Vendedor - PetShop</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/styles.css">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #2c3e50;">
+        <div class="container">
+            <a class="navbar-brand" href="../../index.html">
+                <img src="../../assets/img/logo1.png" alt="PetShop" height="40">
+                PetShop
+            </a>
+            <div class="navbar-nav ms-auto">
+                <span class="navbar-text me-3">
+                    👨‍💼 <span id="nombreVendedor">Vendedor</span>
+                </span>
+                <button class="btn btn-outline-light btn-sm" onclick="cerrarSesion()">
+                    Cerrar Sesión
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <div class="row">
+            <!-- Panel lateral -->
+            <div class="col-md-3">
+                <div class="card">
+                    <div class="card-header bg-info text-white">
+                        <h5>📊 Panel Vendedor</h5>
+                    </div>
+                    <div class="list-group list-group-flush">
+                        <button class="list-group-item list-group-item-action active" onclick="mostrarSeccion('productos')">
+                            📦 Ver Productos
+                        </button>
+                        <button class="list-group-item list-group-item-action" onclick="mostrarSeccion('ordenes')">
+                            🛒 Ver Órdenes
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Resumen simple -->
+                <div class="card mt-3">
+                    <div class="card-header">
+                        <h6>📈 Resumen</h6>
+                    </div>
+                    <div class="card-body">
+                        <p><strong>Total productos:</strong> <span id="totalProductos">0</span></p>
+                        <p><strong>Mi acceso:</strong> Solo lectura</p>
+                        <small class="text-muted">Como vendedor puedes ver productos y órdenes, pero no editarlos.</small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contenido principal -->
+            <div class="col-md-9">
+                <!-- Sección Productos -->
+                <div id="seccionProductos" class="seccion-vendedor">
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between">
+                            <h5>📦 Lista de Productos (Solo Lectura)</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Nombre</th>
+                                            <th>Precio</th>
+                                            <th>Categoría</th>
+                                            <th>Stock</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tablaProductosVendedor">
+                                        <!-- Se llena con JavaScript -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sección Órdenes -->
+                <div id="seccionOrdenes" class="seccion-vendedor" style="display: none;">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5>🛒 Lista de Órdenes (Solo Lectura)</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="alert alert-info">
+                                <strong>Próximamente:</strong> Sistema de órdenes en desarrollo.
+                                <br>Como vendedor podrás ver todas las órdenes del sistema.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../../js/utils/utilidades.js"></script>
+    <script src="../../js/vendedor/panel-vendedor.js"></script>
+</body>
+</html>
