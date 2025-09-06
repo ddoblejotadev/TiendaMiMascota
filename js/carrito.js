@@ -16,7 +16,9 @@ function guardarCarrito(carrito) {
 // Función para agregar producto al carrito
 function agregarAlCarrito(idProducto) {
   var productos = obtenerProductos();
-  var producto = productos.find(function(p) { return p.id === idProducto; });
+  var producto = productos.find(function(p) { 
+    return p.id === parseInt(idProducto); 
+  });
   
   if (!producto) {
     mostrarNotificacion('Producto no encontrado', 'error');
@@ -65,17 +67,26 @@ function actualizarContadorCarrito() {
     return total + item.cantidad;
   }, 0);
   
-  var contador = document.getElementById('carrito-contador');
-  if (contador) {
-    contador.textContent = totalItems;
+  // Actualizar contador en index.html
+  var contadorIndex = document.getElementById('carrito-contador');
+  if (contadorIndex) {
+    contadorIndex.textContent = totalItems;
+  }
+  
+  // Actualizar contador en detalle-producto.html
+  var contadorDetalle = document.getElementById('cantidadCarrito');
+  if (contadorDetalle) {
+    contadorDetalle.textContent = totalItems;
   }
 }
 
 // Función para mostrar carrito en modal
 function mostrarCarrito() {
   var carrito = obtenerCarrito();
-  var contenedor = document.getElementById('carrito-items');
-  var totalElement = document.getElementById('carrito-total');
+  
+  // Buscar contenedores (puede ser carrito-items o contenidoCarrito)
+  var contenedor = document.getElementById('carrito-items') || document.getElementById('contenidoCarrito');
+  var totalElement = document.getElementById('carrito-total') || document.getElementById('totalCarrito');
   
   if (contenedor) {
     contenedor.innerHTML = '';
@@ -110,12 +121,10 @@ function mostrarCarrito() {
     }
     
     if (totalElement) {
-      totalElement.textContent = '$' + total.toLocaleString();
+      totalElement.textContent = total.toLocaleString();
     }
   }
-}
-
-// Función para eliminar item del carrito
+}// Función para eliminar item del carrito
 function eliminarDelCarrito(idProducto) {
   var carrito = obtenerCarrito();
   carrito = carrito.filter(function(item) {
@@ -125,7 +134,7 @@ function eliminarDelCarrito(idProducto) {
   guardarCarrito(carrito);
   mostrarCarrito();
   actualizarContadorCarrito();
-  mostrarExito('Producto eliminado del carrito');
+  mostrarNotificacion('Producto eliminado del carrito', 'success');
 }
 
 // Función para vaciar carrito
@@ -134,6 +143,6 @@ function vaciarCarrito() {
     localStorage.removeItem('carrito');
     mostrarCarrito();
     actualizarContadorCarrito();
-    mostrarExito('Carrito vaciado');
+    mostrarNotificacion('Carrito vaciado', 'success');
   }
 }

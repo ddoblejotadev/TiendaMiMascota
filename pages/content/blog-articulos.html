@@ -35,25 +35,7 @@
             </div>
         </div>
 
-        <!-- Barra de búsqueda y filtros -->
-        <div class="row mb-4">
-            <div class="col-md-6 mb-3">
-                <div class="input-group">
-                    <input type="text" class="form-control" id="buscadorBlog" placeholder="Buscar artículos...">
-                    <span class="input-group-text">🔍</span>
-                </div>
-            </div>
-            <div class="col-md-6 mb-3">
-                <div class="btn-group w-100" role="group">
-                    <button type="button" class="btn btn-outline-primary active" data-categoria="todos">Todos</button>
-                    <button type="button" class="btn btn-outline-primary" data-categoria="cuidados">Cuidados</button>
-                    <button type="button" class="btn btn-outline-primary" data-categoria="entretenimiento">Entretenimiento</button>
-                    <button type="button" class="btn btn-outline-primary" data-categoria="higiene">Higiene</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Lista de artículos (dinámico) -->
+        <!-- Lista de artículos (simple) -->
         <div class="row" id="listaArticulos">
             <!-- Los artículos se cargan dinámicamente con JavaScript -->
             <div class="col-12 text-center">
@@ -89,5 +71,7 @@
 
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../../js/utilidades.js"></script>
+    <script src="../../js/blog-articulos.js"></script>
 </body>
 </html>

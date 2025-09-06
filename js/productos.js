@@ -97,6 +97,40 @@ function verDetalle(id) {
   window.location.href = 'pages/content/detalle-producto.html?id=' + id;
 }
 
+// Función para agregar producto al carrito desde detalle
+function agregarAlCarritoDetalle() {
+  var params = new URLSearchParams(window.location.search);
+  var idProducto = parseInt(params.get('id'));
+  var cantidad = parseInt(document.getElementById('cantidadCompra').value) || 1;
+  
+  if (!idProducto || isNaN(idProducto)) {
+    mostrarNotificacion('Producto no encontrado', 'error');
+    return;
+  }
+  
+  if (typeof agregarAlCarrito !== 'function') {
+    mostrarNotificacion('Error: función no disponible', 'error');
+    return;
+  }
+  
+  if (typeof obtenerProductos !== 'function') {
+    mostrarNotificacion('Error: función productos no disponible', 'error');
+    return;
+  }
+  
+  try {
+    // Agregar al carrito con la cantidad especificada
+    for (var i = 0; i < cantidad; i++) {
+      agregarAlCarrito(idProducto);
+    }
+    
+    mostrarNotificacion('Producto agregado al carrito', 'success');
+    actualizarContadorCarrito();
+  } catch (error) {
+    mostrarNotificacion('Error al agregar producto: ' + error.message, 'error');
+  }
+}
+
 // Función para mostrar detalle específico del producto
 function mostrarDetalleProducto() {
   var params = new URLSearchParams(window.location.search);
@@ -118,21 +152,33 @@ function mostrarDetalleProducto() {
   }
   
   // Mostrar información del producto
-  document.getElementById('producto-nombre').textContent = producto.nombre;
+  document.getElementById('nombreProducto').textContent = producto.nombre;
   // Normalizar ruta según ubicación
-  document.getElementById('producto-imagen').src = rutaImagenNormalizada(producto.imagen);
-  document.getElementById('producto-imagen').alt = producto.nombre;
-  document.getElementById('producto-descripcion').textContent = producto.descripcion || 'Sin descripción disponible';
-  document.getElementById('producto-precio').textContent = '$' + producto.precio.toLocaleString();
-  document.getElementById('producto-stock').textContent = producto.stock + ' unidades disponibles';
+  document.getElementById('imagenProducto').src = rutaImagenNormalizada(producto.imagen);
+  document.getElementById('imagenProducto').alt = producto.nombre;
   
-  // Configurar botón de agregar al carrito
-  var btnAgregar = document.getElementById('btn-agregar-carrito');
-  if (btnAgregar) {
-    btnAgregar.onclick = function() {
-      agregarAlCarrito(producto.id);
-    };
+  // Mostrar descripción detallada (sin información de stock crítico para usuarios normales)
+  var descripcionElement = document.getElementById('descripcionProducto');
+  if (descripcionElement) {
+    descripcionElement.innerHTML = `
+      <h4>Descripción del Producto</h4>
+      <p class="lead">${producto.descripcion || 'Sin descripción disponible'}</p>
+      <div class="row mt-3">
+        <div class="col-md-6">
+          <p><strong>Código:</strong> ${producto.codigo}</p>
+          <p><strong>Categoría:</strong> ${producto.categoria}</p>
+        </div>
+        <div class="col-md-6">
+          <p><strong>Stock disponible:</strong> ${producto.stock > 0 ? 'Disponible' : 'Agotado'}</p>
+        </div>
+      </div>
+    `;
   }
+  
+  document.getElementById('precioProducto').textContent = producto.precio.toLocaleString();
+  
+  // Actualizar contador del carrito
+  actualizarContadorCarrito();
 }
 
 // Función para listar productos (admin/vendedor)
