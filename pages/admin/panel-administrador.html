@@ -1,8 +1,5 @@
 <!DOCTYPE html>
-            <nav>
-                <span class="text-light me-3">🛡️ <span id="nombreAdmin">Administrador</span></span>
-                <button class="btn btn-outline-light btn-sm" onclick="cerrarSesion()">Cerrar Sesión</button>
-            </nav>l lang="es">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -19,7 +16,7 @@
                 <span class="h6 mb-0">🐾 Tienda MiMascota</span>
             </a>
             <nav>
-                <span class="text-light me-3">�️ <span id="nombreAdmin">Administrador</span></span>
+                <span class="text-light me-3">🛡️ <span id="nombreAdmin">Administrador</span></span>
                 <button class="btn btn-outline-light btn-sm" onclick="cerrarSesion()">Cerrar Sesión</button>
             </nav>
         </div>
@@ -28,72 +25,140 @@
     <!-- Contenido Principal -->
     <main class="container py-4">
         <h1 class="mb-4">⚙️ Panel de Administración</h1>
+
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-3 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h6 class="fw-bold">Menú</h6>
+                        <ul class="list-unstyled admin-sidebar mt-3">
+                            <li><a href="#" onclick="showSection('usuarios')">👥 Usuarios</a></li>
+                            <li><a href="#" onclick="showSection('productos')">📦 Productos</a></li>
+                            <li><a href="#" onclick="cerrarSesion()">🔒 Cerrar Sesión</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contenido central -->
+            <div class="col-md-9">
         
         <!-- Estadísticas -->
         <div class="row mb-4">
             <div class="col-md-4">
                 <div class="card text-center">
                     <div class="card-body">
-                        <h5 class="card-title">👥 Total Usuarios</h5>
+                        <h5 class="card-title">� Total Usuarios</h5>
                         <h2 class="text-primary" id="totalUsuarios">0</h2>
                     </div>
                 </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card text-center">
-                    <div class="card-body">
-                        <h5 class="card-title">📦 Total Productos</h5>
-                        <h2 class="text-success">8</h2>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card text-center">
-                    <div class="card-body">
-                        <h5 class="card-title">🏪 Sistema</h5>
-                        <h2 class="text-info">Activo</h2>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <div class="row">
-            <!-- Gestión de Usuarios con ROLES -->
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-header bg-danger text-white">
-                        <h5 class="mb-0">� Gestión de Usuarios y Roles</h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="alert alert-info">
-                            <strong>📋 Usuarios Predefinidos:</strong>
-                            <br>• <strong>admin@duoc.cl</strong> / admin123 (Administrador)
-                            <br>• <strong>vendedor1@duoc.cl</strong> / vende123 (Vendedor)
-                            <br>• <strong>vendedor2@duoc.cl</strong> / vende456 (Vendedor)
-                            <br>• <strong>cliente1@gmail.com</strong> / cliente123 (Cliente)
-                            <br>• <strong>cliente2@duoc.cl</strong> / cliente456 (Cliente)
+
+                <div id="seccion-usuarios">
+                    <div class="card mb-4">
+                        <div class="card-header bg-danger text-white">
+                            <h5 class="mb-0">📋 Gestión de Usuarios y Roles</h5>
                         </div>
-                        
-                        <div class="table-responsive">
-                            <table class="table table-striped">
-                                <thead class="table-dark">
-                                    <tr>
-                                        <th>ID</th>
-                                        <th>Nombre</th>
-                                        <th>Email</th>
-                                        <th>Rol</th>
-                                        <th>Estado</th>
-                                        <th>Acciones</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="tablaUsuarios">
-                                    <!-- Usuarios se cargan aquí con JavaScript -->
-                                </tbody>
-                            </table>
+                        <div class="card-body">
+                            <div class="alert alert-info">
+                                <strong>📋 Usuarios Predefinidos:</strong>
+                                <br>• <strong>admin@duoc.cl</strong> / admin123 (Administrador)
+                                <br>• <strong>vendedor1@duoc.cl</strong> / vende123 (Vendedor)
+                                <br>• <strong>vendedor2@duoc.cl</strong> / vende456 (Vendedor)
+                                <br>• <strong>cliente1@gmail.com</strong> / cliente123 (Cliente)
+                                <br>• <strong>cliente2@duoc.cl</strong> / cliente456 (Cliente)
+                            </div>
+
+                            <div class="table-responsive">
+                                <table class="table table-striped">
+                                    <thead class="table-dark">
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Nombre</th>
+                                            <th>Email</th>
+                                            <th>Rol</th>
+                                            <th>Estado</th>
+                                            <th>Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tablaUsuarios">
+                                        <!-- Usuarios se cargan aquí con JavaScript -->
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+
+                <div id="seccion-productos" style="display:none;">
+                    <div class="card mb-4">
+                        <div class="card-header bg-success text-white">
+                            <h5 class="mb-0">📦 Mantenedor de Productos</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <button class="btn btn-sm btn-primary" onclick="abrirNuevoProducto()">+ Nuevo Producto</button>
+                            </div>
+
+                            <!-- Formulario simple para crear/editar -->
+                            <form id="productoForm" style="max-width:800px;" onsubmit="event.preventDefault(); guardarProductoFromForm();">
+                                <input type="hidden" id="productoId" value="" />
+                                <div class="row g-2">
+                                    <div class="col-md-4">
+                                        <label class="form-label">Código *</label>
+                                        <input id="productoCodigo" class="form-control" maxlength="50" required />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <label class="form-label">Nombre *</label>
+                                        <input id="productoNombre" class="form-control" maxlength="100" required />
+                                    </div>
+                                    <div class="col-12">
+                                        <label class="form-label">Descripción</label>
+                                        <textarea id="productoDescripcion" class="form-control" maxlength="500" rows="2"></textarea>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="form-label">Precio *</label>
+                                        <input id="productoPrecio" type="number" step="0.01" min="0" class="form-control" required />
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="form-label">Stock *</label>
+                                        <input id="productoStock" type="number" min="0" step="1" class="form-control" required />
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="form-label">Stock Crítico</label>
+                                        <input id="productoStockCritico" type="number" min="0" step="1" class="form-control" />
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label">Categoría *</label>
+                                        <input id="productoCategoria" class="form-control" required />
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label">Imagen (ruta)</label>
+                                        <input id="productoImagen" class="form-control" placeholder="assets/img/ejemplo.png" />
+                                    </div>
+                                    <div class="col-12 mt-2">
+                                        <button class="btn btn-success btn-sm" type="submit">Guardar Producto</button>
+                                        <button class="btn btn-secondary btn-sm" type="button" onclick="cancelarProducto()">Cancelar</button>
+                                    </div>
+                                </div>
+                            </form>
+
+                            <hr />
+
+                            <div class="table-responsive">
+                                <table class="table table-striped">
+                                    <thead class="table-dark">
+                                        <tr><th>ID</th><th>Nombre</th><th>Precio</th><th>Stock</th><th>Categoría</th><th>Acciones</th></tr>
+                                    </thead>
+                                    <tbody id="tablaProductosAdmin"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                    </div> <!-- end col-md-9 -->
+                </div> <!-- end row -->
         </div>
     </main>
 
@@ -122,7 +187,7 @@
 
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="../../js/utils/utilidades.js"></script>
-    <script src="../../js/admin/panel-administrador.js"></script>
+    <script src="../../js/utilidades.js"></script>
+    <script src="../../js/panel-administrador.js"></script>
 </body>
 </html>

@@ -103,7 +103,7 @@ function mostrarDetalleProducto() {
   var id = parseInt(params.get('id'));
   
   if (!id) {
-    alert('Producto no encontrado');
+    mostrarNotificacion('Producto no encontrado', 'error');
     window.location.href = 'index.html';
     return;
   }
@@ -112,7 +112,7 @@ function mostrarDetalleProducto() {
   var producto = productos.find(function(p) { return p.id === id; });
   
   if (!producto) {
-    alert('Producto no encontrado');
+    mostrarNotificacion('Producto no encontrado', 'error');
     window.location.href = 'index.html';
     return;
   }

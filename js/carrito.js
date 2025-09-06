@@ -19,12 +19,12 @@ function agregarAlCarrito(idProducto) {
   var producto = productos.find(function(p) { return p.id === idProducto; });
   
   if (!producto) {
-    alert('Producto no encontrado');
+    mostrarNotificacion('Producto no encontrado', 'error');
     return;
   }
   
   if (producto.stock <= 0) {
-    alert('Producto sin stock disponible');
+    mostrarNotificacion('Producto sin stock disponible', 'error');
     return;
   }
   
@@ -38,7 +38,7 @@ function agregarAlCarrito(idProducto) {
   if (itemExistente) {
     // Verificar stock disponible
     if (itemExistente.cantidad >= producto.stock) {
-      alert('No hay más stock disponible para este producto');
+      mostrarNotificacion('No hay más stock disponible para este producto', 'error');
       return;
     }
     itemExistente.cantidad += 1;

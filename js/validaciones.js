@@ -62,10 +62,10 @@ function validarComentario(comentario) {
 
 // Función para mostrar mensaje de error
 function mostrarError(campo, mensaje) {
-  alert('❌ ' + campo + ': ' + mensaje);
+  mostrarNotificacion('❌ ' + campo + ': ' + mensaje, 'error');
 }
 
 // Función para mostrar mensaje de éxito
 function mostrarExito(mensaje) {
-  alert('✅ ' + mensaje);
+  mostrarNotificacion('✅ ' + mensaje, 'success');
 }
