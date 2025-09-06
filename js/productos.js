@@ -125,7 +125,13 @@ function agregarAlCarritoDetalle() {
     }
     
     mostrarNotificacion('Producto agregado al carrito', 'success');
-    actualizarContadorCarrito();
+    
+    // Actualizar contador del carrito
+    setTimeout(function() {
+      if (typeof actualizarContadorCarrito === 'function') {
+        actualizarContadorCarrito();
+      }
+    }, 100);
   } catch (error) {
     mostrarNotificacion('Error al agregar producto: ' + error.message, 'error');
   }

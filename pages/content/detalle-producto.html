@@ -118,6 +118,13 @@
       document.addEventListener('DOMContentLoaded', function() {
         mostrarDetalleProducto();
         
+        // Actualizar contador del carrito al cargar la página
+        setTimeout(function() {
+          if (typeof actualizarContadorCarrito === 'function') {
+            actualizarContadorCarrito();
+          }
+        }, 200);
+        
         // Configurar modal del carrito
         var modalCarrito = document.getElementById('modalCarrito');
         if (modalCarrito) {

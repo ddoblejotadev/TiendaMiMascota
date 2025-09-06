@@ -56,7 +56,7 @@ function agregarAlCarrito(idProducto) {
   }
   
   guardarCarrito(carrito);
-  mostrarExito('Producto agregado al carrito');
+  mostrarNotificacion('Producto agregado al carrito', 'success');
   actualizarContadorCarrito();
 }
 
@@ -103,7 +103,7 @@ function mostrarCarrito() {
         div.className = 'row mb-3 align-items-center';
         div.innerHTML = `
           <div class="col-3">
-            <img src="${item.imagen}" class="img-fluid" alt="${item.nombre}">
+            <img src="${rutaImagenNormalizada(item.imagen)}" class="img-fluid" alt="${item.nombre}">
           </div>
           <div class="col-6">
             <h6>${item.nombre}</h6>
