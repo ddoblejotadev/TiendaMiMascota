@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="es">
-<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Contacto - Tienda MiMascota</title>
@@ -30,42 +29,60 @@
     <main class="container py-5">
         <div class="row justify-content-center">
             <div class="col-md-8 col-lg-6">
-                <h1 class="text-center mb-4">📞 Contáctanos</h1>
-                
-                <div class="card">
-                    <div class="card-body">
-                        <form id="contactForm">
-                            <div class="mb-3">
-                                <label for="contactName" class="form-label">Nombre *</label>
-                                <input type="text" class="form-control" id="contactName" required maxlength="100">
-                            </div>
-                            
-                            <div class="mb-3">
-                                <label for="contactEmail" class="form-label">Correo Electrónico *</label>
-                                <input type="email" class="form-control" id="contactEmail" required>
-                                <div class="form-text">Solo se permiten: @duoc.cl, @profesor.duoc.cl, @gmail.com</div>
-                            </div>
-                            
-                            <div class="mb-3">
-                                <label for="contactMessage" class="form-label">Comentario *</label>
-                                <textarea class="form-control" id="contactMessage" rows="5" required maxlength="500"></textarea>
-                            </div>
-                            
-                            <button type="submit" class="btn btn-primary w-100">Enviar Mensaje</button>
-                        </form>
-                        
-                        <!-- Área para mostrar alertas -->
-                        <div id="contactAlert" class="mt-3"></div>
-                    </div>
+                <!-- Título de la página -->
+                <div class="text-center mb-5">
+                    <h1 class="display-5 fw-bold text-primary">📞 Contáctanos</h1>
+                    <p class="lead text-muted">¿Tienes alguna pregunta? ¡Estamos aquí para ayudarte!</p>
                 </div>
                 
-                <!-- Información de contacto -->
-                <div class="card mt-4">
-                    <div class="card-body text-center">
-                        <h5>Información de Contacto</h5>
-                        <p class="mb-1">📧 info@mimascota.cl</p>
-                        <p class="mb-1">📞 +56 9 1234 5678</p>
-                        <p class="mb-0">📍 Santiago, Chile</p>
+                <!-- Formulario de contacto -->
+                <div class="card shadow-sm">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="card-title mb-0">✉️ Envíanos un mensaje</h5>
+                    </div>
+                    <div class="card-body">
+                        <form id="formularioContacto">
+                            <div class="mb-3">
+                                <label for="nombre" class="form-label">Nombre Completo *</label>
+                                <input type="text" class="form-control" id="nombre" required maxlength="100" 
+                                       placeholder="Tu nombre completo">
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="email" class="form-label">Correo Electrónico *</label>
+                                <input type="email" class="form-control" id="email" required 
+                                       placeholder="correo@ejemplo.com">
+                                <div class="form-text">Ejemplo: correo@duocuc.cl, correo@gmail.com</div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="telefono" class="form-label">Teléfono (opcional)</label>
+                                <input type="tel" class="form-control" id="telefono" 
+                                       placeholder="+56 9 1234 5678">
+                                <div class="form-text">Formato chileno: +56 9 XXXX XXXX</div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="asunto" class="form-label">Asunto *</label>
+                                <input type="text" class="form-control" id="asunto" required maxlength="200" 
+                                       placeholder="Motivo de tu consulta">
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="mensaje" class="form-label">Mensaje *</label>
+                                <textarea class="form-control" id="mensaje" rows="5" required maxlength="1000" 
+                                          placeholder="Escribe tu mensaje aquí..."></textarea>
+                                <div class="form-text">
+                                    <span id="contadorCaracteres">0/1000</span> caracteres
+                                </div>
+                            </div>
+                            
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-primary btn-lg">
+                                    ✉️ Enviar Mensaje
+                                </button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -74,17 +91,29 @@
 
     <!-- Footer -->
     <footer class="bg-dark text-white py-4 mt-5">
-        <div class="container text-center">
-            <div class="d-flex align-items-center justify-content-center mb-3">
-                <img src="../../assets/img/logo1.png" alt="Tienda MiMascota" style="height: 30px; width: auto;" class="me-2">
-                <span class="h6 mb-0">🐾 Tienda MiMascota</span>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="d-flex align-items-center mb-2">
+                        <img src="../../assets/img/logo1.png" alt="Tienda MiMascota" style="height: 30px; width: auto;" class="me-2">
+                        <span class="h6 mb-0">🐾 Tienda MiMascota</span>
+                    </div>
+                    <p class="mb-0">Tu tienda de confianza para el cuidado y felicidad de tus mascotas.</p>
+                </div>
+                <div class="col-md-4 text-md-end">
+                    <p class="mb-1">📧 info@mimascota.cl</p>
+                    <p class="mb-0">📞 +56 9 1234 5678</p>
+                </div>
             </div>
-            <p class="mb-0">&copy; 2024 Tienda MiMascota. Todos los derechos reservados.</p>
+            <hr class="border-light mt-4">
+            <div class="text-center">
+                <p class="mb-0">&copy; 2024 Tienda MiMascota. Todos los derechos reservados.</p>
+            </div>
         </div>
     </footer>
 
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="../../js/funciones-principales.js"></script>
+    <script src="../../js/utils/contacto.js"></script>
 </body>
 </html>

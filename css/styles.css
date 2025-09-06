@@ -1,5 +1,7 @@
 /* Copiado desde assets/css/styles.css - simplificado para proyecto de principiante */
-body { background: #f8f9fa; }
+html, body { height: 100%; }
+body { background: #f8f9fa; min-height: 100vh; display: flex; flex-direction: column; }
+main { flex: 1 0 auto; }
 
 /* Tarjetas limpias y sencillas */
 .card {
@@ -29,8 +31,306 @@ header img { height: 48px; width: auto; }
 
 .btn-primary { border-radius: 6px; padding: .5rem .75rem; font-weight: 600; }
 
+/* Notificación del carrito */
+.notificacion-carrito {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: #28a745;
+  color: white;
+  padding: 15px 20px;
+  border-radius: 10px;
+  z-index: 9999;
+  font-weight: bold;
+  box-shadow: 0 4px 15px rgba(40, 167, 69, 0.4);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 250px;
+  /* Animación de entrada */
+  animation: deslizarEntrada 0.4s ease-out;
+  animation-fill-mode: both;
+  will-change: transform, opacity;
+  pointer-events: auto; /* permitir interacción si se desea copiar texto o cerrar en el futuro */
+}
+
+/* Icono dentro de la notificación */
+.notificacion-carrito .icono {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  width: 35px;
+  height: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+}
+
+/* Animación de entrada (desliza desde la derecha) */
+@keyframes deslizarEntrada {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* Animación de salida */
+@keyframes deslizarSalida {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
 /* Pequeños ajustes responsive */
 @media (max-width: 576px) {
   header .h5 { font-size: 1rem; }
   .card { padding: .75rem; }
+  
+  /* Notificación más pequeña en móviles */
+  .notificacion-carrito {
+    right: 10px;
+    left: 10px;
+    min-width: auto;
+  top: 10px;
+  }
+}
+
+/* === MODAL DE CONFIRMACIÓN MODERNO === */
+.confirmacion-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  animation: fadeIn 0.3s ease-out;
+  /* permitir scroll del contenido modal en pantallas pequeñas */
+  padding: 1rem;
+  box-sizing: border-box;
+  pointer-events: auto;
+}
+
+.confirmacion-content {
+  background: white;
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  text-align: center;
+  max-width: 400px;
+  width: 90%;
+  animation: slideUp 0.3s ease-out;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.confirmacion-content h5 {
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.confirmacion-content p {
+  margin-bottom: 25px;
+  color: #666;
+}
+
+.confirmacion-botones {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+}
+
+.btn-confirmar {
+  background: #dc3545;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.btn-cancelar {
+  background: #6c757d;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+/* Estados hover y foco para accesibilidad */
+.btn-confirmar:hover, .btn-confirmar:focus {
+  background: #c82333;
+  outline: none;
+}
+
+.btn-cancelar:hover, .btn-cancelar:focus {
+  background: #5a6268;
+  outline: none;
+}
+
+/* Animaciones para modal de confirmación */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { transform: translateY(50px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+/* === ESTILOS PARA PANEL DE ADMINISTRADOR === */
+.admin-header {
+  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  color: white;
+  padding: 20px 0;
+  margin-bottom: 30px;
+  border-radius: 10px;
+}
+
+.admin-sidebar {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 10px;
+  padding: 20px 0;
+  min-height: 400px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.admin-sidebar a {
+  color: white !important;
+  text-decoration: none;
+  padding: 12px 20px;
+  display: block;
+  transition: all 0.3s ease;
+  border-radius: 5px;
+  margin: 5px 15px;
+}
+
+.admin-sidebar a:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateX(5px);
+}
+
+.admin-sidebar .active {
+  background: rgba(255, 255, 255, 0.3);
+  font-weight: bold;
+}
+
+.content-section {
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 30px;
+  margin-bottom: 30px;
+}
+
+.stats-card {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-radius: 10px;
+  padding: 20px;
+  text-align: center;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.stats-card h3 {
+  font-size: 2.5rem;
+  margin-bottom: 5px;
+}
+
+.btn-custom {
+  border-radius: 25px;
+  padding: 8px 20px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.btn-custom:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.form-section {
+  background: #f8f9fa;
+  border-radius: 10px;
+  padding: 25px;
+  margin-bottom: 30px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.table-responsive {
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* === ESTILOS RESPONSIVE PARA PANEL ADMIN === */
+@media (max-width: 768px) {
+  .admin-header {
+    padding: 15px 0;
+    margin-bottom: 20px;
+  }
+  
+  .admin-header h4 {
+    font-size: 1.2rem;
+  }
+  
+  .admin-sidebar {
+    margin-bottom: 20px;
+    min-height: auto;
+  }
+  
+  .content-section {
+    padding: 20px;
+  }
+  
+  .stats-card h3 {
+    font-size: 2rem;
+  }
+  
+  .btn-custom {
+    padding: 6px 15px;
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .admin-sidebar a {
+    padding: 10px 15px;
+    margin: 3px 10px;
+    font-size: 0.9rem;
+  }
+  
+  .stats-card {
+    padding: 15px;
+  }
+  
+  .stats-card h3 {
+    font-size: 1.8rem;
+  }
+  
+  .admin-header .d-flex {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .admin-header .me-3 {
+    margin-right: 0 !important;
+    margin-bottom: 10px;
+  }
 }
