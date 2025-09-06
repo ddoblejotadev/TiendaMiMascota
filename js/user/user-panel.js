@@ -99,6 +99,17 @@ function actualizarPerfil() {
   }
 }
 
+// FUNCIÓN 4: Editar perfil (función simple para principiantes)
+function editProfile() {
+  var nuevoNombre = prompt('Ingresa tu nuevo nombre:');
+  
+  if (nuevoNombre && nuevoNombre.trim() !== '') {
+    actualizarPerfil(nuevoNombre.trim());
+  } else if (nuevoNombre !== null) {
+    mostrarNotificacion('❌ El nombre no puede estar vacío', 'error');
+  }
+}
+
 // Inicializar cuando carga la página
 document.addEventListener('DOMContentLoaded', function() {
   verificarUsuario();
