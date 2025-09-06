@@ -33,7 +33,23 @@
           <div class="card p-4">
             <h2 class="h4 mb-4 text-center">📋 Crear Cuenta</h2>
             
-                        <form id="registroForm">
+            <!-- INFORMACIÓN SOBRE ROLES -->
+            <div class="alert alert-info mb-4">
+              <h6 class="mb-2">ℹ️ Asignación de roles:</h6>
+              <div class="row">
+                <div class="col-12 mb-2">
+                  <strong>Administrador:</strong> admin@duoc.cl
+                </div>
+                <div class="col-12 mb-2">
+                  <strong>Vendedor:</strong> cualquier email que contenga "vendedor" y termine en @duoc.cl
+                </div>
+                <div class="col-12">
+                  <strong>Cliente:</strong> todos los demás emails válidos
+                </div>
+              </div>
+            </div>
+            
+            <form id="registroForm">
               <!-- RUN -->
               <div class="mb-3">
                 <label for="run" class="form-label">RUN *</label>
@@ -89,7 +105,7 @@
               </div>
 
               <!-- Contraseña -->
-              <div class="mb-4">
+              <div class="mb-3">
                 <label for="password" class="form-label">Contraseña *</label>
                 <input
                   type="password"
@@ -100,6 +116,47 @@
                   minlength="4"
                   maxlength="10"
                 />
+              </div>
+
+              <!-- Fecha de Nacimiento -->
+              <div class="mb-3">
+                <label for="fechaNacimiento" class="form-label">Fecha de Nacimiento</label>
+                <input
+                  type="date"
+                  id="fechaNacimiento"
+                  class="form-control"
+                />
+                <small class="text-muted">Campo opcional</small>
+              </div>
+
+              <!-- Región -->
+              <div class="mb-3">
+                <label for="region" class="form-label">Región *</label>
+                <select id="region" class="form-control" required>
+                  <option value="">Seleccione región</option>
+                </select>
+              </div>
+
+              <!-- Comuna -->
+              <div class="mb-3">
+                <label for="comuna" class="form-label">Comuna *</label>
+                <select id="comuna" class="form-control" required>
+                  <option value="">Seleccione comuna</option>
+                </select>
+              </div>
+
+              <!-- Dirección -->
+              <div class="mb-4">
+                <label for="direccion" class="form-label">Dirección *</label>
+                <textarea
+                  id="direccion"
+                  class="form-control"
+                  required
+                  placeholder="Ingrese su dirección completa"
+                  maxlength="300"
+                  rows="3"
+                ></textarea>
+                <small class="text-muted">Máximo 300 caracteres</small>
               </div>
 
               <!-- Botón de registro -->
@@ -143,7 +200,24 @@
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="../../js/utils/utilidades.js"></script>
-    <script src="../../js/auth/funciones-principales.js"></script>
+    
+    <!-- Scripts propios -->
+    <script src="../../js/validaciones.js"></script>
+    <script src="../../js/usuarios.js"></script>
+    <script src="../../js/regiones-comunas.js"></script>
+    
+    <script>
+      // Inicializar página
+      document.addEventListener('DOMContentLoaded', function() {
+        // Cargar regiones y comunas
+        inicializarRegionesYComunas();
+        
+        // Conectar formulario con función de registro
+        document.getElementById('registroForm').addEventListener('submit', function(e) {
+          e.preventDefault();
+          registrarUsuario();
+        });
+      });
+    </script>
 </body>
 </html>
