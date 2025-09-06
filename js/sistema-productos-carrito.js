@@ -323,7 +323,8 @@ function mostrarCarrito() {
 
 // Función para vaciar el carrito
 function vaciarCarrito() {
-  if (confirm('¿Vaciar el carrito?')) {
+  // Confirmación moderna en lugar de confirm() anticuado
+  mostrarConfirmacion('¿Vaciar el carrito?', 'Se eliminarán todos los productos', function() {
     carrito = [];
     localStorage.removeItem('carrito');
     actualizarContador();
@@ -347,7 +348,41 @@ function vaciarCarrito() {
         }
       }, 400);
     }, 3000);
-  }
+  });
+}
+
+// FUNCIÓN EXTRA: Confirmación moderna usando CSS
+function mostrarConfirmacion(titulo, mensaje, funcionConfirmar) {
+  var modal = document.createElement('div');
+  modal.className = 'confirmacion-modal';
+  
+  modal.innerHTML = 
+    '<div class="confirmacion-content">' +
+      '<h5>🗑️ ' + titulo + '</h5>' +
+      '<p>' + mensaje + '</p>' +
+      '<div class="confirmacion-botones">' +
+        '<button class="btn-confirmar" onclick="confirmarAccion()">Sí, vaciar</button>' +
+        '<button class="btn-cancelar" onclick="cancelarAccion()">Cancelar</button>' +
+      '</div>' +
+    '</div>';
+  
+  document.body.appendChild(modal);
+  
+  // Funciones globales temporales para los botones
+  window.confirmarAccion = function() {
+    document.body.removeChild(modal);
+    funcionConfirmar(); // Ejecutar la función pasada como parámetro
+    // Limpiar funciones globales
+    delete window.confirmarAccion;
+    delete window.cancelarAccion;
+  };
+  
+  window.cancelarAccion = function() {
+    document.body.removeChild(modal);
+    // Limpiar funciones globales
+    delete window.confirmarAccion;
+    delete window.cancelarAccion;
+  };
 }
 
 // Cuando la página cargue, ejecutar esto
