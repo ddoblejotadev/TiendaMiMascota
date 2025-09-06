@@ -4,60 +4,52 @@
 
 // Función para obtener productos del localStorage
 function obtenerProductos() {
-  var productos = localStorage.getItem('productos');
-  if (productos) {
-    return JSON.parse(productos);
-  } else {
-    // Productos iniciales si no hay ninguno
-    var productosIniciales = [
-      {
-        id: 1,
-        codigo: 'COM001',
-        nombre: 'Comida para Perros Premium',
-        descripcion: 'Alimento balanceado para perros adultos',
-        precio: 15000,
-        stock: 50,
-        stockCritico: 10,
-        categoria: 'Comida',
-        imagen: 'assets/img/Comida.jpg'
-      },
-      {
-        id: 2,
-        codigo: 'CAM001',
-        nombre: 'Cama para Mascotas',
-        descripcion: 'Cama cómoda y resistente para mascotas',
-        precio: 25000,
-        stock: 20,
-        stockCritico: 5,
-        categoria: 'Accesorios',
-        imagen: 'assets/img/cama2.png'
-      },
-      {
-        id: 3,
-        codigo: 'JUG001',
-        nombre: 'Juguetes Variados',
-        descripcion: 'Set de juguetes para entretenimiento',
-        precio: 8000,
-        stock: 30,
-        stockCritico: 8,
-        categoria: 'Juguetes',
-        imagen: 'assets/img/jugetes.png'
-      },
-      {
-        id: 4,
-        codigo: 'HIG001',
-        nombre: 'Productos de Higiene',
-        descripcion: 'Kit completo de higiene para mascotas',
-        precio: 12000,
-        stock: 15,
-        stockCritico: 3,
-        categoria: 'Higiene',
-        imagen: 'assets/img/higiene.png'
+  var almacen = localStorage.getItem('productos');
+  var productosIniciales = cargarProductosCompletos();
+
+  if (almacen) {
+    try {
+      var lista = JSON.parse(almacen);
+      // Si la lista guardada es menor que la lista completa, reescribimos
+      if (!Array.isArray(lista) || lista.length < productosIniciales.length) {
+        guardarProductos(productosIniciales);
+        return productosIniciales;
       }
-    ];
+      return lista;
+    } catch (e) {
+      // En caso de error de parseo, inicializamos con la lista completa
+      guardarProductos(productosIniciales);
+      return productosIniciales;
+    }
+  } else {
     guardarProductos(productosIniciales);
     return productosIniciales;
   }
+}
+
+// Devuelve el conjunto completo de productos (no depende de localStorage)
+function cargarProductosCompletos() {
+  return [
+    { id: 1, codigo: 'COM001', nombre: 'Comida para Perros Premium', descripcion: 'Alimento balanceado para perros adultos', precio: 15000, stock: 50, stockCritico: 10, categoria: 'Comida', imagen: 'assets/img/Comida.jpg' },
+    { id: 2, codigo: 'CAM001', nombre: 'Cama para Mascotas', descripcion: 'Cama cómoda y resistente para mascotas', precio: 25000, stock: 20, stockCritico: 5, categoria: 'Accesorios', imagen: 'assets/img/cama2.png' },
+    { id: 3, codigo: 'JUG001', nombre: 'Juguetes Variados', descripcion: 'Set de juguetes para entretenimiento', precio: 8000, stock: 30, stockCritico: 8, categoria: 'Juguetes', imagen: 'assets/img/jugetes.png' },
+    { id: 4, codigo: 'HIG001', nombre: 'Productos de Higiene', descripcion: 'Kit completo de higiene para mascotas', precio: 12000, stock: 15, stockCritico: 3, categoria: 'Higiene', imagen: 'assets/img/higiene.png' },
+    { id: 5, codigo: 'ACC001', nombre: 'Accesorios para Mascotas', descripcion: 'Variedad de accesorios útiles para el día a día con tu mascota', precio: 18000, stock: 25, stockCritico: 5, categoria: 'Accesorios', imagen: 'assets/img/accesorios.png' },
+    { id: 6, codigo: 'SAL001', nombre: 'Productos de Salud', descripcion: 'Vitaminas y suplementos para mantener la salud de tu mascota', precio: 22000, stock: 18, stockCritico: 4, categoria: 'Salud', imagen: 'assets/img/salud.png' },
+    { id: 7, codigo: 'PROD001', nombre: 'Producto Especial', descripcion: 'Producto premium para el cuidado especial de mascotas', precio: 35000, stock: 10, stockCritico: 2, categoria: 'Premium', imagen: 'assets/img/prod.png' }
+  ];
+}
+
+// Normaliza la ruta de la imagen según la ubicación de la página actual
+function rutaImagenNormalizada(rutaRelativa) {
+  if (!rutaRelativa) return '';
+  var ruta = rutaRelativa.replace(/\\\\/g, '/');
+  var pathname = location.pathname.replace(/\\\\/g, '/');
+  // Si estamos dentro de /pages/ necesitamos subir dos niveles
+  if (pathname.indexOf('/pages/') !== -1) {
+    return '../../' + ruta;
+  }
+  return ruta;
 }
 
 // Función para guardar productos en localStorage
@@ -78,7 +70,7 @@ function mostrarProductos() {
       div.className = 'col-md-4 mb-4';
       div.innerHTML = `
         <div class="card h-100">
-          <img src="${producto.imagen}" class="card-img-top" alt="${producto.nombre}" style="height: 200px; object-fit: cover;">
+          <img src="${rutaImagenNormalizada(producto.imagen)}" class="card-img-top" alt="${producto.nombre}" style="height: 200px; object-fit: cover;">
           <div class="card-body d-flex flex-column">
             <h5 class="card-title">${producto.nombre}</h5>
             <p class="card-text flex-grow-1">${producto.descripcion || ''}</p>
@@ -101,7 +93,8 @@ function mostrarProductos() {
 
 // Función para ver detalle del producto
 function verDetalle(id) {
-  window.location.href = 'detalle-producto.html?id=' + id;
+  // Ir a la página de detalle existente en pages/content
+  window.location.href = 'pages/content/detalle-producto.html?id=' + id;
 }
 
 // Función para mostrar detalle específico del producto
@@ -126,7 +119,8 @@ function mostrarDetalleProducto() {
   
   // Mostrar información del producto
   document.getElementById('producto-nombre').textContent = producto.nombre;
-  document.getElementById('producto-imagen').src = producto.imagen;
+  // Normalizar ruta según ubicación
+  document.getElementById('producto-imagen').src = rutaImagenNormalizada(producto.imagen);
   document.getElementById('producto-imagen').alt = producto.nombre;
   document.getElementById('producto-descripcion').textContent = producto.descripcion || 'Sin descripción disponible';
   document.getElementById('producto-precio').textContent = '$' + producto.precio.toLocaleString();
@@ -159,7 +153,7 @@ function listarProductosAdmin() {
         <div class="card-body">
           <div class="row">
             <div class="col-md-2">
-              <img src="${producto.imagen}" class="img-fluid" alt="${producto.nombre}">
+              <img src="${rutaImagenNormalizada(producto.imagen)}" class="img-fluid" alt="${producto.nombre}">
             </div>
             <div class="col-md-10">
               <h5 class="card-title">${producto.nombre} ${alertaStock}</h5>

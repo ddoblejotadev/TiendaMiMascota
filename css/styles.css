@@ -1,5 +1,7 @@
 /* Copiado desde assets/css/styles.css - simplificado para proyecto de principiante */
-body { background: #f8f9fa; }
+html, body { height: 100%; }
+body { background: #f8f9fa; min-height: 100vh; display: flex; flex-direction: column; }
+main { flex: 1 0 auto; }
 
 /* Tarjetas limpias y sencillas */
 .card {
@@ -47,6 +49,9 @@ header img { height: 48px; width: auto; }
   min-width: 250px;
   /* Animación de entrada */
   animation: deslizarEntrada 0.4s ease-out;
+  animation-fill-mode: both;
+  will-change: transform, opacity;
+  pointer-events: auto; /* permitir interacción si se desea copiar texto o cerrar en el futuro */
 }
 
 /* Icono dentro de la notificación */
@@ -95,6 +100,7 @@ header img { height: 48px; width: auto; }
     right: 10px;
     left: 10px;
     min-width: auto;
+  top: 10px;
   }
 }
 
@@ -111,6 +117,10 @@ header img { height: 48px; width: auto; }
   justify-content: center;
   z-index: 10000;
   animation: fadeIn 0.3s ease-out;
+  /* permitir scroll del contenido modal en pantallas pequeñas */
+  padding: 1rem;
+  box-sizing: border-box;
+  pointer-events: auto;
 }
 
 .confirmacion-content {
@@ -122,6 +132,8 @@ header img { height: 48px; width: auto; }
   max-width: 400px;
   width: 90%;
   animation: slideUp 0.3s ease-out;
+  max-height: 80vh;
+  overflow-y: auto;
 }
 
 .confirmacion-content h5 {
@@ -157,6 +169,17 @@ header img { height: 48px; width: auto; }
   padding: 10px 20px;
   border-radius: 8px;
   cursor: pointer;
+}
+
+/* Estados hover y foco para accesibilidad */
+.btn-confirmar:hover, .btn-confirmar:focus {
+  background: #c82333;
+  outline: none;
+}
+
+.btn-cancelar:hover, .btn-cancelar:focus {
+  background: #5a6268;
+  outline: none;
 }
 
 /* Animaciones para modal de confirmación */

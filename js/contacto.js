@@ -6,7 +6,8 @@
 function enviarContacto() {
   var nombre = document.getElementById('nombre').value.trim();
   var email = document.getElementById('email').value.trim();
-  var comentario = document.getElementById('comentario').value.trim();
+  // En el HTML el textarea tiene id="mensaje"
+  var comentario = document.getElementById('mensaje') ? document.getElementById('mensaje').value.trim() : (document.getElementById('comentario') ? document.getElementById('comentario').value.trim() : '');
   
   // Validaciones según requerimientos
   if (!nombre) {
@@ -57,5 +58,26 @@ function enviarContacto() {
   mostrarExito('Mensaje enviado correctamente. Te contactaremos pronto.');
   
   // Limpiar formulario
-  document.getElementById('contactoForm').reset();
+  // En la vista el id del form es 'formularioContacto'
+  var form = document.getElementById('formularioContacto') || document.getElementById('contactoForm');
+  if (form) form.reset();
 }
+
+// Conectar el formulario de contacto cuando la página cargue
+document.addEventListener('DOMContentLoaded', function() {
+  var form = document.getElementById('formularioContacto') || document.getElementById('contactoForm');
+  if (form) {
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      enviarContacto();
+    });
+  }
+  // Contador de caracteres para el textarea (si existe)
+  var textarea = document.getElementById('mensaje') || document.getElementById('comentario');
+  var contador = document.getElementById('contadorCaracteres');
+  if (textarea && contador) {
+    textarea.addEventListener('input', function() {
+      contador.textContent = textarea.value.length + '/' + (textarea.maxLength || 1000);
+    });
+  }
+});
