@@ -103,7 +103,7 @@ Tienda-MiMascota/
 
 1. **Clonar el repositorio**
    ```bash
-   git clone https://github.com/ddoblejotadev/EvaluacionFormativaFullstack.git
+   git clone https://github.com/ddoblejotadev/TiendaMiMascota
    cd EvaluacionFormativaFullstack
    ```
 
@@ -277,4 +277,4 @@ Este proyecto está bajo la Licencia MIT. Ver el archivo `LICENSE` para más det
 
 ---
 
-*Proyecto desarrollado como parte de la evaluación formativa de desarrollo fullstack.*
+*Proyecto desarrollado como parte de la evaluación parcial de desarrollo fullstack II.*
