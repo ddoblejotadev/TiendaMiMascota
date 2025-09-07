@@ -104,7 +104,7 @@ Tienda-MiMascota/
 1. **Clonar el repositorio**
    ```bash
    git clone https://github.com/ddoblejotadev/TiendaMiMascota
-   cd EvaluacionFormativaFullstack
+   cd TiendaMiMascota
    ```
 
 2. **Abrir en el navegador**
