@@ -4,7 +4,6 @@ import userEvent from '@testing-library/user-event';
 import Login from '../pages/auth/Login';
 import { AuthProvider } from '../context/AuthContext';
 
-// Mock para localStorage
 const mockLocalStorage = {
   getItem: vi.fn(),
   setItem: vi.fn(),
@@ -12,12 +11,10 @@ const mockLocalStorage = {
   clear: vi.fn(),
 };
 
-// Configurar el mock de localStorage
 Object.defineProperty(window, 'localStorage', {
   value: mockLocalStorage,
 });
 
-// Helper function para renderizar con el provider
 const renderWithAuthProvider = (component) => {
   return render(
     <AuthProvider>
@@ -28,7 +25,6 @@ const renderWithAuthProvider = (component) => {
 
 describe('Login Component', () => {
   beforeEach(() => {
-    // Limpiar mocks antes de cada test
     vi.clearAllMocks();
     mockLocalStorage.getItem.mockReturnValue(null);
   });
@@ -39,7 +35,7 @@ describe('Login Component', () => {
       
       expect(screen.getByRole('heading', { name: /iniciar sesión/i })).toBeInTheDocument();
       expect(screen.getByLabelText(/email/i)).toBeInTheDocument();
-      expect(screen.getByPlaceholderText(/tu contraseña/i)).toBeInTheDocument(); // Campo de contraseña por placeholder
+      expect(screen.getByPlaceholderText(/tu contraseña/i)).toBeInTheDocument();
       expect(screen.getByRole('button', { name: /iniciar sesión/i })).toBeInTheDocument();
     });
 
@@ -119,12 +115,10 @@ describe('Login Component', () => {
       
       const emailInput = screen.getByLabelText(/email/i);
       const submitButton = screen.getByRole('button', { name: /iniciar sesión/i });
-      
-      // Provocar error
+
       await user.click(submitButton);
       expect(screen.getByText(/el email es requerido/i)).toBeInTheDocument();
-      
-      // Escribir en el campo
+
       await user.type(emailInput, 'test@test.com');
       expect(screen.queryByText(/el email es requerido/i)).not.toBeInTheDocument();
     });
@@ -137,15 +131,12 @@ describe('Login Component', () => {
       
       const passwordInput = screen.getByPlaceholderText(/tu contraseña/i);
       const toggleButton = screen.getByRole('button', { name: /mostrar contraseña/i });
-      
-      // Inicialmente debe ser tipo password
+
       expect(passwordInput).toHaveAttribute('type', 'password');
-      
-      // Hacer clic para mostrar
+
       await user.click(toggleButton);
       expect(passwordInput).toHaveAttribute('type', 'text');
-      
-      // Hacer clic para ocultar
+
       await user.click(toggleButton);
       expect(passwordInput).toHaveAttribute('type', 'password');
     });
@@ -163,8 +154,7 @@ describe('Login Component', () => {
       await user.type(emailInput, 'admin@mimascota.com');
       await user.type(passwordInput, 'admin123');
       await user.click(submitButton);
-      
-      // Verificar que se llamó localStorage.setItem
+
       await waitFor(() => {
         expect(mockLocalStorage.setItem).toHaveBeenCalledWith('authToken', 'fake-jwt-token');
         expect(mockLocalStorage.setItem).toHaveBeenCalledWith(

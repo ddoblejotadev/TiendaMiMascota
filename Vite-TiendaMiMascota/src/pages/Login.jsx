@@ -12,8 +12,10 @@ const Login = () => {
   
   const { login, loading, error, isAuthenticated } = useAuth();
 
+  // Redirigir si ya está autenticado
   useEffect(() => {
     if (isAuthenticated) {
+      // En una aplicación real, usarías react-router para redirigir
       console.log('Usuario ya autenticado, redirigiendo...');
     }
   }, [isAuthenticated]);
@@ -21,12 +23,14 @@ const Login = () => {
   const validateForm = () => {
     const errors = {};
 
+    // Validación de email
     if (!formData.email) {
       errors.email = 'El email es requerido';
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
       errors.email = 'El email no es válido';
     }
 
+    // Validación de contraseña
     if (!formData.password) {
       errors.password = 'La contraseña es requerida';
     } else if (formData.password.length < 6) {
@@ -43,6 +47,7 @@ const Login = () => {
       [name]: value
     }));
 
+    // Limpiar error específico cuando el usuario empiece a escribir
     if (validationErrors[name]) {
       setValidationErrors(prev => ({
         ...prev,
@@ -53,7 +58,8 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    
+    // Validar formulario
     const errors = validateForm();
     setValidationErrors(errors);
 
@@ -62,6 +68,7 @@ const Login = () => {
       
       if (result.success) {
         console.log('Login exitoso:', result.user);
+        // Aquí normalmente redirigirías al usuario
       }
     }
   };

@@ -1,33 +1,16 @@
-/**
- * CONSTANTES GLOBALES DE LA APLICACIÓN
- * 
- * Este archivo centraliza todos los valores constantes que se usan
- * en múltiples partes de la aplicación.
- * 
- * VENTAJAS:
- * - Evita errores de tipeo
- * - Facilita cambios futuros
- * - Mejora la legibilidad del código
- */
 
-// ============================================
-// ROLES DE USUARIO
-// ============================================
 export const USER_ROLES = {
   ADMIN: 'administrador',
   VENDOR: 'vendedor',
   CLIENT: 'cliente'
 };
 
-// ============================================
-// ESTADOS DE ÓRDENES
-// ============================================
 export const ORDER_STATUS = {
-  PENDING: 'pendiente',      // Orden recién creada
-  PROCESSING: 'procesando',   // Vendedor está preparando
-  SHIPPED: 'enviada',         // En camino al cliente
-  DELIVERED: 'entregada',     // Cliente recibió producto
-  CANCELLED: 'cancelada'      // Orden cancelada
+  PENDING: 'pendiente',
+  PROCESSING: 'procesando',
+  SHIPPED: 'enviada',
+  DELIVERED: 'entregada',
+  CANCELLED: 'cancelada'
 };
 
 // Traducción de estados para mostrar al usuario
@@ -39,18 +22,14 @@ export const ORDER_STATUS_LABELS = {
   [ORDER_STATUS.CANCELLED]: 'Cancelada'
 };
 
-// Colores para cada estado (útil para badges/chips)
 export const ORDER_STATUS_COLORS = {
-  [ORDER_STATUS.PENDING]: 'warning',     // Amarillo
-  [ORDER_STATUS.PROCESSING]: 'info',     // Azul
-  [ORDER_STATUS.SHIPPED]: 'primary',     // Azul oscuro
-  [ORDER_STATUS.DELIVERED]: 'success',   // Verde
-  [ORDER_STATUS.CANCELLED]: 'error'      // Rojo
+  [ORDER_STATUS.PENDING]: 'warning',
+  [ORDER_STATUS.PROCESSING]: 'info',
+  [ORDER_STATUS.SHIPPED]: 'primary',
+  [ORDER_STATUS.DELIVERED]: 'success',
+  [ORDER_STATUS.CANCELLED]: 'error'
 };
 
-// ============================================
-// CATEGORÍAS DE PRODUCTOS
-// ============================================
 export const PRODUCT_CATEGORIES = {
   FOOD: 'comida',
   TOYS: 'juguetes',
@@ -60,7 +39,6 @@ export const PRODUCT_CATEGORIES = {
   BEDS: 'camas'
 };
 
-// Traducción de categorías
 export const PRODUCT_CATEGORIES_LABELS = {
   [PRODUCT_CATEGORIES.FOOD]: 'Comida',
   [PRODUCT_CATEGORIES.TOYS]: 'Juguetes',
@@ -70,9 +48,6 @@ export const PRODUCT_CATEGORIES_LABELS = {
   [PRODUCT_CATEGORIES.BEDS]: 'Camas'
 };
 
-// ============================================
-// CONFIGURACIÓN DE VALIDACIÓN
-// ============================================
 export const VALIDATION_RULES = {
   RUN: {
     MIN_LENGTH: 7,
@@ -98,11 +73,8 @@ export const VALIDATION_RULES = {
   }
 };
 
-// ============================================
-// RUTAS DE NAVEGACIÓN
-// ============================================
 export const ROUTES = {
-  // Públicas
+
   HOME: '/',
   ABOUT: '/acerca',
   BLOG: '/blog',
@@ -110,37 +82,28 @@ export const ROUTES = {
   PRODUCTS: '/productos',
   PRODUCT_DETAIL: '/productos/:id',
   CART: '/carrito',
-  
-  // Autenticación
+
   LOGIN: '/login',
   REGISTER: '/registro',
   PROFILE: '/perfil',
   ORDERS: '/mis-pedidos',
-  
-  // Admin
+
   ADMIN_DASHBOARD: '/admin',
   ADMIN_PRODUCTS: '/admin/productos',
   ADMIN_USERS: '/admin/usuarios',
   ADMIN_STATS: '/admin/estadisticas',
-  
-  // Vendedor
+
   VENDOR_DASHBOARD: '/vendedor',
   VENDOR_PRODUCTS: '/vendedor/productos',
   VENDOR_ORDERS: '/vendedor/pedidos'
 };
 
-// ============================================
-// CONFIGURACIÓN DE PAGINACIÓN
-// ============================================
 export const PAGINATION = {
   PRODUCTS_PER_PAGE: 12,
   ORDERS_PER_PAGE: 10,
   USERS_PER_PAGE: 10
 };
 
-// ============================================
-// MENSAJES DE ÉXITO/ERROR COMUNES
-// ============================================
 export const MESSAGES = {
   SUCCESS: {
     LOGIN: 'Inicio de sesión exitoso',
@@ -175,9 +138,6 @@ export const MESSAGES = {
   }
 };
 
-// ============================================
-// CONFIGURACIÓN DE ALMACENAMIENTO LOCAL
-// ============================================
 export const STORAGE_KEYS = {
   AUTH_TOKEN: 'auth_token',
   USER_DATA: 'user_data',
@@ -188,9 +148,6 @@ export const STORAGE_KEYS = {
   CONTACTS: 'mensajes_contacto'
 };
 
-// ============================================
-// CONFIGURACIÓN DE FORMATO
-// ============================================
 export const FORMAT = {
   CURRENCY: 'CLP',
   LOCALE: 'es-CL',
@@ -198,10 +155,7 @@ export const FORMAT = {
   DATETIME_FORMAT: 'DD/MM/YYYY HH:mm'
 };
 
-// ============================================
-// LÍMITES DE STOCK
-// ============================================
 export const STOCK = {
-  LOW_THRESHOLD: 5,    // Stock bajo: menos de 5 unidades
-  OUT_OF_STOCK: 0      // Sin stock
+  LOW_THRESHOLD: 5,
+  OUT_OF_STOCK: 0
 };
