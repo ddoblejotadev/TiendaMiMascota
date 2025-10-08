@@ -8,40 +8,29 @@ import * as productService from '../services/productService';
 
 export function useProducts(opciones = {}) {
   const {
-    cargarInicial = true,        // Si debe cargar productos al montar
-    soloDestacados = false,      // Si solo carga productos destacados
-    categoria = null             // Categoría inicial a filtrar
+    cargarInicial = true,
+    soloDestacados = false,
+    categoria = null
   } = opciones;
 
-  // Estados
   const [productos, setProductos] = useState([]);
   const [productosFiltrados, setProductosFiltrados] = useState([]);
   const [cargando, setCargando] = useState(false);
   const [error, setError] = useState(null);
   
-  // Estados de filtros
   const [busqueda, setBusqueda] = useState('');
   const [categoriaActual, setCategoriaActual] = useState(categoria || '');
 
-  /**
-   * EFECTO: Cargar productos al montar
-   */
   useEffect(() => {
     if (cargarInicial) {
       cargarProductos();
     }
   }, [cargarInicial]);
 
-  /**
-   * EFECTO: Filtrar productos cuando cambian filtros
-   */
   useEffect(() => {
     filtrarProductos();
   }, [productos, busqueda, categoriaActual]);
 
-  /**
-   * Carga todos los productos o solo destacados
-   */
   const cargarProductos = async () => {
     try {
       setCargando(true);
@@ -62,13 +51,9 @@ export function useProducts(opciones = {}) {
     }
   };
 
-  /**
-   * Filtra productos según búsqueda y categoría
-   */
   const filtrarProductos = () => {
     let resultado = [...productos];
 
-    // Filtrar por búsqueda
     if (busqueda) {
       const terminoLower = busqueda.toLowerCase();
       resultado = resultado.filter(p =>
@@ -77,7 +62,6 @@ export function useProducts(opciones = {}) {
       );
     }
 
-    // Filtrar por categoría
     if (categoriaActual && categoriaActual !== 'Todos') {
       resultado = resultado.filter(p => p.categoria === categoriaActual);
     }
@@ -85,35 +69,19 @@ export function useProducts(opciones = {}) {
     setProductosFiltrados(resultado);
   };
 
-  /**
-   * Busca productos por término
-   * @param {string} termino - Término de búsqueda
-   */
   const buscarProductos = (termino) => {
     setBusqueda(termino);
   };
 
-  /**
-   * Filtra por categoría
-   * @param {string} categoria - Categoría a filtrar
-   */
   const filtrarPorCategoria = (categoria) => {
     setCategoriaActual(categoria);
   };
 
-  /**
-   * Limpia todos los filtros
-   */
   const limpiarFiltros = () => {
     setBusqueda('');
     setCategoriaActual('');
   };
 
-  /**
-   * Obtiene un producto por ID
-   * @param {number} id - ID del producto
-   * @returns {Promise<Object>}
-   */
   const obtenerProducto = async (id) => {
     try {
       setCargando(true);
@@ -129,10 +97,6 @@ export function useProducts(opciones = {}) {
     }
   };
 
-  /**
-   * Agrega un nuevo producto (CRUD)
-   * @param {Object} producto - Datos del producto
-   */
   const agregarProducto = async (producto) => {
     try {
       setCargando(true);
@@ -150,11 +114,6 @@ export function useProducts(opciones = {}) {
     }
   };
 
-  /**
-   * Actualiza un producto existente (CRUD)
-   * @param {number} id - ID del producto
-   * @param {Object} datosActualizados - Datos a actualizar
-   */
   const actualizarProducto = async (id, datosActualizados) => {
     try {
       setCargando(true);
@@ -178,10 +137,6 @@ export function useProducts(opciones = {}) {
     }
   };
 
-  /**
-   * Elimina un producto (CRUD)
-   * @param {number} id - ID del producto
-   */
   const eliminarProducto = async (id) => {
     try {
       setCargando(true);
@@ -203,28 +158,24 @@ export function useProducts(opciones = {}) {
     }
   };
 
-  /**
-   * Recarga los productos
-   */
   const recargar = () => {
     cargarProductos();
   };
 
-  // Retornar todo lo que necesitamos
   return {
-    productos: productosFiltrados,  // Productos filtrados
-    todoLosProductos: productos,    // Todos los productos sin filtrar
-    cargando,                       // Estado de carga
-    error,                          // Error si hay
-    busqueda,                       // Término de búsqueda actual
-    categoriaActual,                // Categoría actual
-    buscarProductos,                // Función para buscar
-    filtrarPorCategoria,            // Función para filtrar por categoría
-    limpiarFiltros,                 // Función para limpiar filtros
-    obtenerProducto,                // Función para obtener un producto
-    agregarProducto,                // Función para agregar (CRUD)
-    actualizarProducto,             // Función para actualizar (CRUD)
-    eliminarProducto,               // Función para eliminar (CRUD)
-    recargar                        // Función para recargar
+    productos: productosFiltrados,
+    todosLosProductos: productos,
+    cargando,
+    error,
+    busqueda,
+    categoriaActual,
+    buscarProductos,
+    filtrarPorCategoria,
+    limpiarFiltros,
+    obtenerProducto,
+    agregarProducto,
+    actualizarProducto,
+    eliminarProducto,
+    recargar
   };
 }
