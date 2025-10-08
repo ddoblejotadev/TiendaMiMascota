@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import './App.css'
 import NotificationContainer from './components/ui/Notification'
+import { ConfirmDialogContainer } from './components/ui/ConfirmDialog'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -17,6 +18,7 @@ function App() {
       </BrowserRouter>
 
       <NotificationContainer position="top-right" maxNotifications={5} />
+      <ConfirmDialogContainer />
     </div>
   )
 }
