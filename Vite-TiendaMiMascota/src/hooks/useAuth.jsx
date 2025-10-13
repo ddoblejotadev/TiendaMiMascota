@@ -79,6 +79,7 @@ export function useAuth() {
   };
 
   return {
+    // Español
     usuario,
     cargando,
     error,
@@ -86,6 +87,14 @@ export function useAuth() {
     registrarse,
     cerrarSesion,
     actualizarPerfil,
-    estaLogueado
+    estaLogueado,
+    // Inglés (aliases)
+    user: usuario,
+    loading: cargando,
+    login: iniciarSesion,
+    register: registrarse,
+    logout: cerrarSesion,
+    updateProfile: actualizarPerfil,
+    isAuthenticated: estaLogueado()
   };
 }

@@ -5,8 +5,8 @@
 
 import { useState } from 'react';
 
-export function useForm(valoresIniciales = {}) {
-  const [valores, setValores] = useState(valoresIniciales);
+export function useForm({ initialValues = {}, validate, onSubmit } = {}) {
+  const [valores, setValores] = useState(initialValues);
   const [errores, setErrores] = useState({});
   const [tocado, setTocado] = useState({});
 
@@ -79,16 +79,57 @@ export function useForm(valoresIniciales = {}) {
     return Object.keys(errores).length === 0;
   };
 
+  /**
+   * Maneja el envío del formulario
+   */
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    
+    // Validar todos los campos
+    if (validate) {
+      const validationErrors = validate(valores);
+      setErrores(validationErrors);
+      
+      if (Object.keys(validationErrors).length > 0) {
+        return;
+      }
+    }
+    
+    // Ejecutar callback de envío
+    if (onSubmit) {
+      await onSubmit(valores);
+    }
+  };
+
+  /**
+   * Establece un error específico
+   */
+  const setError = (campo, mensaje) => {
+    setErrores(prev => ({
+      ...prev,
+      [campo]: mensaje
+    }));
+  };
+
   return {
+    // Español
     valores,
     errores,
     tocado,
     handleChange,
     handleBlur,
+    handleSubmit,
     resetForm,
     setFormValues,
     setFormErrors,
+    setError,
     tieneError,
-    esValido
+    esValido,
+    // Inglés (aliases)
+    values: valores,
+    errors: errores,
+    touched: tocado,
+    hasError: tieneError,
+    isValid: esValido
   };
 }

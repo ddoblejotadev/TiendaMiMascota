@@ -163,6 +163,7 @@ export function useProducts(opciones = {}) {
   };
 
   return {
+    // Español
     productos: productosFiltrados,
     todosLosProductos: productos,
     cargando,
@@ -176,6 +177,21 @@ export function useProducts(opciones = {}) {
     agregarProducto,
     actualizarProducto,
     eliminarProducto,
-    recargar
+    recargar,
+    // Inglés (aliases)
+    products: productos,
+    filteredProducts: productosFiltrados,
+    allProducts: productos,
+    loading: cargando,
+    searchTerm: busqueda,
+    currentCategory: categoriaActual,
+    searchProducts: buscarProductos,
+    filterByCategory: filtrarPorCategoria,
+    clearFilters: limpiarFiltros,
+    getProduct: obtenerProducto,
+    addProduct: agregarProducto,
+    updateProduct: actualizarProducto,
+    deleteProduct: eliminarProducto,
+    reload: recargar
   };
 }

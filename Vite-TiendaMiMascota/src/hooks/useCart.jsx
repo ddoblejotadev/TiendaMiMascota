@@ -63,7 +63,11 @@ export function useCart() {
     return carrito.length === 0;
   };
 
+  const getTotal = () => total;
+  const getTotalItems = () => cantidadTotal;
+
   return {
+    // Español
     carrito,
     cantidadTotal,
     total,
@@ -73,6 +77,18 @@ export function useCart() {
     vaciarCarrito,
     estaEnCarrito,
     obtenerCantidadProducto,
-    carritoVacio
+    carritoVacio,
+    // Inglés (aliases)
+    cart: carrito,
+    totalItems: cantidadTotal,
+    addToCart: agregarProducto,
+    removeFromCart: eliminarProducto,
+    updateQuantity: actualizarCantidad,
+    clearCart: vaciarCarrito,
+    isInCart: estaEnCarrito,
+    getProductQuantity: obtenerCantidadProducto,
+    isEmpty: carritoVacio,
+    getTotal,
+    getTotalItems
   };
 }
