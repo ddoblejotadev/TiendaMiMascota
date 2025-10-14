@@ -7,7 +7,8 @@ import { Link } from 'react-router-dom';
 import useCarrito from '../hooks/useCarrito';
 
 function ProductCard({ producto }) {
-  const { agregarAlCarrito, estaEnCarrito } = useCarrito();
+  const { agregarAlCarrito, obtenerCantidadEnCarrito } = useCarrito();
+  const cantidadEnCarrito = obtenerCantidadEnCarrito(producto.id);
 
   /**
    * Formatear precio en pesos chilenos
@@ -23,7 +24,7 @@ function ProductCard({ producto }) {
     evento.preventDefault();
     evento.stopPropagation();
     
-    agregarAlCarrito(producto);
+    agregarAlCarrito(producto, 1);
     
     // Feedback visual
     const boton = evento.currentTarget;
@@ -31,12 +32,14 @@ function ProductCard({ producto }) {
     boton.innerHTML = '✓ Agregado';
     boton.classList.add('btn-success');
     boton.classList.remove('btn-primary');
+    boton.disabled = true;
     
     setTimeout(() => {
       boton.innerHTML = textoOriginal;
       boton.classList.remove('btn-success');
       boton.classList.add('btn-primary');
-    }, 1500);
+      boton.disabled = false;
+    }, 1000);
   };
 
   return (
@@ -69,10 +72,10 @@ function ProductCard({ producto }) {
             )}
           </div>
 
-          {estaEnCarrito(producto.id) && (
+          {cantidadEnCarrito > 0 && (
             <div className="position-absolute top-0 end-0 p-2">
               <span className="badge bg-success">
-                ✓ En carrito
+                ✓ En carrito ({cantidadEnCarrito})
               </span>
             </div>
           )}

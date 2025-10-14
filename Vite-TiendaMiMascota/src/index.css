@@ -50,6 +50,17 @@ img {
   padding-right: 15px;
 }
 
+/* Efecto hover lift para tarjetas */
+.hover-lift:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* Timeline styles para la historia */
+.timeline .border-start {
+  position: relative;
+}
+
 /* Estilos para componentes UI personalizados */
 .confirm-dialog-overlay {
   position: fixed;

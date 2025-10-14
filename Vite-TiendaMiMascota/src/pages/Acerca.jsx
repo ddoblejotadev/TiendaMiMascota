@@ -20,29 +20,62 @@ function Acerca() {
       {/* Nuestra Historia */}
       <section className="py-5">
         <div className="container">
-          <div className="row align-items-center g-5">
-            <div className="col-lg-6">
-              <h2 className="display-5 fw-bold mb-4">📖 Nuestra Historia</h2>
-              <p className="lead mb-3">
-                <strong>Mi Mascota</strong> nació en 2020 con una misión clara: 
-                proporcionar productos de alta calidad para el cuidado y felicidad 
-                de las mascotas en Chile.
-              </p>
-              <p className="mb-3">
-                Lo que comenzó como una pequeña tienda local, hoy se ha convertido 
-                en una de las tiendas online más confiables del país, atendiendo 
-                a miles de familias que aman a sus mascotas.
-              </p>
-              <p>
-                Sabemos que tu mascota es parte de tu familia, por eso seleccionamos 
-                cuidadosamente cada producto que ofrecemos, garantizando calidad, 
-                seguridad y los mejores precios.
-              </p>
-            </div>
-            <div className="col-lg-6">
-              <img src="/images/tienda-historia.jpg" alt="Nuestra historia" 
-                   className="img-fluid rounded shadow-lg"
-                   onError={(e) => e.target.src = 'https://via.placeholder.com/600x400?text=Mi+Mascota'} />
+          <div className="row justify-content-center">
+            {/* Solo contenido - Sin imagen */}
+            <div className="col-lg-8">
+              <div className="text-center mb-5">
+                <span className="badge bg-primary bg-opacity-10 text-primary px-3 py-2 rounded-pill mb-3">
+                  📖 Nuestra Historia
+                </span>
+                <h2 className="display-5 fw-bold mb-4">
+                  Una Pasión que se Convirtió en Realidad
+                </h2>
+              </div>
+              
+              <div className="timeline">
+                <div className="mb-4 ps-4 border-start border-primary border-4">
+                  <div className="badge bg-primary rounded-circle mb-2" style={{ width: '16px', height: '16px', marginLeft: '-30px' }}></div>
+                  <h5 className="fw-bold text-primary mb-2">2020 - El Inicio</h5>
+                  <p className="mb-0 text-muted">
+                    <strong>Mi Mascota</strong> nació con una misión clara: proporcionar 
+                    productos de alta calidad para el cuidado y felicidad de las mascotas en Chile.
+                  </p>
+                </div>
+
+                <div className="mb-4 ps-4 border-start border-success border-4">
+                  <div className="badge bg-success rounded-circle mb-2" style={{ width: '16px', height: '16px', marginLeft: '-30px' }}></div>
+                  <h5 className="fw-bold text-success mb-2">2021 - Crecimiento</h5>
+                  <p className="mb-0 text-muted">
+                    Lo que comenzó como una pequeña tienda local se expandió rápidamente, 
+                    ganando la confianza de miles de familias chilenas.
+                  </p>
+                </div>
+
+                <div className="mb-4 ps-4 border-start border-info border-4">
+                  <div className="badge bg-info rounded-circle mb-2" style={{ width: '16px', height: '16px', marginLeft: '-30px' }}></div>
+                  <h5 className="fw-bold text-info mb-2">Hoy - Líderes del Mercado</h5>
+                  <p className="mb-0 text-muted">
+                    Somos una de las tiendas online más confiables del país, 
+                    seleccionando cuidadosamente cada producto para garantizar calidad, 
+                    seguridad y los mejores precios.
+                  </p>
+                </div>
+              </div>
+
+              <div className="alert alert-primary border-0 shadow-sm mt-5" role="alert">
+                <div className="d-flex align-items-start">
+                  <span className="fs-2 me-3">💙</span>
+                  <div>
+                    <h6 className="alert-heading fw-bold mb-2">Nuestro Compromiso</h6>
+                    <p className="mb-0">
+                      Tu mascota es parte de tu familia, y nosotros lo sabemos. 
+                      Por eso cada decisión que tomamos está pensada en su bienestar.
+                      Seleccionamos cuidadosamente cada producto para garantizar la máxima 
+                      calidad, seguridad y los mejores precios del mercado.
+                    </p>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -141,112 +174,64 @@ function Acerca() {
         </div>
       </section>
 
-      {/* Equipo */}
+      {/* Estadísticas */}
       <section className="py-5 bg-light">
         <div className="container">
-          <h2 className="display-5 fw-bold text-center mb-3">👥 Nuestro Equipo</h2>
-          <p className="text-center text-muted mb-5">
-            Conoce a las personas apasionadas que hacen posible Mi Mascota
-          </p>
-          
-          <div className="row g-4">
-            <div className="col-sm-6 col-lg-3">
-              <div className="card border-0 shadow-sm h-100 text-center">
-                <div className="card-body p-4">
-                  <div className="mb-3">
-                    <div className="rounded-circle bg-primary d-inline-flex align-items-center justify-content-center text-white" 
-                         style={{ width: '100px', height: '100px', fontSize: '3rem' }}>
-                      👩‍⚕️
-                    </div>
-                  </div>
-                  <h5 className="fw-bold mb-1">María González</h5>
-                  <p className="text-primary small fw-semibold mb-2">Fundadora & CEO</p>
-                  <p className="text-muted small">Veterinaria con 10 años de experiencia</p>
-                </div>
-              </div>
-            </div>
-
-            <div className="col-sm-6 col-lg-3">
-              <div className="card border-0 shadow-sm h-100 text-center">
-                <div className="card-body p-4">
-                  <div className="mb-3">
-                    <div className="rounded-circle bg-success d-inline-flex align-items-center justify-content-center text-white" 
-                         style={{ width: '100px', height: '100px', fontSize: '3rem' }}>
-                      👨‍💼
-                    </div>
-                  </div>
-                  <h5 className="fw-bold mb-1">Carlos Ruiz</h5>
-                  <p className="text-success small fw-semibold mb-2">Director de Operaciones</p>
-                  <p className="text-muted small">Experto en logística y distribución</p>
-                </div>
-              </div>
-            </div>
-
-            <div className="col-sm-6 col-lg-3">
-              <div className="card border-0 shadow-sm h-100 text-center">
-                <div className="card-body p-4">
-                  <div className="mb-3">
-                    <div className="rounded-circle bg-info d-inline-flex align-items-center justify-content-center text-white" 
-                         style={{ width: '100px', height: '100px', fontSize: '3rem' }}>
-                      👩‍💻
-                    </div>
-                  </div>
-                  <h5 className="fw-bold mb-1">Ana Martínez</h5>
-                  <p className="text-info small fw-semibold mb-2">Jefa de Atención al Cliente</p>
-                  <p className="text-muted small">Dedicada a la satisfacción del cliente</p>
-                </div>
-              </div>
-            </div>
-
-            <div className="col-sm-6 col-lg-3">
-              <div className="card border-0 shadow-sm h-100 text-center">
-                <div className="card-body p-4">
-                  <div className="mb-3">
-                    <div className="rounded-circle bg-warning d-inline-flex align-items-center justify-content-center text-white" 
-                         style={{ width: '100px', height: '100px', fontSize: '3rem' }}>
-                      👨‍🔬
-                    </div>
-                  </div>
-                  <h5 className="fw-bold mb-1">Pedro Silva</h5>
-                  <p className="text-warning small fw-semibold mb-2">Especialista en Productos</p>
-                  <p className="text-muted small">Curador de nuestro catálogo</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Estadísticas */}
-      <section className="py-5">
-        <div className="container">
-          <h2 className="display-5 fw-bold text-center mb-5">📊 Nuestros Números</h2>
+          <h2 className="display-5 fw-bold text-center mb-5">📊 Nuestros Números Hablan por Sí Solos</h2>
           <div className="row g-4 text-center">
             <div className="col-sm-6 col-lg-3">
-              <div className="p-4">
-                <div className="display-3 fw-bold text-primary mb-2">5,000+</div>
-                <div className="text-muted">Clientes Felices</div>
+              <div className="card border-0 shadow-sm h-100 p-4 hover-lift" style={{ transition: 'transform 0.3s' }}>
+                <div className="card-body">
+                  <div className="bg-primary bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3"
+                       style={{ width: '80px', height: '80px' }}>
+                    <span className="fs-1">😊</span>
+                  </div>
+                  <div className="display-4 fw-bold text-primary mb-2">5,000+</div>
+                  <div className="fw-semibold text-muted">Clientes Felices</div>
+                  <p className="text-muted small mb-0 mt-2">Familias satisfechas con nuestros productos</p>
+                </div>
               </div>
             </div>
 
             <div className="col-sm-6 col-lg-3">
-              <div className="p-4">
-                <div className="display-3 fw-bold text-success mb-2">15,000+</div>
-                <div className="text-muted">Productos Vendidos</div>
+              <div className="card border-0 shadow-sm h-100 p-4 hover-lift" style={{ transition: 'transform 0.3s' }}>
+                <div className="card-body">
+                  <div className="bg-success bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3"
+                       style={{ width: '80px', height: '80px' }}>
+                    <span className="fs-1">📦</span>
+                  </div>
+                  <div className="display-4 fw-bold text-success mb-2">15,000+</div>
+                  <div className="fw-semibold text-muted">Productos Vendidos</div>
+                  <p className="text-muted small mb-0 mt-2">Entregas exitosas a todo Chile</p>
+                </div>
               </div>
             </div>
 
             <div className="col-sm-6 col-lg-3">
-              <div className="p-4">
-                <div className="display-3 fw-bold text-info mb-2">500+</div>
-                <div className="text-muted">Productos Diferentes</div>
+              <div className="card border-0 shadow-sm h-100 p-4 hover-lift" style={{ transition: 'transform 0.3s' }}>
+                <div className="card-body">
+                  <div className="bg-info bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3"
+                       style={{ width: '80px', height: '80px' }}>
+                    <span className="fs-1">🛍️</span>
+                  </div>
+                  <div className="display-4 fw-bold text-info mb-2">500+</div>
+                  <div className="fw-semibold text-muted">Productos Diferentes</div>
+                  <p className="text-muted small mb-0 mt-2">Variedad para todas las mascotas</p>
+                </div>
               </div>
             </div>
 
             <div className="col-sm-6 col-lg-3">
-              <div className="p-4">
-                <div className="display-3 fw-bold text-warning mb-2">4.8⭐</div>
-                <div className="text-muted">Calificación Promedio</div>
+              <div className="card border-0 shadow-sm h-100 p-4 hover-lift" style={{ transition: 'transform 0.3s' }}>
+                <div className="card-body">
+                  <div className="bg-warning bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3"
+                       style={{ width: '80px', height: '80px' }}>
+                    <span className="fs-1">⭐</span>
+                  </div>
+                  <div className="display-4 fw-bold text-warning mb-2">4.8</div>
+                  <div className="fw-semibold text-muted">Calificación Promedio</div>
+                  <p className="text-muted small mb-0 mt-2">Excelencia en servicio y calidad</p>
+                </div>
               </div>
             </div>
           </div>
