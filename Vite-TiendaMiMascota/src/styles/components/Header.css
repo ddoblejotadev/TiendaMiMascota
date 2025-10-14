@@ -1,0 +1,257 @@
+/* COMPONENTE HEADER */
+
+.header {
+  background: white;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.header-contenido {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 1rem 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+}
+
+/* Logo */
+.header-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #333;
+  transition: transform 0.3s;
+}
+
+.header-logo:hover {
+  transform: scale(1.05);
+}
+
+.logo-icono {
+  font-size: 2rem;
+}
+
+.logo-texto {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Navegación */
+.header-navegacion {
+  display: flex;
+  gap: 2rem;
+  flex: 1;
+  justify-content: center;
+}
+
+.nav-enlace {
+  text-decoration: none;
+  color: #666;
+  font-weight: 600;
+  font-size: 1rem;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  transition: all 0.3s;
+  position: relative;
+}
+
+.nav-enlace:hover {
+  color: #667eea;
+  background: #f3f4f6;
+}
+
+.nav-enlace::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 3px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  transition: width 0.3s;
+}
+
+.nav-enlace:hover::after {
+  width: 80%;
+}
+
+/* Acciones del usuario */
+.header-acciones {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+/* Carrito */
+.accion-carrito {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  background: #f3f4f6;
+  text-decoration: none;
+  transition: all 0.3s;
+}
+
+.accion-carrito:hover {
+  background: #667eea;
+  transform: scale(1.1);
+}
+
+.carrito-icono {
+  font-size: 1.5rem;
+}
+
+.carrito-badge {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background: #ef4444;
+  color: white;
+  font-size: 0.75rem;
+  font-weight: bold;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Usuario */
+.usuario-menu {
+  position: relative;
+}
+
+.usuario-boton {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1.2rem;
+  background: #f3f4f6;
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.usuario-boton:hover {
+  background: #e5e7eb;
+}
+
+.usuario-icono {
+  font-size: 1.2rem;
+}
+
+.usuario-nombre {
+  font-weight: 600;
+  color: #333;
+}
+
+/* Dropdown del usuario */
+.usuario-dropdown {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+  min-width: 200px;
+  overflow: hidden;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px);
+  transition: all 0.3s;
+}
+
+.usuario-menu:hover .usuario-dropdown {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.dropdown-item {
+  display: block;
+  padding: 1rem 1.5rem;
+  color: #333;
+  text-decoration: none;
+  background: none;
+  border: none;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.3s;
+  font-size: 0.95rem;
+}
+
+.dropdown-item:hover {
+  background: #f3f4f6;
+}
+
+.dropdown-cerrar {
+  color: #ef4444;
+  border-top: 1px solid #f3f4f6;
+}
+
+.dropdown-cerrar:hover {
+  background: #fee2e2;
+}
+
+/* Botón login */
+.boton-login {
+  padding: 0.7rem 1.5rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  text-decoration: none;
+  border-radius: 25px;
+  font-weight: 600;
+  transition: all 0.3s;
+}
+
+.boton-login:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+/* RESPONSIVE */
+@media (max-width: 968px) {
+  .header-navegacion {
+    display: none;
+  }
+
+  .header-acciones {
+    gap: 1rem;
+  }
+
+  .usuario-nombre {
+    display: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .header-contenido {
+    padding: 1rem;
+  }
+
+  .logo-texto {
+    display: none;
+  }
+
+  .boton-login {
+    padding: 0.6rem 1rem;
+    font-size: 0.9rem;
+  }
+}

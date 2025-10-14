@@ -1,66 +1,94 @@
-import { Link, useLocation } from 'react-router-dom'
-import { useCart } from '../hooks/useCart'
-import { useAuth } from '../hooks/useAuth'
-import '../styles/global.css'
+/**
+ * COMPONENTE: HEADER
+ * Encabezado de la aplicación con navegación
+ */
+
+import { Link, useNavigate } from 'react-router-dom';
+import useCarrito from '../hooks/useCarrito';
+import useAutenticacion from '../hooks/useAutenticacion';
+import '../styles/components/Header.css';
 
 function Header() {
-  const location = useLocation()
-  const { cart, getTotalItems } = useCart()
-  const { user, isAuthenticated } = useAuth()
-  
-  const cartItemsCount = getTotalItems ? getTotalItems() : cart?.reduce((sum, item) => sum + item.quantity, 0) || 0
+  const navegar = useNavigate();
+  const { totalArticulos } = useCarrito();
+  const { usuario, estaAutenticado, cerrarSesion } = useAutenticacion();
 
-  const isActive = (path) => {
-    return location.pathname === path ? 'active' : ''
-  }
+  /**
+   * Manejar cierre de sesión
+   */
+  const manejarCerrarSesion = () => {
+    if (confirm('¿Estás seguro de cerrar sesión?')) {
+      cerrarSesion();
+      navegar('/');
+    }
+  };
 
   return (
     <header className="header">
-      <div className="container">
-        <Link to="/" className="logo">
-          <img src="/src/assets/logo1.png" alt="Mi Mascota Logo" />
-          <span className="logo-text">Mi Mascota</span>
+      <div className="header-contenido">
+        {/* Logo */}
+        <Link to="/" className="header-logo">
+          <span className="logo-icono">🐾</span>
+          <span className="logo-texto">Mi Mascota</span>
         </Link>
 
-        <nav className="main-nav">
-          <Link to="/" className={isActive('/')}>
+        {/* Navegación principal */}
+        <nav className="header-navegacion">
+          <Link to="/" className="nav-enlace">
             Inicio
           </Link>
-          <Link to="/products" className={isActive('/products')}>
+          <Link to="/productos" className="nav-enlace">
             Productos
           </Link>
-          <Link to="/about" className={isActive('/about')}>
-            Nosotros
+          <Link to="/acerca" className="nav-enlace">
+            Acerca
           </Link>
-          <Link to="/contact" className={isActive('/contact')}>
+          <Link to="/contacto" className="nav-enlace">
             Contacto
           </Link>
         </nav>
 
-        <div className="header-actions">
-          <Link to="/cart" className={`cart-button ${isActive('/cart')}`}>
-            <span className="cart-icon">🛒</span>
-            <span className="cart-text">Carrito</span>
-            {cartItemsCount > 0 && (
-              <span className="cart-badge">{cartItemsCount}</span>
+        {/* Acciones del usuario */}
+        <div className="header-acciones">
+          {/* Carrito */}
+          <Link to="/carrito" className="accion-carrito">
+            <span className="carrito-icono">🛒</span>
+            {totalArticulos > 0 && (
+              <span className="carrito-badge">{totalArticulos}</span>
             )}
           </Link>
 
-          {isAuthenticated && user ? (
-            <Link to="/profile" className="user-button">
-              <span className="user-icon">👤</span>
-              <span className="user-name">{user.name || user.email}</span>
-            </Link>
+          {/* Usuario */}
+          {estaAutenticado ? (
+            <div className="usuario-menu">
+              <button className="usuario-boton">
+                <span className="usuario-icono">👤</span>
+                <span className="usuario-nombre">{usuario?.nombre}</span>
+              </button>
+              <div className="usuario-dropdown">
+                <Link to="/perfil" className="dropdown-item">
+                  Mi Perfil
+                </Link>
+                <Link to="/pedidos" className="dropdown-item">
+                  Mis Pedidos
+                </Link>
+                <button 
+                  onClick={manejarCerrarSesion}
+                  className="dropdown-item dropdown-cerrar"
+                >
+                  Cerrar Sesión
+                </button>
+              </div>
+            </div>
           ) : (
-            <Link to="/login" className={`login-button ${isActive('/login')}`}>
-              <span className="login-icon">🔐</span>
-              <span className="login-text">Iniciar Sesión</span>
+            <Link to="/iniciar-sesion" className="boton-login">
+              Iniciar Sesión
             </Link>
           )}
         </div>
       </div>
     </header>
-  )
+  );
 }
 
-export default Header
+export default Header;
