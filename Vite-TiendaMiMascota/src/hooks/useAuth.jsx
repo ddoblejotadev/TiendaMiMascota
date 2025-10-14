@@ -1,100 +1,72 @@
 /**
- * CUSTOM HOOK: useAuth
- * Maneja toda la lógica de autenticación
+ * HOOK SIMPLE DE AUTENTICACIÓN
  */
 
 import { useState, useEffect } from 'react';
-import * as authService from '../services/authService';
 
 export function useAuth() {
-  const [usuario, setUsuario] = useState(null);
-  const [cargando, setCargando] = useState(true);
-  const [error, setError] = useState(null);
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
 
+  // Cargar usuario al iniciar
   useEffect(() => {
-    const usuarioGuardado = authService.obtenerUsuarioActual();
-    setUsuario(usuarioGuardado);
-    setCargando(false);
+    const savedUser = localStorage.getItem('user');
+    if (savedUser) {
+      setUser(JSON.parse(savedUser));
+    }
+    setLoading(false);
   }, []);
 
-  const iniciarSesion = async (email, password) => {
-    try {
-      setCargando(true);
-      setError(null);
+  // Login
+  const login = (email, password) => {
+    // Simulación simple de login
+    if (email && password) {
+      const userData = {
+        id: 1,
+        nombre: 'Usuario Demo',
+        email: email
+      };
       
-      const usuarioLogueado = await authService.login(email, password);
-      setUsuario(usuarioLogueado);
-      
-      return { success: true };
-    } catch (err) {
-      setError(err.message);
-      return { success: false, error: err.message };
-    } finally {
-      setCargando(false);
+      localStorage.setItem('user', JSON.stringify(userData));
+      setUser(userData);
+      return true;
     }
+    return false;
   };
 
-  const registrarse = async (datosUsuario) => {
-    try {
-      setCargando(true);
-      setError(null);
+  // Registro
+  const register = (nombre, email, password) => {
+    if (nombre && email && password) {
+      const userData = {
+        id: Date.now(),
+        nombre: nombre,
+        email: email
+      };
       
-      const usuarioRegistrado = await authService.registrar(datosUsuario);
-      setUsuario(usuarioRegistrado);
-      
-      return { success: true };
-    } catch (err) {
-      setError(err.message);
-      return { success: false, error: err.message };
-    } finally {
-      setCargando(false);
+      localStorage.setItem('user', JSON.stringify(userData));
+      setUser(userData);
+      return true;
     }
+    return false;
   };
 
-  const cerrarSesion = () => {
-    authService.logout();
-    setUsuario(null);
-    setError(null);
+  // Logout
+  const logout = () => {
+    localStorage.removeItem('user');
+    setUser(null);
   };
 
-  const actualizarPerfil = async (datosActualizados) => {
-    try {
-      setCargando(true);
-      setError(null);
-      
-      const usuarioActualizado = await authService.actualizarPerfil(datosActualizados);
-      setUsuario(usuarioActualizado);
-      
-      return { success: true };
-    } catch (err) {
-      setError(err.message);
-      return { success: false, error: err.message };
-    } finally {
-      setCargando(false);
-    }
-  };
-
-  const estaLogueado = () => {
-    return usuario !== null;
+  // Verificar si está logueado
+  const isLoggedIn = () => {
+    return user !== null;
   };
 
   return {
-    // Español
-    usuario,
-    cargando,
-    error,
-    iniciarSesion,
-    registrarse,
-    cerrarSesion,
-    actualizarPerfil,
-    estaLogueado,
-    // Inglés (aliases)
-    user: usuario,
-    loading: cargando,
-    login: iniciarSesion,
-    register: registrarse,
-    logout: cerrarSesion,
-    updateProfile: actualizarPerfil,
-    isAuthenticated: estaLogueado()
+    user,
+    loading,
+    login,
+    register,
+    logout,
+    isLoggedIn
   };
 }
