@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { useCart } from '../hooks/useCart'
+import { useCart } from '../hooks/useCarrito'
 import { notify } from './ui/Notification'
 import '../styles/global.css'
 
