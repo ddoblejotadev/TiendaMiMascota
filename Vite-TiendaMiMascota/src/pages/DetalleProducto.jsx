@@ -11,7 +11,7 @@ import useCarrito from '../hooks/useCarrito';
 function DetalleProducto() {
   const { id } = useParams(); // Obtener ID de la URL
   const navigate = useNavigate();
-  const { obtenerProductoPorId } = useProductos();
+  const { obtenerProductoPorId, todosLosProductos, cargando: cargandoProductos } = useProductos();
   const { agregarAlCarrito } = useCarrito();
   
   const [producto, setProducto] = useState(null);
@@ -20,17 +20,26 @@ function DetalleProducto() {
 
   // Cargar producto al montar el componente
   useEffect(() => {
+    // Esperar a que los productos se carguen
+    if (cargandoProductos) {
+      setCargando(true);
+      return;
+    }
+
     const productoEncontrado = obtenerProductoPorId(id);
     
     if (productoEncontrado) {
       setProducto(productoEncontrado);
+      setCargando(false);
     } else {
-      alert('Producto no encontrado');
-      navigate('/productos');
+      // Solo mostrar error si ya se cargaron todos los productos
+      if (todosLosProductos.length > 0) {
+        setCargando(false);
+        alert('Producto no encontrado');
+        navigate('/productos');
+      }
     }
-    
-    setCargando(false);
-  }, [id, obtenerProductoPorId, navigate]);
+  }, [id, obtenerProductoPorId, navigate, cargandoProductos, todosLosProductos]);
 
   /**
    * Formatear precio
