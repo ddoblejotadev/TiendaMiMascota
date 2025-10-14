@@ -1,0 +1,271 @@
+/* PÁGINA REGISTRARSE */
+
+.pagina-registrarse {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.registrarse-contenedor {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  max-width: 1100px;
+  width: 100%;
+  background: white;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+}
+
+/* Formulario (izquierda) */
+.registrarse-formulario {
+  padding: 3rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.registrarse-formulario h2 {
+  font-size: 2rem;
+  margin: 0 0 0.5rem 0;
+  color: #333;
+}
+
+.registrarse-subtitulo {
+  color: #666;
+  margin: 0 0 2rem 0;
+  font-size: 1rem;
+}
+
+/* Grupos del formulario */
+.grupo-formulario {
+  margin-bottom: 1.2rem;
+}
+
+.grupo-formulario label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: #333;
+  font-size: 0.95rem;
+}
+
+.grupo-formulario input {
+  width: 100%;
+  padding: 0.85rem 1rem;
+  border: 2px solid #e5e7eb;
+  border-radius: 10px;
+  font-size: 1rem;
+  transition: all 0.3s;
+}
+
+.grupo-formulario input:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+/* Campo con botón de mostrar contraseña */
+.campo-contrasena {
+  position: relative;
+}
+
+.campo-contrasena input {
+  padding-right: 3rem;
+}
+
+.boton-mostrar-contrasena {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  opacity: 0.6;
+  transition: opacity 0.3s;
+}
+
+.boton-mostrar-contrasena:hover {
+  opacity: 1;
+}
+
+/* Checkbox */
+.grupo-checkbox {
+  margin: 1.5rem 0;
+}
+
+.etiqueta-checkbox {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  cursor: pointer;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.etiqueta-checkbox input {
+  margin-top: 0.2rem;
+  width: auto;
+  cursor: pointer;
+}
+
+.etiqueta-checkbox a {
+  color: #667eea;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.etiqueta-checkbox a:hover {
+  text-decoration: underline;
+}
+
+/* Botón de registro */
+.boton-registrarse {
+  width: 100%;
+  padding: 1rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s;
+  margin-top: 1rem;
+}
+
+.boton-registrarse:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+}
+
+/* Enlace a iniciar sesión */
+.registrarse-enlace-login {
+  text-align: center;
+  margin-top: 1.5rem;
+}
+
+.registrarse-enlace-login p {
+  color: #666;
+  font-size: 0.95rem;
+}
+
+.registrarse-enlace-login a {
+  color: #667eea;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.registrarse-enlace-login a:hover {
+  text-decoration: underline;
+}
+
+/* Información (derecha) */
+.registrarse-informacion {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 3rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.registrarse-informacion h1 {
+  font-size: 2.5rem;
+  margin: 0 0 0.5rem 0;
+}
+
+.registrarse-informacion > p {
+  font-size: 1.2rem;
+  opacity: 0.9;
+  margin-bottom: 2rem;
+}
+
+/* Lista de beneficios */
+.lista-beneficios {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 2rem 0;
+}
+
+.lista-beneficios li {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  align-items: flex-start;
+}
+
+.lista-beneficios .icono {
+  font-size: 1.8rem;
+  background: rgba(255,255,255,0.2);
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.lista-beneficios strong {
+  display: block;
+  font-size: 1.1rem;
+  margin-bottom: 0.3rem;
+}
+
+.lista-beneficios p {
+  margin: 0;
+  font-size: 0.95rem;
+  opacity: 0.9;
+}
+
+/* Ilustración */
+.registrarse-ilustracion {
+  margin-top: 2rem;
+  text-align: center;
+}
+
+.registrarse-ilustracion img {
+  width: 100%;
+  max-width: 250px;
+  height: auto;
+  border-radius: 12px;
+}
+
+/* RESPONSIVE */
+@media (max-width: 968px) {
+  .registrarse-contenedor {
+    grid-template-columns: 1fr;
+  }
+
+  .registrarse-informacion {
+    padding: 2rem;
+  }
+
+  .registrarse-informacion h1 {
+    font-size: 2rem;
+  }
+
+  .registrarse-ilustracion {
+    display: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .pagina-registrarse {
+    padding: 1rem;
+  }
+
+  .registrarse-formulario {
+    padding: 2rem 1.5rem;
+  }
+
+  .grupo-formulario input {
+    padding: 0.75rem;
+  }
+}
