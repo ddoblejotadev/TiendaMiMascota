@@ -1,184 +1,155 @@
-import { Link, useNavigate } from 'react-router-dom'
-import { useCart } from '../hooks/useCart'
-import CartSummary from '../components/CartSummary'
-import { confirmDialog } from '../components/ui/ConfirmDialog'
-import { notify } from '../components/ui/Notification'
-import '../styles/global.css'
+/**
+ * PÁGINA DEL CARRITO
+ * Muestra los productos en el carrito y permite modificarlos
+ */
+
+import { useNavigate } from 'react-router-dom';
+import { useCart } from '../hooks/useCart';
+import './Cart.css';
 
 function Cart() {
-  const navigate = useNavigate()
-  const { cart, updateQuantity, removeFromCart, clearCart, getTotal } = useCart()
+  const navigate = useNavigate();
+  const { cart, updateQuantity, removeFromCart, clearCart, getTotal, getTotalItems } = useCart();
 
-  const handleUpdateQuantity = (productId, newQuantity) => {
-    if (newQuantity < 1) {
-      handleRemoveItem(productId)
-      return
+  // Formatear precio en pesos chilenos
+  const formatPrice = (price) => {
+    return new Intl.NumberFormat('es-CL', {
+      style: 'currency',
+      currency: 'CLP'
+    }).format(price);
+  };
+
+  // Manejar cambio de cantidad
+  const handleQuantityChange = (productId, newQuantity) => {
+    if (newQuantity >= 1) {
+      updateQuantity(productId, newQuantity);
     }
-    updateQuantity(productId, newQuantity)
-    notify('Cantidad actualizada', 'info', 2000)
-  }
+  };
 
-  const handleRemoveItem = async (productId) => {
-    const confirmed = await confirmDialog({
-      title: 'Eliminar Producto',
-      message: '¿Estás seguro de que quieres eliminar este producto del carrito?',
-      confirmText: 'Eliminar',
-      cancelText: 'Cancelar'
-    })
-
-    if (confirmed) {
-      removeFromCart(productId)
-      notify('Producto eliminado del carrito', 'success')
+  // Manejar eliminar producto
+  const handleRemove = (productId) => {
+    if (window.confirm('¿Eliminar este producto?')) {
+      removeFromCart(productId);
     }
-  }
+  };
 
-  const handleClearCart = async () => {
-    const confirmed = await confirmDialog({
-      title: 'Vaciar Carrito',
-      message: '¿Estás seguro de que quieres vaciar todo el carrito?',
-      confirmText: 'Vaciar',
-      cancelText: 'Cancelar'
-    })
-
-    if (confirmed) {
-      clearCart()
-      notify('Carrito vaciado', 'success')
+  // Manejar vaciar carrito
+  const handleClearCart = () => {
+    if (window.confirm('¿Vaciar todo el carrito?')) {
+      clearCart();
     }
-  }
+  };
 
+  // Ir a pagar
   const handleCheckout = () => {
-    if (cart.length === 0) {
-      notify('El carrito está vacío', 'warning')
-      return
-    }
-    notify('Procesando compra...', 'info')
-    // Navegar a checkout (a implementar)
-    setTimeout(() => {
-      notify('Funcionalidad de checkout en desarrollo', 'info')
-    }, 1000)
+    alert('Función de pago en desarrollo');
+    // navigate('/checkout');
+  };
+
+  // Si el carrito está vacío
+  if (cart.length === 0) {
+    return (
+      <div className="cart-empty">
+        <h2>Tu carrito está vacío</h2>
+        <p>¡Agrega productos para comenzar tu compra!</p>
+        <button onClick={() => navigate('/productos')}>
+          Ver Productos
+        </button>
+      </div>
+    );
   }
 
   return (
     <div className="cart-page">
-      <header className="header">
-        <div className="container">
-          <Link to="/" className="logo">
-            <img src="/src/assets/logo1.png" alt="Mi Mascota Logo" />
-          </Link>
-          <nav>
-            <Link to="/">Inicio</Link>
-            <Link to="/products">Productos</Link>
-            <Link to="/about">Nosotros</Link>
-            <Link to="/contact">Contacto</Link>
-            <Link to="/cart" className="active">Carrito</Link>
-            <Link to="/login">Iniciar Sesión</Link>
-          </nav>
-        </div>
-      </header>
+      <div className="cart-header">
+        <h1>Mi Carrito</h1>
+        <button onClick={handleClearCart} className="btn-clear">
+          Vaciar Carrito
+        </button>
+      </div>
 
-      <main className="container">
-        <div className="page-header">
-          <h1>Carrito de Compras</h1>
-          {cart.length > 0 && (
-            <button onClick={handleClearCart} className="btn btn-secondary btn-sm">
-              Vaciar Carrito
-            </button>
-          )}
-        </div>
-
-        {cart.length === 0 ? (
-          <div className="empty-cart">
-            <div className="empty-cart-icon">🛒</div>
-            <h2>Tu carrito está vacío</h2>
-            <p>Agrega productos para comenzar tu compra</p>
-            <Link to="/products" className="btn btn-primary">
-              Ver Productos
-            </Link>
-          </div>
-        ) : (
-          <div className="cart-layout">
-            <div className="cart-items">
-              {cart.map((item) => (
-                <div key={item.id} className="cart-item">
-                  <div className="cart-item-image">
-                    <img src={item.image || '/src/assets/prod.png'} alt={item.name} />
-                  </div>
-                  
-                  <div className="cart-item-details">
-                    <h3>{item.name}</h3>
-                    <p className="cart-item-description">{item.description}</p>
-                    <p className="cart-item-price">
-                      ${item.price?.toLocaleString('es-CL')}
-                    </p>
-                  </div>
-
-                  <div className="cart-item-actions">
-                    <div className="quantity-controls">
-                      <button
-                        onClick={() => handleUpdateQuantity(item.id, item.quantity - 1)}
-                        className="quantity-btn"
-                        aria-label="Disminuir cantidad"
-                      >
-                        -
-                      </button>
-                      <span className="quantity-value">{item.quantity}</span>
-                      <button
-                        onClick={() => handleUpdateQuantity(item.id, item.quantity + 1)}
-                        className="quantity-btn"
-                        aria-label="Aumentar cantidad"
-                      >
-                        +
-                      </button>
-                    </div>
-
-                    <p className="cart-item-subtotal">
-                      Subtotal: ${((item.price || 0) * item.quantity).toLocaleString('es-CL')}
-                    </p>
-
-                    <button
-                      onClick={() => handleRemoveItem(item.id)}
-                      className="btn btn-danger btn-sm"
-                    >
-                      Eliminar
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            <div className="cart-sidebar">
-              <CartSummary />
+      <div className="cart-content">
+        {/* Lista de productos */}
+        <div className="cart-items">
+          {cart.map(item => (
+            <div key={item.id} className="cart-item">
+              {/* Imagen */}
+              <img src={item.imagen} alt={item.nombre} />
               
-              <button onClick={handleCheckout} className="btn btn-primary btn-block">
-                Proceder al Pago
-              </button>
+              {/* Info del producto */}
+              <div className="item-info">
+                <h3>{item.nombre}</h3>
+                <p>{item.descripcion}</p>
+                <p className="item-price">{formatPrice(item.precio)}</p>
+              </div>
 
-              <Link to="/products" className="btn btn-secondary btn-block">
-                Seguir Comprando
-              </Link>
+              {/* Controles */}
+              <div className="item-controls">
+                {/* Cantidad */}
+                <div className="quantity-control">
+                  <button 
+                    onClick={() => handleQuantityChange(item.id, item.quantity - 1)}
+                  >
+                    -
+                  </button>
+                  <span>{item.quantity}</span>
+                  <button 
+                    onClick={() => handleQuantityChange(item.id, item.quantity + 1)}
+                  >
+                    +
+                  </button>
+                </div>
 
-              <div className="cart-info">
-                <p>✓ Envío gratis en compras sobre $30.000</p>
-                <p>✓ Garantía de satisfacción</p>
-                <p>✓ Pago seguro</p>
+                {/* Subtotal */}
+                <p className="item-subtotal">
+                  {formatPrice(item.precio * item.quantity)}
+                </p>
+
+                {/* Botón eliminar */}
+                <button 
+                  onClick={() => handleRemove(item.id)}
+                  className="btn-remove"
+                >
+                  🗑️
+                </button>
               </div>
             </div>
-          </div>
-        )}
-      </main>
-
-      <footer className="footer">
-        <div className="container">
-          <p>&copy; 2025 Mi Mascota. Todos los derechos reservados.</p>
-          <div className="footer-links">
-            <Link to="/about">Sobre Nosotros</Link>
-            <Link to="/contact">Contacto</Link>
-            <Link to="/products">Productos</Link>
-          </div>
+          ))}
         </div>
-      </footer>
+
+        {/* Resumen */}
+        <div className="cart-summary">
+          <h2>Resumen del Pedido</h2>
+          
+          <div className="summary-row">
+            <span>Productos ({getTotalItems()})</span>
+            <span>{formatPrice(getTotal())}</span>
+          </div>
+
+          <div className="summary-row">
+            <span>Envío</span>
+            <span>Gratis</span>
+          </div>
+
+          <div className="summary-total">
+            <span>Total</span>
+            <span>{formatPrice(getTotal())}</span>
+          </div>
+
+          <button onClick={handleCheckout} className="btn-checkout">
+            Proceder al Pago
+          </button>
+
+          <button 
+            onClick={() => navigate('/productos')}
+            className="btn-continue"
+          >
+            Seguir Comprando
+          </button>
+        </div>
+      </div>
     </div>
-  )
+  );
 }
 
-export default Cart
+export default Cart;
