@@ -1,41 +1,46 @@
-import { useState } from 'react'
-import { BrowserRouter, Route, Routes } from 'react-router-dom'
-import './App.css'
-import NotificationContainer from './components/ui/Notification'
-import { ConfirmDialogContainer } from './components/ui/ConfirmDialog'
-import Home from './pages/Home'
-import About from './pages/About'
-import Contact from './pages/Contact'
-import Products from './pages/Products'
-import ProductDetail from './pages/ProductDetail'
-import Cart from './pages/Cart'
-import Login from './pages/Login'
-import Register from './pages/Register'
-import NotFound from './pages/NotFound'
+/**
+ * APLICACIÓN PRINCIPAL
+ * Configuración de rutas y layout
+ */
+
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import MainLayout from './layouts/MainLayout';
+
+// Importar páginas
+import Inicio from './pages/Inicio';
+import Productos from './pages/Productos';
+import DetalleProducto from './pages/DetalleProducto';
+import Carrito from './pages/Carrito';
+import IniciarSesion from './pages/IniciarSesion';
+import Registrarse from './pages/Registrarse';
+import Contacto from './pages/Contacto';
+import Acerca from './pages/Acerca';
+import NoEncontrado from './pages/NoEncontrado';
+
+// Importar CSS global
+import './styles/global.css';
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <div className="app">
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/contact" element={<Contact />} />
-          <Route path="/products" element={<Products />} />
-          <Route path="/product/:id" element={<ProductDetail />} />
-          <Route path="/cart" element={<Cart />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
-
-      <NotificationContainer position="top-right" maxNotifications={5} />
-      <ConfirmDialogContainer />
-    </div>
-  )
+    <BrowserRouter>
+      <Routes>
+        {/* Rutas con layout (Header + Footer) */}
+        <Route path="/" element={<MainLayout />}>
+          <Route index element={<Inicio />} />
+          <Route path="productos" element={<Productos />} />
+          <Route path="productos/:id" element={<DetalleProducto />} />
+          <Route path="carrito" element={<Carrito />} />
+          <Route path="iniciar-sesion" element={<IniciarSesion />} />
+          <Route path="registrarse" element={<Registrarse />} />
+          <Route path="contacto" element={<Contacto />} />
+          <Route path="acerca" element={<Acerca />} />
+          
+          {/* Página 404 */}
+          <Route path="*" element={<NoEncontrado />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
+  );
 }
 
-export default App
+export default App;
