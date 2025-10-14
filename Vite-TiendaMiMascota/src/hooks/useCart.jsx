@@ -1,93 +1,87 @@
 /**
- * CUSTOM HOOK: useCart
- * Maneja toda la lógica del carrito de compras
+ * HOOK SIMPLE DEL CARRITO
+ * Maneja el carrito de compras usando localStorage
  */
 
 import { useState, useEffect } from 'react';
-import * as cartService from '../services/cartService';
 
 export function useCart() {
-  const [carrito, setCarrito] = useState([]);
-  const [cantidadTotal, setCantidadTotal] = useState(0);
-  const [total, setTotal] = useState(0);
+  // Estado del carrito
+  const [cart, setCart] = useState([]);
 
+  // CARGAR carrito cuando inicia la app
   useEffect(() => {
-    const carritoGuardado = cartService.obtenerCarrito();
-    setCarrito(carritoGuardado);
-    actualizarTotales(carritoGuardado);
+    const savedCart = localStorage.getItem('cart');
+    if (savedCart) {
+      setCart(JSON.parse(savedCart));
+    }
   }, []);
 
-  const actualizarTotales = (items) => {
-    const cantidad = items.reduce((sum, item) => sum + item.cantidad, 0);
-    const precio = cartService.calcularTotal(items);
+  // GUARDAR carrito cada vez que cambia
+  useEffect(() => {
+    localStorage.setItem('cart', JSON.stringify(cart));
+  }, [cart]);
+
+  // AGREGAR producto al carrito
+  const addToCart = (product) => {
+    // Buscar si el producto ya existe
+    const existingItem = cart.find(item => item.id === product.id);
     
-    setCantidadTotal(cantidad);
-    setTotal(precio);
+    if (existingItem) {
+      // Si existe, aumentar cantidad
+      setCart(cart.map(item =>
+        item.id === product.id
+          ? { ...item, quantity: item.quantity + 1 }
+          : item
+      ));
+    } else {
+      // Si no existe, agregarlo
+      setCart([...cart, { ...product, quantity: 1 }]);
+    }
   };
 
-  const agregarProducto = (producto, cantidad = 1) => {
-    const carritoActualizado = cartService.agregarAlCarrito(producto, cantidad);
-    setCarrito(carritoActualizado);
-    actualizarTotales(carritoActualizado);
+  // ELIMINAR producto del carrito
+  const removeFromCart = (productId) => {
+    setCart(cart.filter(item => item.id !== productId));
   };
 
-  const eliminarProducto = (productoId) => {
-    const carritoActualizado = cartService.eliminarDelCarrito(productoId);
-    setCarrito(carritoActualizado);
-    actualizarTotales(carritoActualizado);
+  // ACTUALIZAR cantidad
+  const updateQuantity = (productId, newQuantity) => {
+    if (newQuantity <= 0) {
+      removeFromCart(productId);
+      return;
+    }
+    
+    setCart(cart.map(item =>
+      item.id === productId
+        ? { ...item, quantity: newQuantity }
+        : item
+    ));
   };
 
-  const actualizarCantidad = (productoId, nuevaCantidad) => {
-    const carritoActualizado = cartService.actualizarCantidad(productoId, nuevaCantidad);
-    setCarrito(carritoActualizado);
-    actualizarTotales(carritoActualizado);
+  // VACIAR carrito
+  const clearCart = () => {
+    setCart([]);
   };
 
-  const vaciarCarrito = () => {
-    cartService.vaciarCarrito();
-    setCarrito([]);
-    setCantidadTotal(0);
-    setTotal(0);
+  // CALCULAR total
+  const getTotal = () => {
+    return cart.reduce((total, item) => {
+      return total + (item.precio * item.quantity);
+    }, 0);
   };
 
-  const estaEnCarrito = (productoId) => {
-    return carrito.some(item => item.id === productoId);
+  // OBTENER cantidad total de items
+  const getTotalItems = () => {
+    return cart.reduce((total, item) => total + item.quantity, 0);
   };
-
-  const obtenerCantidadProducto = (productoId) => {
-    const item = carrito.find(item => item.id === productoId);
-    return item ? item.cantidad : 0;
-  };
-
-  const carritoVacio = () => {
-    return carrito.length === 0;
-  };
-
-  const getTotal = () => total;
-  const getTotalItems = () => cantidadTotal;
 
   return {
-    // Español
-    carrito,
-    cantidadTotal,
-    total,
-    agregarProducto,
-    eliminarProducto,
-    actualizarCantidad,
-    vaciarCarrito,
-    estaEnCarrito,
-    obtenerCantidadProducto,
-    carritoVacio,
-    // Inglés (aliases)
-    cart: carrito,
-    totalItems: cantidadTotal,
-    addToCart: agregarProducto,
-    removeFromCart: eliminarProducto,
-    updateQuantity: actualizarCantidad,
-    clearCart: vaciarCarrito,
-    isInCart: estaEnCarrito,
-    getProductQuantity: obtenerCantidadProducto,
-    isEmpty: carritoVacio,
+    cart,
+    addToCart,
+    removeFromCart,
+    updateQuantity,
+    clearCart,
     getTotal,
     getTotalItems
   };
