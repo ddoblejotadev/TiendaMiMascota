@@ -3,6 +3,13 @@
  * Maneja todas las operaciones relacionadas con productos
  */
 
+// Importar imágenes desde assets
+import imagenComida from '../assets/Comida.jpg';
+import imagenJuguetes from '../assets/jugetes.png';
+import imagenAccesorios from '../assets/accesorios.png';
+import imagenHigiene from '../assets/higiene.png';
+import imagenCama from '../assets/cama2.png';
+
 // Base de datos simulada de productos
 let productosDB = [
   {
@@ -11,7 +18,7 @@ let productosDB = [
     descripcion: "Alimento balanceado de alta calidad para perros adultos de todas las razas. Rico en proteínas y nutrientes esenciales.",
     precio: 25990,
     precioAnterior: 29990,
-    imagen: "/images/productos/alimento-perro.jpg",
+    imagen: imagenComida,
     categoria: "Alimento",
     stock: 50,
     destacado: true,
@@ -22,7 +29,7 @@ let productosDB = [
     nombre: "Juguete Mordedor Resistente",
     descripcion: "Juguete de goma resistente ideal para perros de todas las edades. Ayuda a mantener dientes limpios.",
     precio: 8990,
-    imagen: "/images/productos/juguete-mordedor.jpg",
+    imagen: imagenJuguetes,
     categoria: "Juguetes",
     stock: 30,
     destacado: false,
@@ -33,7 +40,7 @@ let productosDB = [
     nombre: "Collar Ajustable Premium",
     descripcion: "Collar cómodo y ajustable para perros medianos y grandes. Material resistente y duradero.",
     precio: 12990,
-    imagen: "/images/productos/collar.jpg",
+    imagen: imagenAccesorios,
     categoria: "Accesorios",
     stock: 20,
     destacado: true,
@@ -44,7 +51,7 @@ let productosDB = [
     nombre: "Shampoo Hipoalergénico para Gatos",
     descripcion: "Shampoo especial para el cuidado del pelaje de gatos. Fórmula suave e hipoalergénica.",
     precio: 7990,
-    imagen: "/images/productos/shampoo-gato.jpg",
+    imagen: imagenHigiene,
     categoria: "Higiene",
     stock: 40,
     destacado: false,
@@ -56,7 +63,7 @@ let productosDB = [
     descripcion: "Cama suave y cómoda para perros y gatos. Relleno de espuma de alta densidad.",
     precio: 35990,
     precioAnterior: 42990,
-    imagen: "/images/productos/cama.jpg",
+    imagen: imagenCama,
     categoria: "Accesorios",
     stock: 15,
     destacado: true,
@@ -67,7 +74,7 @@ let productosDB = [
     nombre: "Alimento para Gatos Adultos",
     descripcion: "Alimento completo y balanceado para gatos adultos. Con taurina y omega 3.",
     precio: 22990,
-    imagen: "/images/productos/alimento-gato.jpg",
+    imagen: imagenComida,
     categoria: "Alimento",
     stock: 45,
     destacado: false,
@@ -78,7 +85,7 @@ let productosDB = [
     nombre: "Rascador para Gatos",
     descripcion: "Torre rascadora multi-nivel para gatos. Incluye plataformas y juguetes colgantes.",
     precio: 45990,
-    imagen: "/images/productos/rascador.jpg",
+    imagen: imagenJuguetes,
     categoria: "Juguetes",
     stock: 8,
     destacado: true,
@@ -89,7 +96,7 @@ let productosDB = [
     nombre: "Correa Retráctil 5 metros",
     descripcion: "Correa retráctil automática de 5 metros. Sistema de freno seguro y cómodo.",
     precio: 15990,
-    imagen: "/images/productos/correa.jpg",
+    imagen: imagenAccesorios,
     categoria: "Accesorios",
     stock: 25,
     destacado: false,

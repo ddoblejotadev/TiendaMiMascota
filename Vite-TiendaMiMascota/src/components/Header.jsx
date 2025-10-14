@@ -6,6 +6,7 @@
 import { Link, useNavigate } from 'react-router-dom';
 import useCarrito from '../hooks/useCarrito';
 import useAutenticacion from '../hooks/useAutenticacion';
+import logo from '../assets/logo1.png';
 import '../styles/components/Header.css';
 
 function Header() {
@@ -28,7 +29,7 @@ function Header() {
       <div className="header-contenido">
         {/* Logo */}
         <Link to="/" className="header-logo">
-          <span className="logo-icono">🐾</span>
+          <img src={logo} alt="Mi Mascota Logo" className="logo-imagen" />
           <span className="logo-texto">Mi Mascota</span>
         </Link>
 

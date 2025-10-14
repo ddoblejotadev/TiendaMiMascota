@@ -5,6 +5,10 @@
 
 import { Link, useNavigate } from 'react-router-dom';
 import useProductos from '../hooks/useProductos';
+import imagenComida from '../assets/Comida.jpg';
+import imagenJuguetes from '../assets/jugetes.png';
+import imagenAccesorios from '../assets/accesorios.png';
+import imagenHigiene from '../assets/higiene.png';
 import '../styles/pages/Inicio.css';
 
 function Inicio() {
@@ -41,9 +45,6 @@ function Inicio() {
           <Link to="/productos" className="boton-hero">
             Ver Todos los Productos
           </Link>
-        </div>
-        <div className="hero-imagen">
-          <img src="/images/hero-mascota.jpg" alt="Mascota feliz" />
         </div>
       </section>
 
@@ -106,7 +107,9 @@ function Inicio() {
             className="tarjeta-categoria"
             onClick={() => irACategoria('Alimento')}
           >
-            <div className="categoria-icono">🍖</div>
+            <div className="categoria-imagen">
+              <img src={imagenComida} alt="Alimento" />
+            </div>
             <h3>Alimento</h3>
             <p>Nutrición balanceada para tu mascota</p>
           </div>
@@ -115,7 +118,9 @@ function Inicio() {
             className="tarjeta-categoria"
             onClick={() => irACategoria('Juguetes')}
           >
-            <div className="categoria-icono">🎾</div>
+            <div className="categoria-imagen">
+              <img src={imagenJuguetes} alt="Juguetes" />
+            </div>
             <h3>Juguetes</h3>
             <p>Diversión y entretenimiento garantizado</p>
           </div>
@@ -124,7 +129,9 @@ function Inicio() {
             className="tarjeta-categoria"
             onClick={() => irACategoria('Accesorios')}
           >
-            <div className="categoria-icono">🦴</div>
+            <div className="categoria-imagen">
+              <img src={imagenAccesorios} alt="Accesorios" />
+            </div>
             <h3>Accesorios</h3>
             <p>Todo lo que necesita tu mascota</p>
           </div>
@@ -133,7 +140,9 @@ function Inicio() {
             className="tarjeta-categoria"
             onClick={() => irACategoria('Higiene')}
           >
-            <div className="categoria-icono">🛁</div>
+            <div className="categoria-imagen">
+              <img src={imagenHigiene} alt="Higiene" />
+            </div>
             <h3>Higiene</h3>
             <p>Productos para su cuidado e higiene</p>
           </div>

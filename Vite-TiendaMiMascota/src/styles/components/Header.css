@@ -34,6 +34,12 @@
   transform: scale(1.05);
 }
 
+.logo-imagen {
+  height: 40px;
+  width: auto;
+  object-fit: contain;
+}
+
 .logo-icono {
   font-size: 2rem;
 }
