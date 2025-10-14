@@ -17,6 +17,13 @@ import Contacto from './pages/Contacto';
 import Acerca from './pages/Acerca';
 import NoEncontrado from './pages/NoEncontrado';
 
+// Nuevas páginas según requisitos del PDF
+import Categorias from './pages/Categorias';
+import Checkout from './pages/Checkout';
+import CompraExitosa from './pages/CompraExitosa';
+import ErrorPago from './pages/ErrorPago';
+import Ofertas from './pages/Ofertas';
+
 // Importar CSS global
 import './styles/global.css';
 
@@ -34,6 +41,13 @@ function App() {
           <Route path="registrarse" element={<Registrarse />} />
           <Route path="contacto" element={<Contacto />} />
           <Route path="acerca" element={<Acerca />} />
+          
+          {/* Nuevas rutas según requisitos del PDF */}
+          <Route path="categorias" element={<Categorias />} />
+          <Route path="ofertas" element={<Ofertas />} />
+          <Route path="checkout" element={<Checkout />} />
+          <Route path="compra-exitosa" element={<CompraExitosa />} />
+          <Route path="error-pago" element={<ErrorPago />} />
           
           {/* Página 404 */}
           <Route path="*" element={<NoEncontrado />} />

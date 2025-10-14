@@ -18,10 +18,6 @@ function Carrito() {
     contarProductos
   } = useCarrito();
 
-  // Debug: Ver qué hay en el carrito
-  console.log('🛒 Carrito en página:', carrito);
-  console.log('📊 Total productos:', contarProductos());
-
   /**
    * Formatear número como precio chileno
    */
@@ -59,11 +55,10 @@ function Carrito() {
   };
 
   /**
-   * Ir a finalizar compra
+   * Ir a finalizar compra - redirige al checkout
    */
   const irAPagar = () => {
-    alert('Función de pago en desarrollo');
-    // navigate('/pagar');
+    navigate('/checkout');
   };
 
   // CASO 1: Si el carrito está vacío

@@ -15,10 +15,8 @@ function useCarrito() {
   // EFECTO 1: Cargar carrito guardado cuando inicia la app
   useEffect(() => {
     const carritoGuardado = localStorage.getItem('carrito');
-    console.log('📦 Carrito guardado en localStorage:', carritoGuardado);
     if (carritoGuardado) {
       const carritoParseado = JSON.parse(carritoGuardado);
-      console.log('📦 Carrito parseado:', carritoParseado);
       setCarrito(carritoParseado);
     }
     // Marcar que ya no es el primer render
@@ -32,7 +30,6 @@ function useCarrito() {
       return;
     }
     
-    console.log('💾 Guardando carrito en localStorage:', carrito);
     localStorage.setItem('carrito', JSON.stringify(carrito));
   }, [carrito]); // Se ejecuta cuando "carrito" cambia
 
@@ -40,8 +37,6 @@ function useCarrito() {
    * FUNCIÓN: Agregar producto al carrito
    */
   const agregarAlCarrito = (producto) => {
-    console.log('🛒 Agregando producto:', producto);
-    
     // Buscar si el producto ya está en el carrito
     const productoExiste = carrito.find(item => item.id === producto.id);
     
@@ -52,12 +47,10 @@ function useCarrito() {
           ? { ...item, cantidad: item.cantidad + 1 }
           : item
       );
-      console.log('✏️ Actualizando cantidad. Nuevo carrito:', nuevoCarrito);
       setCarrito(nuevoCarrito);
     } else {
       // Si no existe, agregarlo con cantidad 1
       const nuevoCarrito = [...carrito, { ...producto, cantidad: 1 }];
-      console.log('➕ Producto nuevo. Nuevo carrito:', nuevoCarrito);
       setCarrito(nuevoCarrito);
     }
   };

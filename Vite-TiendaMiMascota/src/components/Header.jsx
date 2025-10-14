@@ -41,6 +41,12 @@ function Header() {
           <Link to="/productos" className="nav-enlace">
             Productos
           </Link>
+          <Link to="/categorias" className="nav-enlace">
+            Categorías
+          </Link>
+          <Link to="/ofertas" className="nav-enlace">
+            🔥 Ofertas
+          </Link>
           <Link to="/acerca" className="nav-enlace">
             Acerca
           </Link>

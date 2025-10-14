@@ -1,0 +1,58 @@
+/* ESTILOS PARA COMPRA EXITOSA */
+
+.pagina-compra-exitosa {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+}
+
+/* Animación del checkmark */
+.icono-exito {
+  display: inline-block;
+}
+
+.checkmark-circle {
+  width: 150px;
+  height: 150px;
+  position: relative;
+  display: inline-block;
+  vertical-align: top;
+  margin: 0 auto;
+  background: #28a745;
+  border-radius: 50%;
+  animation: scale-up 0.5s ease;
+}
+
+.checkmark {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(45deg);
+  width: 35px;
+  height: 70px;
+  border: solid white;
+  border-width: 0 8px 8px 0;
+  animation: draw-checkmark 0.3s 0.5s ease forwards;
+  opacity: 0;
+}
+
+@keyframes scale-up {
+  0% {
+    transform: scale(0);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes draw-checkmark {
+  0% {
+    opacity: 0;
+    height: 0;
+    width: 0;
+  }
+  100% {
+    opacity: 1;
+    height: 70px;
+    width: 35px;
+  }
+}

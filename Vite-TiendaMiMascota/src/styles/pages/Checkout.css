@@ -1,0 +1,11 @@
+/* ESTILOS PARA CHECKOUT */
+
+.pagina-checkout {
+  min-height: 100vh;
+  background-color: #f8f9fa;
+}
+
+.lista-productos {
+  max-height: 300px;
+  overflow-y: auto;
+}
