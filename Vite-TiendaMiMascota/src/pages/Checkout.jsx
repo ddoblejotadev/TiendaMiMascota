@@ -11,7 +11,7 @@ import { formatearPrecio } from '../util/formatters';
 
 function Checkout() {
   const navigate = useNavigate();
-  const { carrito, vaciarCarrito, subtotal, calcularTotal } = useCarrito();
+  const { carrito, vaciarCarrito, calcularTotal } = useCarrito();
   
   // Estado del formulario de envío
   const [datosEnvio, setDatosEnvio] = useState({
@@ -54,6 +54,11 @@ function Checkout() {
     }
   }, [carrito, navigate]);
 
+  // No renderizar nada si el carrito está vacío
+  if (carrito.length === 0) {
+    return null;
+  }
+
   // Manejar cambios en el formulario
   const manejarCambio = (e) => {
     const { name, value } = e.target;
@@ -81,8 +86,8 @@ function Checkout() {
         fecha: new Date().toISOString(),
         productos: carrito,
         datosEnvio,
-        subtotal: subtotal(),
-        total: calcularTotal(),
+        subtotal: calcularTotal(),
+        total: calcularTotal() + (calcularTotal() >= 50000 ? 0 : 5000),
         estado: 'completada'
       };
       
@@ -103,8 +108,9 @@ function Checkout() {
     setProcesando(false);
   };
 
-  const costoEnvio = subtotal() >= 50000 ? 0 : 5000;
-  const total = subtotal() + costoEnvio;
+  const subtotal = calcularTotal();
+  const costoEnvio = subtotal >= 50000 ? 0 : 5000;
+  const total = subtotal + costoEnvio;
 
   return (
     <div className="container py-5">
@@ -288,7 +294,7 @@ function Checkout() {
                 <div>
                   <div className="d-flex justify-content-between mb-2">
                     <span>Subtotal:</span>
-                    <span>{formatearPrecio(subtotal())}</span>
+                    <span>{formatearPrecio(subtotal)}</span>
                   </div>
                   <div className="d-flex justify-content-between mb-2">
                     <span>Envío:</span>
