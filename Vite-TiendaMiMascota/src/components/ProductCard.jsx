@@ -1,102 +1,115 @@
-import { Link } from 'react-router-dom'
-import { useCart } from '../hooks/useCarrito'
-import { notify } from './ui/Notification'
-import '../styles/global.css'
+/**
+ * COMPONENTE: TARJETA DE PRODUCTO
+ * Muestra un producto individual con su información básica
+ */
 
-function ProductCard({ product }) {
-  const { addToCart } = useCart()
+import { Link } from 'react-router-dom';
+import useCarrito from '../hooks/useCarrito';
+import '../styles/components/ProductCard.css';
 
-  const handleAddToCart = (e) => {
-    e.preventDefault()
-    e.stopPropagation()
+function ProductCard({ producto }) {
+  const { agregarAlCarrito, estaEnCarrito } = useCarrito();
+
+  /**
+   * Formatear precio en pesos chilenos
+   */
+  const formatearPrecio = (precio) => {
+    return '$' + precio.toLocaleString('es-CL');
+  };
+
+  /**
+   * Manejar click en agregar al carrito
+   */
+  const manejarAgregarCarrito = (evento) => {
+    evento.preventDefault(); // Evitar navegación
+    evento.stopPropagation();
     
-    addToCart(product, 1)
-    notify(`${product.name} agregado al carrito`, 'success', 2000)
-  }
-
-  const formatPrice = (price) => {
-    return new Intl.NumberFormat('es-CL', {
-      style: 'currency',
-      currency: 'CLP',
-      minimumFractionDigits: 0
-    }).format(price)
-  }
+    agregarAlCarrito(producto);
+    
+    // Feedback visual
+    const boton = evento.currentTarget;
+    boton.textContent = '✓ Agregado';
+    boton.classList.add('agregado');
+    
+    setTimeout(() => {
+      boton.textContent = '🛒 Agregar';
+      boton.classList.remove('agregado');
+    }, 1500);
+  };
 
   return (
-    <div className="product-card">
-      <Link to={`/product/${product.id}`} className="product-card-link">
-        <div className="product-card-image">
-          <img 
-            src={product.image || '/src/assets/prod.png'} 
-            alt={product.name}
-            onError={(e) => {
-              e.target.src = '/src/assets/prod.png'
-            }}
-          />
-          {product.discount && (
-            <span className="product-badge discount">
-              -{product.discount}%
-            </span>
-          )}
-          {product.isNew && (
-            <span className="product-badge new">
-              Nuevo
-            </span>
-          )}
-          {product.stock === 0 && (
-            <span className="product-badge out-of-stock">
-              Agotado
-            </span>
-          )}
-        </div>
+    <Link to={`/productos/${producto.id}`} className="tarjeta-producto">
+      {/* Imagen del producto */}
+      <div className="producto-imagen-contenedor">
+        <img 
+          src={producto.imagen} 
+          alt={producto.nombre}
+          className="producto-imagen"
+          onError={(e) => {
+            e.target.src = '/images/placeholder.jpg';
+          }}
+        />
+        
+        {/* Badge de stock bajo */}
+        {producto.stock < 10 && producto.stock > 0 && (
+          <div className="badge badge-stock-bajo">
+            ⚠️ Últimas {producto.stock} unidades
+          </div>
+        )}
+        
+        {/* Badge de agotado */}
+        {producto.stock === 0 && (
+          <div className="badge badge-agotado">
+            ❌ Agotado
+          </div>
+        )}
 
-        <div className="product-card-content">
-          {product.category && (
-            <span className="product-category">{product.category}</span>
-          )}
-          
-          <h3 className="product-name">{product.name}</h3>
-          
-          {product.description && (
-            <p className="product-description">
-              {product.description.length > 80 
-                ? `${product.description.substring(0, 80)}...` 
-                : product.description
-              }
-            </p>
-          )}
+        {/* Badge de en carrito */}
+        {estaEnCarrito(producto.id) && (
+          <div className="badge badge-en-carrito">
+            ✓ En carrito
+          </div>
+        )}
+      </div>
 
-          <div className="product-rating">
-            <span className="stars">⭐⭐⭐⭐⭐</span>
-            <span className="rating-text">{product.rating || 5.0}</span>
+      {/* Información del producto */}
+      <div className="producto-informacion">
+        {/* Categoría */}
+        <span className="producto-categoria">{producto.categoria}</span>
+        
+        {/* Nombre */}
+        <h3 className="producto-nombre">{producto.nombre}</h3>
+        
+        {/* Descripción corta */}
+        <p className="producto-descripcion">
+          {producto.descripcion.substring(0, 80)}...
+        </p>
+
+        {/* Precio y acciones */}
+        <div className="producto-footer">
+          <div className="producto-precio">
+            <span className="precio-actual">
+              {formatearPrecio(producto.precio)}
+            </span>
           </div>
 
-          <div className="product-card-footer">
-            <div className="product-price">
-              {product.originalPrice && (
-                <span className="original-price">
-                  {formatPrice(product.originalPrice)}
-                </span>
-              )}
-              <span className="current-price">
-                {formatPrice(product.price)}
-              </span>
-            </div>
-
+          {/* Botón agregar al carrito */}
+          {producto.stock > 0 ? (
             <button 
-              onClick={handleAddToCart}
-              className="btn btn-add-to-cart"
-              disabled={product.stock === 0}
-              aria-label={`Agregar ${product.name} al carrito`}
+              className="boton-agregar"
+              onClick={manejarAgregarCarrito}
             >
-              <span className="cart-icon">🛒</span>
-              Agregar
+              🛒 Agregar
             </button>
-          </div>
+          ) : (
+            <button className="boton-agotado" disabled>
+              Agotado
+            </button>
+          )}
         </div>
-      </Link>
-    </div>
-  )
+      </div>
+    </Link>
+  );
 }
 
-export default ProductCard
+export default ProductCard;
