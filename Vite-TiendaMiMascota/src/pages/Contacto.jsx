@@ -1,230 +1,251 @@
-import { useState } from 'react'
-import { Link } from 'react-router-dom'
-import { useForm } from '../hooks/useForm'
-import { notify } from '../components/ui/Notification'
-import '../styles/global.css'
+/**
+ * PÁGINA: CONTACTO
+ * Formulario de contacto y información de la tienda
+ */
 
-function Contact() {
-  const [loading, setLoading] = useState(false)
-  
-  const { values, errors, handleChange, handleSubmit, resetForm } = useForm({
-    initialValues: {
-      name: '',
-      email: '',
-      phone: '',
-      subject: '',
-      message: ''
-    },
-    validate: (values) => {
-      const errors = {}
-      
-      if (!values.name) {
-        errors.name = 'El nombre es requerido'
-      }
-      
-      if (!values.email) {
-        errors.email = 'El correo es requerido'
-      } else if (!/\S+@\S+\.\S+/.test(values.email)) {
-        errors.email = 'El correo no es válido'
-      }
-      
-      if (!values.subject) {
-        errors.subject = 'El asunto es requerido'
-      }
-      
-      if (!values.message) {
-        errors.message = 'El mensaje es requerido'
-      } else if (values.message.length < 10) {
-        errors.message = 'El mensaje debe tener al menos 10 caracteres'
-      }
-      
-      return errors
-    },
-    onSubmit: async (values) => {
-      setLoading(true)
-      try {
-        // Simular envío de formulario
-        await new Promise(resolve => setTimeout(resolve, 1500))
-        
-        console.log('Formulario enviado:', values)
-        notify('Mensaje enviado exitosamente. Te contactaremos pronto!', 'success')
-        resetForm()
-      } catch (error) {
-        notify('Error al enviar el mensaje', 'error')
-      } finally {
-        setLoading(false)
-      }
+import { useState } from 'react';
+import '../styles/pages/Contacto.css';
+
+function Contacto() {
+  // Estados del formulario
+  const [nombre, setNombre] = useState('');
+  const [correo, setCorreo] = useState('');
+  const [asunto, setAsunto] = useState('');
+  const [mensaje, setMensaje] = useState('');
+  const [enviando, setEnviando] = useState(false);
+
+  /**
+   * Manejar envío del formulario
+   */
+  const manejarEnvio = (evento) => {
+    evento.preventDefault();
+    
+    // Validaciones básicas
+    if (!nombre || !correo || !asunto || !mensaje) {
+      alert('❌ Por favor completa todos los campos');
+      return;
     }
-  })
+
+    if (!correo.includes('@')) {
+      alert('❌ Correo electrónico inválido');
+      return;
+    }
+
+    // Simular envío
+    setEnviando(true);
+    
+    setTimeout(() => {
+      alert('✅ Mensaje enviado con éxito. Te responderemos pronto.');
+      
+      // Limpiar formulario
+      setNombre('');
+      setCorreo('');
+      setAsunto('');
+      setMensaje('');
+      setEnviando(false);
+    }, 1500);
+  };
 
   return (
-    <div className="contact-page">
-      <header className="header">
-        <div className="container">
-          <Link to="/" className="logo">
-            <img src="/src/assets/logo1.png" alt="Mi Mascota Logo" />
-          </Link>
-          <nav>
-            <Link to="/">Inicio</Link>
-            <Link to="/products">Productos</Link>
-            <Link to="/about">Nosotros</Link>
-            <Link to="/contact" className="active">Contacto</Link>
-            <Link to="/cart">Carrito</Link>
-            <Link to="/login">Iniciar Sesión</Link>
-          </nav>
-        </div>
-      </header>
+    <div className="pagina-contacto">
+      {/* Encabezado */}
+      <div className="contacto-encabezado">
+        <h1>📞 Contáctanos</h1>
+        <p>Estamos aquí para ayudarte con cualquier consulta</p>
+      </div>
 
-      <main className="container">
-        <div className="page-header">
-          <h1>Contáctanos</h1>
-          <p>Estamos aquí para ayudarte. Envíanos tu consulta o comentario</p>
-        </div>
+      <div className="contacto-contenido">
+        {/* IZQUIERDA: Formulario de contacto */}
+        <div className="contacto-formulario">
+          <h2>Envíanos un Mensaje</h2>
+          <p className="formulario-descripcion">
+            Completa el formulario y nos pondremos en contacto contigo lo antes posible
+          </p>
 
-        <div className="contact-layout">
-          <div className="contact-info">
-            <h2>Información de Contacto</h2>
-            
-            <div className="contact-item">
-              <div className="contact-icon">📍</div>
-              <div>
-                <h3>Dirección</h3>
-                <p>Av. Principal 123, Santiago, Chile</p>
-              </div>
+          <form onSubmit={manejarEnvio}>
+            {/* Nombre */}
+            <div className="grupo-formulario">
+              <label htmlFor="nombre">Nombre Completo *</label>
+              <input
+                type="text"
+                id="nombre"
+                placeholder="Tu nombre"
+                value={nombre}
+                onChange={(e) => setNombre(e.target.value)}
+                required
+              />
             </div>
 
-            <div className="contact-item">
-              <div className="contact-icon">📞</div>
-              <div>
-                <h3>Teléfono</h3>
-                <p>+56 9 1234 5678</p>
-              </div>
+            {/* Correo electrónico */}
+            <div className="grupo-formulario">
+              <label htmlFor="correo">Correo Electrónico *</label>
+              <input
+                type="email"
+                id="correo"
+                placeholder="tu@correo.com"
+                value={correo}
+                onChange={(e) => setCorreo(e.target.value)}
+                required
+              />
             </div>
 
-            <div className="contact-item">
-              <div className="contact-icon">✉️</div>
-              <div>
-                <h3>Email</h3>
-                <p>contacto@mimascota.cl</p>
-              </div>
-            </div>
-
-            <div className="contact-item">
-              <div className="contact-icon">🕐</div>
-              <div>
-                <h3>Horario de Atención</h3>
-                <p>Lunes a Viernes: 9:00 - 18:00</p>
-                <p>Sábados: 10:00 - 14:00</p>
-              </div>
-            </div>
-
-            <div className="social-links">
-              <h3>Síguenos</h3>
-              <div className="social-icons">
-                <a href="#" aria-label="Facebook">📘</a>
-                <a href="#" aria-label="Instagram">📷</a>
-                <a href="#" aria-label="Twitter">🐦</a>
-                <a href="#" aria-label="WhatsApp">💬</a>
-              </div>
-            </div>
-          </div>
-
-          <div className="contact-form-container">
-            <h2>Envíanos un Mensaje</h2>
-            
-            <form onSubmit={handleSubmit} className="contact-form">
-              <div className="form-group">
-                <label htmlFor="name">Nombre Completo *</label>
-                <input
-                  type="text"
-                  id="name"
-                  name="name"
-                  value={values.name}
-                  onChange={handleChange}
-                  className={errors.name ? 'error' : ''}
-                  placeholder="Tu nombre"
-                />
-                {errors.name && <span className="error-message">{errors.name}</span>}
-              </div>
-
-              <div className="form-group">
-                <label htmlFor="email">Correo Electrónico *</label>
-                <input
-                  type="email"
-                  id="email"
-                  name="email"
-                  value={values.email}
-                  onChange={handleChange}
-                  className={errors.email ? 'error' : ''}
-                  placeholder="tu@email.com"
-                />
-                {errors.email && <span className="error-message">{errors.email}</span>}
-              </div>
-
-              <div className="form-group">
-                <label htmlFor="phone">Teléfono</label>
-                <input
-                  type="tel"
-                  id="phone"
-                  name="phone"
-                  value={values.phone}
-                  onChange={handleChange}
-                  placeholder="+56 9 1234 5678"
-                />
-              </div>
-
-              <div className="form-group">
-                <label htmlFor="subject">Asunto *</label>
-                <input
-                  type="text"
-                  id="subject"
-                  name="subject"
-                  value={values.subject}
-                  onChange={handleChange}
-                  className={errors.subject ? 'error' : ''}
-                  placeholder="Motivo de tu consulta"
-                />
-                {errors.subject && <span className="error-message">{errors.subject}</span>}
-              </div>
-
-              <div className="form-group">
-                <label htmlFor="message">Mensaje *</label>
-                <textarea
-                  id="message"
-                  name="message"
-                  value={values.message}
-                  onChange={handleChange}
-                  className={errors.message ? 'error' : ''}
-                  placeholder="Escribe tu mensaje aquí..."
-                  rows="5"
-                />
-                {errors.message && <span className="error-message">{errors.message}</span>}
-              </div>
-
-              <button 
-                type="submit" 
-                className="btn btn-primary btn-block"
-                disabled={loading}
+            {/* Asunto */}
+            <div className="grupo-formulario">
+              <label htmlFor="asunto">Asunto *</label>
+              <select
+                id="asunto"
+                value={asunto}
+                onChange={(e) => setAsunto(e.target.value)}
+                required
               >
-                {loading ? 'Enviando...' : 'Enviar Mensaje'}
-              </button>
-            </form>
-          </div>
-        </div>
-      </main>
+                <option value="">Selecciona un asunto</option>
+                <option value="consulta-producto">Consulta sobre producto</option>
+                <option value="pedido">Estado de pedido</option>
+                <option value="devolucion">Devolución o cambio</option>
+                <option value="sugerencia">Sugerencia</option>
+                <option value="reclamo">Reclamo</option>
+                <option value="otro">Otro</option>
+              </select>
+            </div>
 
-      <footer className="footer">
-        <div className="container">
-          <p>&copy; 2025 Mi Mascota. Todos los derechos reservados.</p>
-          <div className="footer-links">
-            <Link to="/about">Sobre Nosotros</Link>
-            <Link to="/contact">Contacto</Link>
-            <Link to="/products">Productos</Link>
+            {/* Mensaje */}
+            <div className="grupo-formulario">
+              <label htmlFor="mensaje">Mensaje *</label>
+              <textarea
+                id="mensaje"
+                placeholder="Escribe tu mensaje aquí..."
+                rows="6"
+                value={mensaje}
+                onChange={(e) => setMensaje(e.target.value)}
+                required
+              ></textarea>
+              <span className="contador-caracteres">
+                {mensaje.length} / 500 caracteres
+              </span>
+            </div>
+
+            {/* Botón enviar */}
+            <button 
+              type="submit" 
+              className="boton-enviar"
+              disabled={enviando}
+            >
+              {enviando ? '📤 Enviando...' : '📨 Enviar Mensaje'}
+            </button>
+          </form>
+        </div>
+
+        {/* DERECHA: Información de contacto */}
+        <div className="contacto-informacion">
+          <h2>Información de Contacto</h2>
+
+          {/* Dirección */}
+          <div className="info-item">
+            <div className="info-icono">📍</div>
+            <div className="info-texto">
+              <h3>Dirección</h3>
+              <p>Av. Principal 123, Local 45</p>
+              <p>Santiago, Chile</p>
+            </div>
+          </div>
+
+          {/* Teléfono */}
+          <div className="info-item">
+            <div className="info-icono">📱</div>
+            <div className="info-texto">
+              <h3>Teléfono</h3>
+              <p>+56 9 1234 5678</p>
+              <p className="horario">Lun - Vie: 9:00 - 18:00</p>
+            </div>
+          </div>
+
+          {/* Email */}
+          <div className="info-item">
+            <div className="info-icono">✉️</div>
+            <div className="info-texto">
+              <h3>Email</h3>
+              <p>contacto@mimascota.cl</p>
+              <p>ventas@mimascota.cl</p>
+            </div>
+          </div>
+
+          {/* Horario */}
+          <div className="info-item">
+            <div className="info-icono">🕐</div>
+            <div className="info-texto">
+              <h3>Horario de Atención</h3>
+              <p><strong>Lunes a Viernes:</strong> 9:00 - 18:00</p>
+              <p><strong>Sábados:</strong> 10:00 - 14:00</p>
+              <p><strong>Domingos:</strong> Cerrado</p>
+            </div>
+          </div>
+
+          {/* Redes sociales */}
+          <div className="redes-sociales">
+            <h3>Síguenos en Redes Sociales</h3>
+            <div className="iconos-redes">
+              <a href="#" className="red-social facebook" title="Facebook">
+                📘
+              </a>
+              <a href="#" className="red-social instagram" title="Instagram">
+                📸
+              </a>
+              <a href="#" className="red-social twitter" title="Twitter">
+                🐦
+              </a>
+              <a href="#" className="red-social whatsapp" title="WhatsApp">
+                💬
+              </a>
+            </div>
+          </div>
+
+          {/* Mapa (simulado) */}
+          <div className="mapa-contenedor">
+            <div className="mapa-placeholder">
+              <p>🗺️ Mapa de ubicación</p>
+              <small>Av. Principal 123, Santiago</small>
+            </div>
           </div>
         </div>
-      </footer>
+      </div>
+
+      {/* Sección de preguntas frecuentes */}
+      <div className="contacto-ayuda">
+        <h2>¿Necesitas Ayuda Rápida?</h2>
+        <p>Revisa nuestras preguntas frecuentes</p>
+        
+        <div className="grid-ayuda">
+          <div className="tarjeta-ayuda">
+            <div className="ayuda-icono">📦</div>
+            <h3>Envíos</h3>
+            <p>Información sobre tiempos y costos de envío</p>
+            <a href="#" className="enlace-ayuda">Ver más →</a>
+          </div>
+
+          <div className="tarjeta-ayuda">
+            <div className="ayuda-icono">🔄</div>
+            <h3>Devoluciones</h3>
+            <p>Política de devoluciones y cambios</p>
+            <a href="#" className="enlace-ayuda">Ver más →</a>
+          </div>
+
+          <div className="tarjeta-ayuda">
+            <div className="ayuda-icono">💳</div>
+            <h3>Pagos</h3>
+            <p>Métodos de pago aceptados</p>
+            <a href="#" className="enlace-ayuda">Ver más →</a>
+          </div>
+
+          <div className="tarjeta-ayuda">
+            <div className="ayuda-icono">❓</div>
+            <h3>FAQ</h3>
+            <p>Preguntas frecuentes generales</p>
+            <a href="#" className="enlace-ayuda">Ver más →</a>
+          </div>
+        </div>
+      </div>
     </div>
-  )
+  );
 }
 
-export default Contact
+export default Contacto;
