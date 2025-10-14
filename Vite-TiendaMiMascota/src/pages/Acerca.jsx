@@ -1,106 +1,211 @@
-import { Link } from 'react-router-dom'
-import '../styles/global.css'
+/**
+ * PÁGINA: ACERCA DE
+ * Información sobre la tienda Mi Mascota
+ */
 
-function About() {
+import '../styles/pages/Acerca.css';
+
+function Acerca() {
   return (
-    <div className="about-page">
-      <header className="header">
-        <div className="container">
-          <Link to="/" className="logo">
-            <img src="/src/assets/logo1.png" alt="Mi Mascota Logo" />
-          </Link>
-          <nav>
-            <Link to="/">Inicio</Link>
-            <Link to="/products">Productos</Link>
-            <Link to="/about" className="active">Nosotros</Link>
-            <Link to="/contact">Contacto</Link>
-            <Link to="/cart">Carrito</Link>
-            <Link to="/login">Iniciar Sesión</Link>
-          </nav>
+    <div className="pagina-acerca">
+      {/* Hero Section */}
+      <section className="acerca-hero">
+        <div className="hero-contenido">
+          <h1>🐾 Sobre Mi Mascota</h1>
+          <p className="hero-descripcion">
+            La mejor tienda para el cuidado y bienestar de tu mascota
+          </p>
         </div>
-      </header>
+      </section>
 
-      <main className="container">
-        <section className="about-hero">
-          <h1>Acerca de Nosotros</h1>
-          <p className="subtitle">Tu tienda de confianza para el cuidado de tu mascota</p>
-        </section>
-
-        <section className="about-content">
-          <div className="about-section">
-            <h2>Nuestra Historia</h2>
+      {/* Nuestra Historia */}
+      <section className="seccion-historia">
+        <div className="contenedor-seccion">
+          <div className="historia-contenido">
+            <h2>📖 Nuestra Historia</h2>
             <p>
-              Mi Mascota nació con la misión de proporcionar productos de calidad para el cuidado
-              y bienestar de tus mascotas. Somos un equipo apasionado de amantes de los animales
-              que entiende la importancia de ofrecer lo mejor para tus compañeros peludos.
+              <strong>Mi Mascota</strong> nació en 2020 con una misión clara: 
+              proporcionar productos de alta calidad para el cuidado y felicidad 
+              de las mascotas en Chile.
+            </p>
+            <p>
+              Lo que comenzó como una pequeña tienda local, hoy se ha convertido 
+              en una de las tiendas online más confiables del país, atendiendo 
+              a miles de familias que aman a sus mascotas.
+            </p>
+            <p>
+              Sabemos que tu mascota es parte de tu familia, por eso seleccionamos 
+              cuidadosamente cada producto que ofrecemos, garantizando calidad, 
+              seguridad y los mejores precios.
+            </p>
+          </div>
+          <div className="historia-imagen">
+            <img src="/images/tienda-historia.jpg" alt="Nuestra historia" />
+          </div>
+        </div>
+      </section>
+
+      {/* Misión y Visión */}
+      <section className="seccion-mision-vision">
+        <div className="contenedor-seccion">
+          <div className="tarjeta-valor">
+            <div className="valor-icono">🎯</div>
+            <h3>Nuestra Misión</h3>
+            <p>
+              Proporcionar productos de calidad excepcional para el cuidado 
+              de mascotas, ofreciendo una experiencia de compra fácil, segura 
+              y confiable, contribuyendo al bienestar y felicidad de cada 
+              animal y su familia.
             </p>
           </div>
 
-          <div className="about-section">
-            <h2>Nuestra Misión</h2>
+          <div className="tarjeta-valor">
+            <div className="valor-icono">🌟</div>
+            <h3>Nuestra Visión</h3>
             <p>
-              Proporcionar productos de alta calidad, accesibles y confiables para el cuidado
-              integral de las mascotas, garantizando la satisfacción de nuestros clientes y
-              el bienestar de sus compañeros.
+              Ser la tienda líder en Chile para productos de mascotas, 
+              reconocida por nuestra calidad, servicio al cliente excepcional 
+              y compromiso con el bienestar animal, expandiendo nuestro 
+              alcance a toda Latinoamérica.
             </p>
           </div>
+        </div>
+      </section>
 
-          <div className="about-section">
-            <h2>Nuestra Visión</h2>
-            <p>
-              Ser la tienda líder en productos para mascotas, reconocida por nuestra calidad,
-              servicio al cliente excepcional y compromiso con el bienestar animal.
-            </p>
+      {/* Valores */}
+      <section className="seccion-valores">
+        <h2>💎 Nuestros Valores</h2>
+        <div className="grid-valores">
+          <div className="valor-item">
+            <div className="valor-icono-pequeno">❤️</div>
+            <h4>Amor por los Animales</h4>
+            <p>Cada decisión la tomamos pensando en el bienestar de las mascotas</p>
           </div>
 
-          <div className="about-values">
-            <h2>Nuestros Valores</h2>
-            <div className="values-grid">
-              <div className="value-card">
-                <h3>🐾 Amor por los Animales</h3>
-                <p>Cada decisión que tomamos está centrada en el bienestar de las mascotas.</p>
-              </div>
-              <div className="value-card">
-                <h3>✨ Calidad</h3>
-                <p>Solo ofrecemos productos de marcas confiables y probadas.</p>
-              </div>
-              <div className="value-card">
-                <h3>🤝 Confianza</h3>
-                <p>Construimos relaciones duraderas con nuestros clientes.</p>
-              </div>
-              <div className="value-card">
-                <h3>💡 Innovación</h3>
-                <p>Buscamos constantemente nuevas formas de mejorar nuestro servicio.</p>
-              </div>
+          <div className="valor-item">
+            <div className="valor-icono-pequeno">✓</div>
+            <h4>Calidad Garantizada</h4>
+            <p>Solo ofrecemos productos de marcas confiables y probadas</p>
+          </div>
+
+          <div className="valor-item">
+            <div className="valor-icono-pequeno">🤝</div>
+            <h4>Confianza</h4>
+            <p>Construimos relaciones duraderas basadas en la transparencia</p>
+          </div>
+
+          <div className="valor-item">
+            <div className="valor-icono-pequeno">🚀</div>
+            <h4>Innovación</h4>
+            <p>Constantemente buscamos mejorar nuestra oferta y servicios</p>
+          </div>
+
+          <div className="valor-item">
+            <div className="valor-icono-pequeno">🎓</div>
+            <h4>Educación</h4>
+            <p>Compartimos conocimiento para el mejor cuidado de las mascotas</p>
+          </div>
+
+          <div className="valor-item">
+            <div className="valor-icono-pequeno">🌍</div>
+            <h4>Responsabilidad</h4>
+            <p>Comprometidos con el medio ambiente y la comunidad</p>
+          </div>
+        </div>
+      </section>
+
+      {/* Equipo */}
+      <section className="seccion-equipo">
+        <h2>👥 Nuestro Equipo</h2>
+        <p className="equipo-descripcion">
+          Conoce a las personas apasionadas que hacen posible Mi Mascota
+        </p>
+        
+        <div className="grid-equipo">
+          <div className="miembro-equipo">
+            <div className="miembro-foto">
+              <img src="/images/equipo-1.jpg" alt="María González" />
             </div>
+            <h3>María González</h3>
+            <p className="miembro-cargo">Fundadora & CEO</p>
+            <p className="miembro-descripcion">
+              Veterinaria con 10 años de experiencia
+            </p>
           </div>
 
-          <div className="about-section">
-            <h2>¿Por qué elegirnos?</h2>
-            <ul className="benefits-list">
-              <li>✓ Amplia variedad de productos para todo tipo de mascotas</li>
-              <li>✓ Precios competitivos y ofertas especiales</li>
-              <li>✓ Envío rápido y seguro a todo el país</li>
-              <li>✓ Atención al cliente personalizada</li>
-              <li>✓ Garantía de calidad en todos nuestros productos</li>
-              <li>✓ Asesoramiento experto para el cuidado de tu mascota</li>
-            </ul>
+          <div className="miembro-equipo">
+            <div className="miembro-foto">
+              <img src="/images/equipo-2.jpg" alt="Carlos Ruiz" />
+            </div>
+            <h3>Carlos Ruiz</h3>
+            <p className="miembro-cargo">Director de Operaciones</p>
+            <p className="miembro-descripcion">
+              Experto en logística y distribución
+            </p>
           </div>
-        </section>
-      </main>
 
-      <footer className="footer">
-        <div className="container">
-          <p>&copy; 2025 Mi Mascota. Todos los derechos reservados.</p>
-          <div className="footer-links">
-            <Link to="/about">Sobre Nosotros</Link>
-            <Link to="/contact">Contacto</Link>
-            <Link to="/products">Productos</Link>
+          <div className="miembro-equipo">
+            <div className="miembro-foto">
+              <img src="/images/equipo-3.jpg" alt="Ana Martínez" />
+            </div>
+            <h3>Ana Martínez</h3>
+            <p className="miembro-cargo">Jefa de Atención al Cliente</p>
+            <p className="miembro-descripcion">
+              Dedicada a la satisfacción del cliente
+            </p>
+          </div>
+
+          <div className="miembro-equipo">
+            <div className="miembro-foto">
+              <img src="/images/equipo-4.jpg" alt="Pedro Silva" />
+            </div>
+            <h3>Pedro Silva</h3>
+            <p className="miembro-cargo">Especialista en Productos</p>
+            <p className="miembro-descripcion">
+              Curador de nuestro catálogo
+            </p>
           </div>
         </div>
-      </footer>
+      </section>
+
+      {/* Estadísticas */}
+      <section className="seccion-estadisticas">
+        <h2>📊 Nuestros Números</h2>
+        <div className="grid-estadisticas">
+          <div className="estadistica">
+            <div className="estadistica-numero">5,000+</div>
+            <div className="estadistica-texto">Clientes Felices</div>
+          </div>
+
+          <div className="estadistica">
+            <div className="estadistica-numero">15,000+</div>
+            <div className="estadistica-texto">Productos Vendidos</div>
+          </div>
+
+          <div className="estadistica">
+            <div className="estadistica-numero">500+</div>
+            <div className="estadistica-texto">Productos Diferentes</div>
+          </div>
+
+          <div className="estadistica">
+            <div className="estadistica-numero">4.8⭐</div>
+            <div className="estadistica-texto">Calificación Promedio</div>
+          </div>
+        </div>
+      </section>
+
+      {/* Call to Action */}
+      <section className="seccion-cta">
+        <div className="cta-contenido">
+          <h2>¿Listo para cuidar mejor a tu mascota?</h2>
+          <p>Explora nuestra amplia selección de productos</p>
+          <a href="/productos" className="boton-cta">
+            Ver Productos
+          </a>
+        </div>
+      </section>
     </div>
-  )
+  );
 }
 
-export default About
+export default Acerca;
