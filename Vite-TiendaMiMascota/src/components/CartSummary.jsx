@@ -1,85 +1,112 @@
-import { useCart } from '../hooks/useCart'
-import '../styles/global.css'
+/**
+ * COMPONENTE: RESUMEN DEL CARRITO
+ * Muestra el resumen de compra con totales
+ */
 
-function CartSummary() {
-  const { cart, getTotal, getTotalItems } = useCart()
+import '../styles/components/CartSummary.css';
 
-  const subtotal = getTotal ? getTotal() : cart.reduce((sum, item) => sum + (item.price * item.quantity), 0)
-  const totalItems = getTotalItems ? getTotalItems() : cart.reduce((sum, item) => sum + item.quantity, 0)
-  
-  const envio = subtotal > 30000 ? 0 : 3500
-  const descuento = subtotal > 50000 ? subtotal * 0.1 : 0
-  const total = subtotal + envio - descuento
+function CartSummary({ 
+  subtotal, 
+  envio, 
+  descuento, 
+  total,
+  alComprar,
+  deshabilitado = false
+}) {
 
-  const formatPrice = (price) => {
-    return new Intl.NumberFormat('es-CL', {
-      style: 'currency',
-      currency: 'CLP',
-      minimumFractionDigits: 0
-    }).format(price)
-  }
+  /**
+   * Formatear precio
+   */
+  const formatearPrecio = (precio) => {
+    return '$' + precio.toLocaleString('es-CL');
+  };
 
   return (
-    <div className="cart-summary">
-      <h3 className="cart-summary-title">Resumen del Pedido</h3>
-      
-      <div className="cart-summary-content">
-        <div className="summary-row">
-          <span className="summary-label">Productos ({totalItems})</span>
-          <span className="summary-value">{formatPrice(subtotal)}</span>
+    <div className="resumen-carrito">
+      <h3 className="resumen-titulo">📋 Resumen de Compra</h3>
+
+      {/* Líneas de totales */}
+      <div className="resumen-lineas">
+        {/* Subtotal */}
+        <div className="linea-total">
+          <span className="linea-etiqueta">Subtotal:</span>
+          <span className="linea-valor">{formatearPrecio(subtotal)}</span>
         </div>
 
-        <div className="summary-row">
-          <span className="summary-label">Envío</span>
-          <span className={`summary-value ${envio === 0 ? 'free' : ''}`}>
-            {envio === 0 ? 'GRATIS' : formatPrice(envio)}
+        {/* Envío */}
+        <div className="linea-total">
+          <span className="linea-etiqueta">Envío:</span>
+          <span className="linea-valor linea-envio">
+            {envio === 0 ? (
+              <span className="envio-gratis">¡GRATIS!</span>
+            ) : (
+              formatearPrecio(envio)
+            )}
           </span>
         </div>
 
+        {/* Descuento (si existe) */}
         {descuento > 0 && (
-          <div className="summary-row discount">
-            <span className="summary-label">Descuento (10%)</span>
-            <span className="summary-value">-{formatPrice(descuento)}</span>
+          <div className="linea-total">
+            <span className="linea-etiqueta">Descuento:</span>
+            <span className="linea-valor linea-descuento">
+              -{formatearPrecio(descuento)}
+            </span>
           </div>
         )}
 
-        <div className="summary-divider"></div>
+        {/* Separador */}
+        <div className="resumen-separador"></div>
 
-        <div className="summary-row total">
-          <span className="summary-label">Total</span>
-          <span className="summary-value">{formatPrice(total)}</span>
+        {/* Total */}
+        <div className="linea-total linea-total-final">
+          <span className="linea-etiqueta">Total:</span>
+          <span className="linea-valor linea-total-valor">
+            {formatearPrecio(total)}
+          </span>
         </div>
       </div>
 
-      <div className="cart-summary-info">
-        {subtotal < 30000 && (
-          <p className="info-message">
-            💡 Agrega {formatPrice(30000 - subtotal)} más para envío gratis
-          </p>
-        )}
-        {subtotal >= 30000 && subtotal < 50000 && (
-          <p className="info-message success">
-            ✓ ¡Envío gratis aplicado!
-          </p>
-        )}
-        {subtotal >= 50000 && (
-          <p className="info-message success">
-            ✓ ¡Envío gratis + 10% de descuento!
-          </p>
-        )}
+      {/* Información adicional */}
+      <div className="resumen-info">
+        <div className="info-item">
+          <span className="info-icono">✓</span>
+          <span>Envío gratis en compras sobre $30.000</span>
+        </div>
+        <div className="info-item">
+          <span className="info-icono">✓</span>
+          <span>Devolución gratis dentro de 30 días</span>
+        </div>
+        <div className="info-item">
+          <span className="info-icono">✓</span>
+          <span>Pago seguro</span>
+        </div>
       </div>
 
-      <div className="cart-summary-benefits">
-        <h4>Beneficios incluidos:</h4>
-        <ul>
-          <li>✓ Garantía de satisfacción</li>
-          <li>✓ Devolución en 30 días</li>
-          <li>✓ Pago seguro</li>
-          <li>✓ Soporte 24/7</li>
-        </ul>
+      {/* Botón de compra */}
+      <button 
+        className="boton-finalizar-compra"
+        onClick={alComprar}
+        disabled={deshabilitado}
+      >
+        {deshabilitado ? (
+          '🛒 Carrito Vacío'
+        ) : (
+          '💳 Finalizar Compra'
+        )}
+      </button>
+
+      {/* Métodos de pago */}
+      <div className="metodos-pago">
+        <p className="metodos-titulo">Métodos de pago aceptados:</p>
+        <div className="iconos-pago">
+          <span className="icono-pago">💳</span>
+          <span className="icono-pago">💵</span>
+          <span className="icono-pago">🏦</span>
+        </div>
       </div>
     </div>
-  )
+  );
 }
 
-export default CartSummary
+export default CartSummary;
