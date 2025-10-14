@@ -4,64 +4,7 @@
  */
 
 import { useState, useEffect } from 'react';
-
-// Lista de productos (simulando base de datos)
-const PRODUCTOS_DB = [
-  {
-    id: 1,
-    nombre: "Alimento Premium para Perros",
-    descripcion: "Alimento balanceado de alta calidad para perros adultos",
-    precio: 25990,
-    imagen: "/images/alimento-perro.jpg",
-    categoria: "Alimento",
-    stock: 50
-  },
-  {
-    id: 2,
-    nombre: "Juguete Mordedor",
-    descripcion: "Juguete resistente para mascotas de todas las edades",
-    precio: 8990,
-    imagen: "/images/juguete.jpg",
-    categoria: "Juguetes",
-    stock: 30
-  },
-  {
-    id: 3,
-    nombre: "Collar Ajustable",
-    descripcion: "Collar cómodo y ajustable para perros medianos",
-    precio: 12990,
-    imagen: "/images/collar.jpg",
-    categoria: "Accesorios",
-    stock: 20
-  },
-  {
-    id: 4,
-    nombre: "Shampoo para Gatos",
-    descripcion: "Shampoo especial para el cuidado del pelaje",
-    precio: 7990,
-    imagen: "/images/shampoo.jpg",
-    categoria: "Higiene",
-    stock: 40
-  },
-  {
-    id: 5,
-    nombre: "Cama para Mascotas",
-    descripcion: "Cama suave y cómoda para perros y gatos",
-    precio: 35990,
-    imagen: "/images/cama.jpg",
-    categoria: "Accesorios",
-    stock: 15
-  },
-  {
-    id: 6,
-    nombre: "Alimento para Gatos",
-    descripcion: "Alimento completo para gatos adultos",
-    precio: 22990,
-    imagen: "/images/alimento-gato.jpg",
-    categoria: "Alimento",
-    stock: 45
-  }
-];
+import { obtenerProductos } from '../services/productService';
 
 function useProductos() {
   // Estados
@@ -75,8 +18,9 @@ function useProductos() {
   useEffect(() => {
     // Simular carga desde servidor (con delay)
     setTimeout(() => {
-      setProductos(PRODUCTOS_DB);
-      setProductosFiltrados(PRODUCTOS_DB);
+      const productosObtenidos = obtenerProductos();
+      setProductos(productosObtenidos);
+      setProductosFiltrados(productosObtenidos);
       setCargando(false);
     }, 500);
   }, []);

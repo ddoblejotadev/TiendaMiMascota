@@ -29,7 +29,7 @@ function Productos() {
     if (location.state?.categoria) {
       filtrarPorCategoria(location.state.categoria);
     }
-  }, [location.state]);
+  }, [location.state, filtrarPorCategoria]);
 
   /**
    * Formatear precio
