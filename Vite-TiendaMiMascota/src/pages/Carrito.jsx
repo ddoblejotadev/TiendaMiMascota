@@ -18,6 +18,10 @@ function Carrito() {
     contarProductos
   } = useCarrito();
 
+  // Debug: Ver qué hay en el carrito
+  console.log('🛒 Carrito en página:', carrito);
+  console.log('📊 Total productos:', contarProductos());
+
   /**
    * Formatear número como precio chileno
    */

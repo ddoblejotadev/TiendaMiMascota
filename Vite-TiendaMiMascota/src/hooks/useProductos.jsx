@@ -16,13 +16,21 @@ function useProductos() {
 
   // EFECTO 1: Cargar productos al inicio
   useEffect(() => {
-    // Simular carga desde servidor (con delay)
-    setTimeout(() => {
-      const productosObtenidos = obtenerProductos();
-      setProductos(productosObtenidos);
-      setProductosFiltrados(productosObtenidos);
-      setCargando(false);
-    }, 500);
+    // Función async para cargar productos
+    const cargarProductos = async () => {
+      try {
+        setCargando(true);
+        const productosObtenidos = await obtenerProductos();
+        setProductos(productosObtenidos);
+        setProductosFiltrados(productosObtenidos);
+      } catch (error) {
+        console.error('Error al cargar productos:', error);
+      } finally {
+        setCargando(false);
+      }
+    };
+
+    cargarProductos();
   }, []);
 
   // EFECTO 2: Filtrar productos cuando cambia búsqueda o categoría
