@@ -7,7 +7,7 @@ import { useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import useProductos from '../hooks/useProductos';
 import useCarrito from '../hooks/useCarrito';
-import './Productos.css';
+import '../styles/pages/Productos.css';
 
 function Productos() {
   const location = useLocation();

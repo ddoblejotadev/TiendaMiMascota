@@ -6,7 +6,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import useAutenticacion from '../hooks/useAutenticacion';
-import '../styles/IniciarSesion.css';
+import '../styles/pages/IniciarSesion.css';
 
 function IniciarSesion() {
   const navigate = useNavigate();

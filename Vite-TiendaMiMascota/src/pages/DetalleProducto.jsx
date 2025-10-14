@@ -7,7 +7,7 @@ import { useEffect, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import useProductos from '../hooks/useProductos';
 import useCarrito from '../hooks/useCarrito';
-import '../styles/DetalleProducto.css';
+import '../styles/pages/DetalleProducto.css';
 
 function DetalleProducto() {
   const { id } = useParams(); // Obtener ID de la URL

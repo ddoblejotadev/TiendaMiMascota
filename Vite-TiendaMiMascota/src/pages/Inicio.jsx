@@ -5,7 +5,7 @@
 
 import { Link, useNavigate } from 'react-router-dom';
 import useProductos from '../hooks/useProductos';
-import './Inicio.css';
+import '../styles/pages/Inicio.css';
 
 function Inicio() {
   const navigate = useNavigate();

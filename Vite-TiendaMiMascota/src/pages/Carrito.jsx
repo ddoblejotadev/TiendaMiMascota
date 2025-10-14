@@ -5,7 +5,7 @@
 
 import { useNavigate } from 'react-router-dom';
 import useCarrito from '../hooks/useCarrito';
-import './Carrito.css';
+import '../styles/pages/Carrito.css';
 
 function Carrito() {
   const navigate = useNavigate();
