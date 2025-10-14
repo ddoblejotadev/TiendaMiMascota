@@ -1,0 +1,160 @@
+/* COMPONENTE RESUMEN DEL CARRITO */
+
+.resumen-carrito {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  position: sticky;
+  top: 100px;
+}
+
+.resumen-titulo {
+  font-size: 1.3rem;
+  margin: 0 0 1.5rem 0;
+  color: #333;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #f3f4f6;
+}
+
+/* Líneas de totales */
+.resumen-lineas {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.linea-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 1rem;
+}
+
+.linea-etiqueta {
+  color: #666;
+  font-weight: 500;
+}
+
+.linea-valor {
+  font-weight: 600;
+  color: #333;
+}
+
+/* Envío gratis */
+.envio-gratis {
+  color: #10b981;
+  font-weight: bold;
+}
+
+.linea-envio {
+  color: #3b82f6;
+}
+
+/* Descuento */
+.linea-descuento {
+  color: #ef4444;
+}
+
+/* Separador */
+.resumen-separador {
+  height: 1px;
+  background: #e5e7eb;
+  margin: 0.5rem 0;
+}
+
+/* Total final */
+.linea-total-final {
+  font-size: 1.3rem;
+  padding-top: 0.5rem;
+}
+
+.linea-total-valor {
+  color: #059669;
+  font-size: 1.8rem;
+}
+
+/* Información adicional */
+.resumen-info {
+  margin: 1.5rem 0;
+  padding: 1rem;
+  background: #f9fafb;
+  border-radius: 8px;
+}
+
+.info-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.info-item:last-child {
+  margin-bottom: 0;
+}
+
+.info-icono {
+  color: #10b981;
+  font-weight: bold;
+}
+
+/* Botón finalizar compra */
+.boton-finalizar-compra {
+  width: 100%;
+  padding: 1.2rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s;
+  margin-top: 1.5rem;
+}
+
+.boton-finalizar-compra:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+}
+
+.boton-finalizar-compra:disabled {
+  background: #d1d5db;
+  color: #9ca3af;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Métodos de pago */
+.metodos-pago {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #e5e7eb;
+  text-align: center;
+}
+
+.metodos-titulo {
+  font-size: 0.85rem;
+  color: #666;
+  margin: 0 0 0.8rem 0;
+}
+
+.iconos-pago {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.icono-pago {
+  font-size: 2rem;
+  opacity: 0.7;
+}
+
+/* RESPONSIVE */
+@media (max-width: 968px) {
+  .resumen-carrito {
+    position: static;
+  }
+}
