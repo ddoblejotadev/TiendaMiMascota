@@ -72,6 +72,11 @@ function Header() {
               </Link>
             </li>
             <li className="nav-item">
+              <Link to="/blog" className="nav-link fw-semibold px-3">
+                📝 Blog
+              </Link>
+            </li>
+            <li className="nav-item">
               <Link to="/acerca" className="nav-link fw-semibold px-3">
                 Acerca
               </Link>

@@ -23,6 +23,7 @@ import Checkout from './pages/Checkout';
 import CompraExitosa from './pages/CompraExitosa';
 import ErrorPago from './pages/ErrorPago';
 import Ofertas from './pages/Ofertas';
+import Blog from './pages/Blog';
 
 function App() {
   return (
@@ -42,6 +43,7 @@ function App() {
           {/* Nuevas rutas según requisitos del PDF */}
           <Route path="categorias" element={<Categorias />} />
           <Route path="ofertas" element={<Ofertas />} />
+          <Route path="blog" element={<Blog />} />
           <Route path="checkout" element={<Checkout />} />
           <Route path="compra-exitosa" element={<CompraExitosa />} />
           <Route path="error-pago" element={<ErrorPago />} />
