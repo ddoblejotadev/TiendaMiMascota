@@ -1,197 +1,108 @@
 /**
- * CUSTOM HOOK: useProducts
- * Maneja toda la lógica de productos, filtros y búsqueda
+ * HOOK SIMPLE DE PRODUCTOS
  */
 
 import { useState, useEffect } from 'react';
-import * as productService from '../services/productService';
 
-export function useProducts(opciones = {}) {
-  const {
-    cargarInicial = true,
-    soloDestacados = false,
-    categoria = null
-  } = opciones;
+// Datos de productos (simulando una base de datos)
+const PRODUCTOS = [
+  {
+    id: 1,
+    nombre: "Alimento Premium para Perros",
+    descripcion: "Alimento balanceado de alta calidad",
+    precio: 25990,
+    imagen: "/images/productos/alimento-perro.jpg",
+    categoria: "Alimento",
+    stock: 50
+  },
+  {
+    id: 2,
+    nombre: "Juguete Mordedor",
+    descripcion: "Juguete resistente para mascotas",
+    precio: 8990,
+    imagen: "/images/productos/juguete.jpg",
+    categoria: "Juguetes",
+    stock: 30
+  },
+  {
+    id: 3,
+    nombre: "Collar Ajustable",
+    descripcion: "Collar cómodo para perros",
+    precio: 12990,
+    imagen: "/images/productos/collar.jpg",
+    categoria: "Accesorios",
+    stock: 20
+  },
+  {
+    id: 4,
+    nombre: "Shampoo para Gatos",
+    descripcion: "Shampoo especial para gatos",
+    precio: 7990,
+    imagen: "/images/productos/shampoo.jpg",
+    categoria: "Higiene",
+    stock: 40
+  }
+];
 
-  const [productos, setProductos] = useState([]);
-  const [productosFiltrados, setProductosFiltrados] = useState([]);
-  const [cargando, setCargando] = useState(false);
-  const [error, setError] = useState(null);
-  
-  const [busqueda, setBusqueda] = useState('');
-  const [categoriaActual, setCategoriaActual] = useState(categoria || '');
+export function useProducts() {
+  const [products, setProducts] = useState([]);
+  const [filteredProducts, setFilteredProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('Todos');
 
+  // Cargar productos al iniciar
   useEffect(() => {
-    if (cargarInicial) {
-      cargarProductos();
-    }
-  }, [cargarInicial]);
+    // Simular carga desde servidor
+    setTimeout(() => {
+      setProducts(PRODUCTOS);
+      setFilteredProducts(PRODUCTOS);
+      setLoading(false);
+    }, 500);
+  }, []);
 
+  // Filtrar cuando cambia búsqueda o categoría
   useEffect(() => {
-    filtrarProductos();
-  }, [productos, busqueda, categoriaActual]);
+    let result = [...products];
 
-  const cargarProductos = async () => {
-    try {
-      setCargando(true);
-      setError(null);
-      
-      let data;
-      if (soloDestacados) {
-        data = await productService.obtenerProductosDestacados();
-      } else {
-        data = await productService.obtenerProductos();
-      }
-      
-      setProductos(data);
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setCargando(false);
-    }
-  };
-
-  const filtrarProductos = () => {
-    let resultado = [...productos];
-
-    if (busqueda) {
-      const terminoLower = busqueda.toLowerCase();
-      resultado = resultado.filter(p =>
-        p.nombre.toLowerCase().includes(terminoLower) ||
-        p.descripcion.toLowerCase().includes(terminoLower)
+    // Filtrar por búsqueda
+    if (searchTerm) {
+      result = result.filter(p =>
+        p.nombre.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
 
-    if (categoriaActual && categoriaActual !== 'Todos') {
-      resultado = resultado.filter(p => p.categoria === categoriaActual);
+    // Filtrar por categoría
+    if (selectedCategory !== 'Todos') {
+      result = result.filter(p => p.categoria === selectedCategory);
     }
 
-    setProductosFiltrados(resultado);
+    setFilteredProducts(result);
+  }, [searchTerm, selectedCategory, products]);
+
+  // Buscar productos
+  const searchProducts = (term) => {
+    setSearchTerm(term);
   };
 
-  const buscarProductos = (termino) => {
-    setBusqueda(termino);
+  // Filtrar por categoría
+  const filterByCategory = (category) => {
+    setSelectedCategory(category);
   };
 
-  const filtrarPorCategoria = (categoria) => {
-    setCategoriaActual(categoria);
-  };
-
-  const limpiarFiltros = () => {
-    setBusqueda('');
-    setCategoriaActual('');
-  };
-
-  const obtenerProducto = async (id) => {
-    try {
-      setCargando(true);
-      setError(null);
-      
-      const producto = await productService.obtenerProductoPorId(id);
-      return producto;
-    } catch (err) {
-      setError(err.message);
-      return null;
-    } finally {
-      setCargando(false);
-    }
-  };
-
-  const agregarProducto = async (producto) => {
-    try {
-      setCargando(true);
-      setError(null);
-      
-      const nuevoProducto = await productService.agregarProducto(producto);
-      setProductos([...productos, nuevoProducto]);
-      
-      return { success: true, producto: nuevoProducto };
-    } catch (err) {
-      setError(err.message);
-      return { success: false, error: err.message };
-    } finally {
-      setCargando(false);
-    }
-  };
-
-  const actualizarProducto = async (id, datosActualizados) => {
-    try {
-      setCargando(true);
-      setError(null);
-      
-      const productoActualizado = await productService.actualizarProducto(id, datosActualizados);
-      
-      if (productoActualizado) {
-        setProductos(productos.map(p => 
-          p.id === id ? productoActualizado : p
-        ));
-        return { success: true, producto: productoActualizado };
-      }
-      
-      return { success: false, error: 'Producto no encontrado' };
-    } catch (err) {
-      setError(err.message);
-      return { success: false, error: err.message };
-    } finally {
-      setCargando(false);
-    }
-  };
-
-  const eliminarProducto = async (id) => {
-    try {
-      setCargando(true);
-      setError(null);
-      
-      const eliminado = await productService.eliminarProducto(id);
-      
-      if (eliminado) {
-        setProductos(productos.filter(p => p.id !== id));
-        return { success: true };
-      }
-      
-      return { success: false, error: 'Producto no encontrado' };
-    } catch (err) {
-      setError(err.message);
-      return { success: false, error: err.message };
-    } finally {
-      setCargando(false);
-    }
-  };
-
-  const recargar = () => {
-    cargarProductos();
+  // Obtener un producto por ID
+  const getProductById = (id) => {
+    return products.find(p => p.id === Number(id));
   };
 
   return {
-    // Español
-    productos: productosFiltrados,
-    todosLosProductos: productos,
-    cargando,
-    error,
-    busqueda,
-    categoriaActual,
-    buscarProductos,
-    filtrarPorCategoria,
-    limpiarFiltros,
-    obtenerProducto,
-    agregarProducto,
-    actualizarProducto,
-    eliminarProducto,
-    recargar,
-    // Inglés (aliases)
-    products: productos,
-    filteredProducts: productosFiltrados,
-    allProducts: productos,
-    loading: cargando,
-    searchTerm: busqueda,
-    currentCategory: categoriaActual,
-    searchProducts: buscarProductos,
-    filterByCategory: filtrarPorCategoria,
-    clearFilters: limpiarFiltros,
-    getProduct: obtenerProducto,
-    addProduct: agregarProducto,
-    updateProduct: actualizarProducto,
-    deleteProduct: eliminarProducto,
-    reload: recargar
+    products: filteredProducts,
+    allProducts: products,
+    loading,
+    searchTerm,
+    selectedCategory,
+    searchProducts,
+    filterByCategory,
+    getProductById
   };
 }
