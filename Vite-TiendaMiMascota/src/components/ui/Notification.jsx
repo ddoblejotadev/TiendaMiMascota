@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react'
-import '../../styles/global.css'
 
 function NotificationContainer({ position = 'top-right', maxNotifications = 5 }) {
   const [notifications, setNotifications] = useState([])
@@ -64,14 +63,6 @@ function NotificationContainer({ position = 'top-right', maxNotifications = 5 })
       ))}
     </div>
   )
-}
-
-// Helper function para mostrar notificaciones
-export const notify = (message, type = 'info', duration = 3000) => {
-  const event = new CustomEvent('notify', {
-    detail: { message, type, duration }
-  })
-  window.dispatchEvent(event)
 }
 
 export default NotificationContainer

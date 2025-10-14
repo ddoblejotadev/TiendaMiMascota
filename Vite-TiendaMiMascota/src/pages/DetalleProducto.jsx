@@ -7,13 +7,12 @@ import { useEffect, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import useProductos from '../hooks/useProductos';
 import useCarrito from '../hooks/useCarrito';
-import '../styles/pages/DetalleProducto.css';
 
 function DetalleProducto() {
   const { id } = useParams(); // Obtener ID de la URL
   const navigate = useNavigate();
   const { obtenerProductoPorId } = useProductos();
-  const { agregarAlCarrito, estaEnCarrito } = useCarrito();
+  const { agregarAlCarrito } = useCarrito();
   
   const [producto, setProducto] = useState(null);
   const [cantidad, setCantidad] = useState(1);
@@ -31,7 +30,7 @@ function DetalleProducto() {
     }
     
     setCargando(false);
-  }, [id]);
+  }, [id, obtenerProductoPorId, navigate]);
 
   /**
    * Formatear precio
@@ -81,8 +80,11 @@ function DetalleProducto() {
   // Mostrar cargando
   if (cargando) {
     return (
-      <div className="pagina-detalle-cargando">
-        <p>Cargando producto...</p>
+      <div className="container py-5 text-center">
+        <div className="spinner-border text-primary" role="status">
+          <span className="visually-hidden">Cargando...</span>
+        </div>
+        <p className="mt-3">Cargando producto...</p>
       </div>
     );
   }
@@ -93,66 +95,76 @@ function DetalleProducto() {
   }
 
   return (
-    <div className="pagina-detalle-producto">
+    <div className="container py-4">
       {/* Breadcrumb */}
-      <div className="breadcrumb">
-        <Link to="/">Inicio</Link>
-        <span> / </span>
-        <Link to="/productos">Productos</Link>
-        <span> / </span>
-        <span>{producto.nombre}</span>
-      </div>
+      <nav aria-label="breadcrumb" className="mb-4">
+        <ol className="breadcrumb">
+          <li className="breadcrumb-item"><Link to="/" className="text-decoration-none">Inicio</Link></li>
+          <li className="breadcrumb-item"><Link to="/productos" className="text-decoration-none">Productos</Link></li>
+          <li className="breadcrumb-item active">{producto.nombre}</li>
+        </ol>
+      </nav>
 
       {/* Contenido principal */}
-      <div className="detalle-contenido">
+      <div className="row g-5 mb-5">
         {/* IZQUIERDA: Imagen del producto */}
-        <div className="detalle-imagen">
-          <img 
-            src={producto.imagen} 
-            alt={producto.nombre}
-            onError={(e) => {
-              e.target.src = '/images/placeholder.jpg';
-            }}
-          />
-          
-          {/* Badge de stock */}
-          {producto.stock < 10 && producto.stock > 0 && (
-            <div className="badge-stock-bajo">
-              ⚠️ Solo quedan {producto.stock} unidades
-            </div>
-          )}
-          
-          {producto.stock === 0 && (
-            <div className="badge-agotado">
-              ❌ Producto Agotado
-            </div>
-          )}
+        <div className="col-lg-6">
+          <div className="position-relative">
+            <img 
+              src={producto.imagen} 
+              alt={producto.nombre}
+              className="img-fluid rounded shadow-lg"
+              style={{ width: '100%', height: '500px', objectFit: 'cover' }}
+              onError={(e) => {
+                e.target.src = '/images/placeholder.jpg';
+              }}
+            />
+            
+            {/* Badge de stock */}
+            {producto.stock < 10 && producto.stock > 0 && (
+              <div className="position-absolute top-0 start-0 m-3">
+                <span className="badge bg-warning text-dark fs-6">
+                  ⚠️ Solo quedan {producto.stock} unidades
+                </span>
+              </div>
+            )}
+            
+            {producto.stock === 0 && (
+              <div className="position-absolute top-0 start-0 m-3">
+                <span className="badge bg-danger fs-6">
+                  ❌ Producto Agotado
+                </span>
+              </div>
+            )}
+          </div>
         </div>
 
         {/* DERECHA: Información del producto */}
-        <div className="detalle-info">
+        <div className="col-lg-6">
           {/* Categoría */}
-          <span className="producto-categoria">{producto.categoria}</span>
+          <span className="badge bg-primary mb-3 fs-6">{producto.categoria}</span>
           
           {/* Nombre */}
-          <h1>{producto.nombre}</h1>
+          <h1 className="display-5 fw-bold mb-3">{producto.nombre}</h1>
           
           {/* Descripción */}
-          <p className="producto-descripcion-completa">
+          <p className="lead text-muted mb-4">
             {producto.descripcion}
           </p>
 
           {/* Precio */}
-          <div className="producto-precio-seccion">
-            <span className="precio-actual">
-              {formatearPrecio(producto.precio)}
-            </span>
-            <span className="precio-info">Precio por unidad</span>
+          <div className="bg-light rounded p-4 mb-4">
+            <div className="d-flex align-items-baseline gap-2">
+              <h2 className="display-4 fw-bold text-primary mb-0">
+                {formatearPrecio(producto.precio)}
+              </h2>
+              <span className="text-muted">Precio por unidad</span>
+            </div>
           </div>
 
           {/* Stock disponible */}
-          <div className="producto-stock">
-            <span className={producto.stock > 10 ? 'stock-disponible' : 'stock-bajo'}>
+          <div className="mb-4">
+            <span className={`badge ${producto.stock > 10 ? 'bg-success' : 'bg-warning text-dark'} fs-6`}>
               {producto.stock > 0 
                 ? `✓ ${producto.stock} disponibles` 
                 : '✗ Sin stock'
@@ -162,77 +174,88 @@ function DetalleProducto() {
 
           {/* Selector de cantidad */}
           {producto.stock > 0 && (
-            <div className="producto-cantidad-seccion">
-              <label>Cantidad:</label>
-              <div className="cantidad-selector">
-                <button 
-                  onClick={disminuirCantidad}
-                  disabled={cantidad <= 1}
-                >
-                  -
-                </button>
-                <span>{cantidad}</span>
-                <button 
-                  onClick={aumentarCantidad}
-                  disabled={cantidad >= producto.stock}
-                >
-                  +
-                </button>
+            <div className="mb-4">
+              <label className="form-label fw-bold fs-5">Cantidad:</label>
+              <div className="d-flex align-items-center gap-3">
+                <div className="input-group" style={{ maxWidth: '150px' }}>
+                  <button 
+                    className="btn btn-outline-secondary"
+                    onClick={disminuirCantidad}
+                    disabled={cantidad <= 1}
+                  >
+                    −
+                  </button>
+                  <input 
+                    type="number" 
+                    className="form-control text-center fw-bold"
+                    value={cantidad}
+                    readOnly
+                  />
+                  <button 
+                    className="btn btn-outline-secondary"
+                    onClick={aumentarCantidad}
+                    disabled={cantidad >= producto.stock}
+                  >
+                    +
+                  </button>
+                </div>
+                <small className="text-muted">
+                  Máximo: {producto.stock}
+                </small>
               </div>
-              <span className="cantidad-info">
-                Máximo: {producto.stock}
-              </span>
             </div>
           )}
 
           {/* Botones de acción */}
-          <div className="producto-acciones">
+          <div className="d-grid gap-3 mb-4">
             {producto.stock > 0 ? (
               <>
                 <button 
-                  className="boton-agregar-carrito"
+                  className="btn btn-primary btn-lg fw-bold"
                   onClick={manejarAgregarCarrito}
                 >
                   🛒 Agregar al Carrito
                 </button>
                 
                 <button 
-                  className="boton-comprar-ahora"
+                  className="btn btn-success btn-lg fw-bold"
                   onClick={comprarAhora}
                 >
                   ⚡ Comprar Ahora
                 </button>
               </>
             ) : (
-              <button className="boton-agotado" disabled>
+              <button className="btn btn-secondary btn-lg" disabled>
                 Producto Agotado
               </button>
             )}
           </div>
 
           {/* Información adicional */}
-          <div className="producto-info-adicional">
-            <div className="info-item">
-              <span className="icono">🚚</span>
-              <div>
-                <strong>Envío Gratis</strong>
-                <p>En compras sobre $30.000</p>
+          <div className="card border-0 bg-light">
+            <div className="card-body">
+              <div className="d-flex align-items-start gap-3 mb-3">
+                <span className="fs-2">🚚</span>
+                <div>
+                  <h6 className="fw-bold mb-1">Envío Gratis</h6>
+                  <p className="text-muted small mb-0">En compras sobre $30.000</p>
+                </div>
               </div>
-            </div>
-            
-            <div className="info-item">
-              <span className="icono">🔄</span>
-              <div>
-                <strong>Devolución</strong>
-                <p>30 días para devolver</p>
+              
+              <div className="d-flex align-items-start gap-3 mb-3">
+                <span className="fs-2">🔄</span>
+                <div>
+                  <h6 className="fw-bold mb-1">Devolución</h6>
+                  <p className="text-muted small mb-0">30 días para devolver</p>
+                </div>
               </div>
-            </div>
-            
-            <div className="info-item">
-              <span className="icono">✓</span>
-              <div>
-                <strong>Garantía</strong>
-                <p>Productos de calidad</p>
+              
+              <div className="d-flex align-items-start gap-3">
+                <span className="fs-2">✓</span>
+                <div>
+                  <h6 className="fw-bold mb-1">Garantía</h6>
+                  <p className="text-muted small mb-0">Productos de calidad</p>
+                </div>
               </div>
             </div>
           </div>
@@ -240,8 +263,8 @@ function DetalleProducto() {
       </div>
 
       {/* Botón volver */}
-      <div className="detalle-volver">
-        <button onClick={() => navigate('/productos')}>
+      <div className="mb-4">
+        <button className="btn btn-outline-secondary" onClick={() => navigate('/productos')}>
           ← Volver a Productos
         </button>
       </div>

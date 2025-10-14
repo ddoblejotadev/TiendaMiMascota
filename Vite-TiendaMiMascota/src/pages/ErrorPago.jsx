@@ -4,33 +4,29 @@
  */
 
 import { Link } from 'react-router-dom';
-import '../styles/pages/ErrorPago.css';
 
 function ErrorPago() {
   return (
-    <div className="pagina-error-pago">
-      <div className="container py-5">
-        <div className="row justify-content-center">
-          <div className="col-lg-6">
-            <div className="card shadow-lg text-center">
-              <div className="card-body p-5">
-                {/* Icono de error */}
-                <div className="icono-error mb-4">
-                  <div className="error-circle">
-                    <div className="error-cross">
-                      <span></span>
-                      <span></span>
-                    </div>
-                  </div>
+    <div className="container py-5" style={{ minHeight: '80vh' }}>
+      <div className="row justify-content-center">
+        <div className="col-lg-6">
+          <div className="card shadow-lg border-0 text-center">
+            <div className="card-body p-5">
+              {/* Icono de error */}
+              <div className="mb-4">
+                <div className="bg-danger bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center" 
+                     style={{ width: '120px', height: '120px' }}>
+                  <span className="display-1 text-danger">✕</span>
                 </div>
+              </div>
 
-                {/* Título */}
-                <h1 className="display-5 fw-bold text-danger mb-3">
-                  ¡Pago Rechazado!
-                </h1>
-                <p className="lead text-muted mb-4">
-                  No pudimos procesar tu pago
-                </p>
+              {/* Título */}
+              <h1 className="display-5 fw-bold text-danger mb-3">
+                ¡Pago Rechazado!
+              </h1>
+              <p className="lead text-muted mb-4">
+                No pudimos procesar tu pago
+              </p>
 
                 {/* Razones posibles */}
                 <div className="alert alert-warning text-start mb-4">
@@ -76,15 +72,14 @@ function ErrorPago() {
                   </Link>
                 </div>
 
-                {/* Contacto */}
-                <div className="mt-4 pt-4 border-top">
-                  <p className="small text-muted mb-0">
-                    ¿Necesitas ayuda? <br />
-                    <a href="/contacto" className="text-decoration-none">
-                      📧 Contáctanos
-                    </a> o llámanos al <strong>+56 9 1234 5678</strong>
-                  </p>
-                </div>
+              {/* Contacto */}
+              <div className="mt-4 pt-4 border-top">
+                <p className="small text-muted mb-0">
+                  ¿Necesitas ayuda? <br />
+                  <a href="/contacto" className="text-decoration-none">
+                    📧 Contáctanos
+                  </a> o llámanos al <strong>+56 9 1234 5678</strong>
+                </p>
               </div>
             </div>
           </div>

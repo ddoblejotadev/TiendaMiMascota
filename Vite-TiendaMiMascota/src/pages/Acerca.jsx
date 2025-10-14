@@ -1,205 +1,265 @@
 /**
  * PÁGINA: ACERCA DE
- * Información sobre la tienda Mi Mascota
+ * Información sobre la tienda Mi Mascota - 100% Bootstrap
  */
-
-import '../styles/pages/Acerca.css';
 
 function Acerca() {
   return (
-    <div className="pagina-acerca">
+    <div>
       {/* Hero Section */}
-      <section className="acerca-hero">
-        <div className="hero-contenido">
-          <h1>🐾 Sobre Mi Mascota</h1>
-          <p className="hero-descripcion">
+      <section className="bg-primary text-white py-5 text-center" 
+               style={{ background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' }}>
+        <div className="container py-5">
+          <h1 className="display-3 fw-bold mb-3">🐾 Sobre Mi Mascota</h1>
+          <p className="lead fs-4">
             La mejor tienda para el cuidado y bienestar de tu mascota
           </p>
         </div>
       </section>
 
       {/* Nuestra Historia */}
-      <section className="seccion-historia">
-        <div className="contenedor-seccion">
-          <div className="historia-contenido">
-            <h2>📖 Nuestra Historia</h2>
-            <p>
-              <strong>Mi Mascota</strong> nació en 2020 con una misión clara: 
-              proporcionar productos de alta calidad para el cuidado y felicidad 
-              de las mascotas en Chile.
-            </p>
-            <p>
-              Lo que comenzó como una pequeña tienda local, hoy se ha convertido 
-              en una de las tiendas online más confiables del país, atendiendo 
-              a miles de familias que aman a sus mascotas.
-            </p>
-            <p>
-              Sabemos que tu mascota es parte de tu familia, por eso seleccionamos 
-              cuidadosamente cada producto que ofrecemos, garantizando calidad, 
-              seguridad y los mejores precios.
-            </p>
-          </div>
-          <div className="historia-imagen">
-            <img src="/images/tienda-historia.jpg" alt="Nuestra historia" />
+      <section className="py-5">
+        <div className="container">
+          <div className="row align-items-center g-5">
+            <div className="col-lg-6">
+              <h2 className="display-5 fw-bold mb-4">📖 Nuestra Historia</h2>
+              <p className="lead mb-3">
+                <strong>Mi Mascota</strong> nació en 2020 con una misión clara: 
+                proporcionar productos de alta calidad para el cuidado y felicidad 
+                de las mascotas en Chile.
+              </p>
+              <p className="mb-3">
+                Lo que comenzó como una pequeña tienda local, hoy se ha convertido 
+                en una de las tiendas online más confiables del país, atendiendo 
+                a miles de familias que aman a sus mascotas.
+              </p>
+              <p>
+                Sabemos que tu mascota es parte de tu familia, por eso seleccionamos 
+                cuidadosamente cada producto que ofrecemos, garantizando calidad, 
+                seguridad y los mejores precios.
+              </p>
+            </div>
+            <div className="col-lg-6">
+              <img src="/images/tienda-historia.jpg" alt="Nuestra historia" 
+                   className="img-fluid rounded shadow-lg"
+                   onError={(e) => e.target.src = 'https://via.placeholder.com/600x400?text=Mi+Mascota'} />
+            </div>
           </div>
         </div>
       </section>
 
       {/* Misión y Visión */}
-      <section className="seccion-mision-vision">
-        <div className="contenedor-seccion">
-          <div className="tarjeta-valor">
-            <div className="valor-icono">🎯</div>
-            <h3>Nuestra Misión</h3>
-            <p>
-              Proporcionar productos de calidad excepcional para el cuidado 
-              de mascotas, ofreciendo una experiencia de compra fácil, segura 
-              y confiable, contribuyendo al bienestar y felicidad de cada 
-              animal y su familia.
-            </p>
-          </div>
+      <section className="py-5 bg-light">
+        <div className="container">
+          <div className="row g-4">
+            <div className="col-md-6">
+              <div className="card h-100 border-0 shadow-sm">
+                <div className="card-body p-5 text-center">
+                  <div className="display-1 mb-4">🎯</div>
+                  <h3 className="fw-bold mb-3">Nuestra Misión</h3>
+                  <p>
+                    Proporcionar productos de calidad excepcional para el cuidado 
+                    de mascotas, ofreciendo una experiencia de compra fácil, segura 
+                    y confiable, contribuyendo al bienestar y felicidad de cada 
+                    animal y su familia.
+                  </p>
+                </div>
+              </div>
+            </div>
 
-          <div className="tarjeta-valor">
-            <div className="valor-icono">🌟</div>
-            <h3>Nuestra Visión</h3>
-            <p>
-              Ser la tienda líder en Chile para productos de mascotas, 
-              reconocida por nuestra calidad, servicio al cliente excepcional 
-              y compromiso con el bienestar animal, expandiendo nuestro 
-              alcance a toda Latinoamérica.
-            </p>
+            <div className="col-md-6">
+              <div className="card h-100 border-0 shadow-sm">
+                <div className="card-body p-5 text-center">
+                  <div className="display-1 mb-4">🌟</div>
+                  <h3 className="fw-bold mb-3">Nuestra Visión</h3>
+                  <p>
+                    Ser la tienda líder en Chile para productos de mascotas, 
+                    reconocida por nuestra calidad, servicio al cliente excepcional 
+                    y compromiso con el bienestar animal, expandiendo nuestro 
+                    alcance a toda Latinoamérica.
+                  </p>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
       {/* Valores */}
-      <section className="seccion-valores">
-        <h2>💎 Nuestros Valores</h2>
-        <div className="grid-valores">
-          <div className="valor-item">
-            <div className="valor-icono-pequeno">❤️</div>
-            <h4>Amor por los Animales</h4>
-            <p>Cada decisión la tomamos pensando en el bienestar de las mascotas</p>
-          </div>
+      <section className="py-5">
+        <div className="container">
+          <h2 className="display-5 fw-bold text-center mb-5">💎 Nuestros Valores</h2>
+          <div className="row g-4">
+            <div className="col-md-6 col-lg-4">
+              <div className="text-center p-4">
+                <div className="display-3 mb-3">❤️</div>
+                <h4 className="fw-bold mb-3">Amor por los Animales</h4>
+                <p className="text-muted">Cada decisión la tomamos pensando en el bienestar de las mascotas</p>
+              </div>
+            </div>
 
-          <div className="valor-item">
-            <div className="valor-icono-pequeno">✓</div>
-            <h4>Calidad Garantizada</h4>
-            <p>Solo ofrecemos productos de marcas confiables y probadas</p>
-          </div>
+            <div className="col-md-6 col-lg-4">
+              <div className="text-center p-4">
+                <div className="display-3 mb-3">✓</div>
+                <h4 className="fw-bold mb-3">Calidad Garantizada</h4>
+                <p className="text-muted">Solo ofrecemos productos de marcas confiables y probadas</p>
+              </div>
+            </div>
 
-          <div className="valor-item">
-            <div className="valor-icono-pequeno">🤝</div>
-            <h4>Confianza</h4>
-            <p>Construimos relaciones duraderas basadas en la transparencia</p>
-          </div>
+            <div className="col-md-6 col-lg-4">
+              <div className="text-center p-4">
+                <div className="display-3 mb-3">🤝</div>
+                <h4 className="fw-bold mb-3">Confianza</h4>
+                <p className="text-muted">Construimos relaciones duraderas basadas en la transparencia</p>
+              </div>
+            </div>
 
-          <div className="valor-item">
-            <div className="valor-icono-pequeno">🚀</div>
-            <h4>Innovación</h4>
-            <p>Constantemente buscamos mejorar nuestra oferta y servicios</p>
-          </div>
+            <div className="col-md-6 col-lg-4">
+              <div className="text-center p-4">
+                <div className="display-3 mb-3">🚀</div>
+                <h4 className="fw-bold mb-3">Innovación</h4>
+                <p className="text-muted">Constantemente buscamos mejorar nuestra oferta y servicios</p>
+              </div>
+            </div>
 
-          <div className="valor-item">
-            <div className="valor-icono-pequeno">🎓</div>
-            <h4>Educación</h4>
-            <p>Compartimos conocimiento para el mejor cuidado de las mascotas</p>
-          </div>
+            <div className="col-md-6 col-lg-4">
+              <div className="text-center p-4">
+                <div className="display-3 mb-3">🎓</div>
+                <h4 className="fw-bold mb-3">Educación</h4>
+                <p className="text-muted">Compartimos conocimiento para el mejor cuidado de las mascotas</p>
+              </div>
+            </div>
 
-          <div className="valor-item">
-            <div className="valor-icono-pequeno">🌍</div>
-            <h4>Responsabilidad</h4>
-            <p>Comprometidos con el medio ambiente y la comunidad</p>
+            <div className="col-md-6 col-lg-4">
+              <div className="text-center p-4">
+                <div className="display-3 mb-3">🌍</div>
+                <h4 className="fw-bold mb-3">Responsabilidad</h4>
+                <p className="text-muted">Comprometidos con el medio ambiente y la comunidad</p>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
       {/* Equipo */}
-      <section className="seccion-equipo">
-        <h2>👥 Nuestro Equipo</h2>
-        <p className="equipo-descripcion">
-          Conoce a las personas apasionadas que hacen posible Mi Mascota
-        </p>
-        
-        <div className="grid-equipo">
-          <div className="miembro-equipo">
-            <div className="miembro-foto">
-              <img src="/images/equipo-1.jpg" alt="María González" />
+      <section className="py-5 bg-light">
+        <div className="container">
+          <h2 className="display-5 fw-bold text-center mb-3">👥 Nuestro Equipo</h2>
+          <p className="text-center text-muted mb-5">
+            Conoce a las personas apasionadas que hacen posible Mi Mascota
+          </p>
+          
+          <div className="row g-4">
+            <div className="col-sm-6 col-lg-3">
+              <div className="card border-0 shadow-sm h-100 text-center">
+                <div className="card-body p-4">
+                  <div className="mb-3">
+                    <div className="rounded-circle bg-primary d-inline-flex align-items-center justify-content-center text-white" 
+                         style={{ width: '100px', height: '100px', fontSize: '3rem' }}>
+                      👩‍⚕️
+                    </div>
+                  </div>
+                  <h5 className="fw-bold mb-1">María González</h5>
+                  <p className="text-primary small fw-semibold mb-2">Fundadora & CEO</p>
+                  <p className="text-muted small">Veterinaria con 10 años de experiencia</p>
+                </div>
+              </div>
             </div>
-            <h3>María González</h3>
-            <p className="miembro-cargo">Fundadora & CEO</p>
-            <p className="miembro-descripcion">
-              Veterinaria con 10 años de experiencia
-            </p>
-          </div>
 
-          <div className="miembro-equipo">
-            <div className="miembro-foto">
-              <img src="/images/equipo-2.jpg" alt="Carlos Ruiz" />
+            <div className="col-sm-6 col-lg-3">
+              <div className="card border-0 shadow-sm h-100 text-center">
+                <div className="card-body p-4">
+                  <div className="mb-3">
+                    <div className="rounded-circle bg-success d-inline-flex align-items-center justify-content-center text-white" 
+                         style={{ width: '100px', height: '100px', fontSize: '3rem' }}>
+                      👨‍💼
+                    </div>
+                  </div>
+                  <h5 className="fw-bold mb-1">Carlos Ruiz</h5>
+                  <p className="text-success small fw-semibold mb-2">Director de Operaciones</p>
+                  <p className="text-muted small">Experto en logística y distribución</p>
+                </div>
+              </div>
             </div>
-            <h3>Carlos Ruiz</h3>
-            <p className="miembro-cargo">Director de Operaciones</p>
-            <p className="miembro-descripcion">
-              Experto en logística y distribución
-            </p>
-          </div>
 
-          <div className="miembro-equipo">
-            <div className="miembro-foto">
-              <img src="/images/equipo-3.jpg" alt="Ana Martínez" />
+            <div className="col-sm-6 col-lg-3">
+              <div className="card border-0 shadow-sm h-100 text-center">
+                <div className="card-body p-4">
+                  <div className="mb-3">
+                    <div className="rounded-circle bg-info d-inline-flex align-items-center justify-content-center text-white" 
+                         style={{ width: '100px', height: '100px', fontSize: '3rem' }}>
+                      👩‍💻
+                    </div>
+                  </div>
+                  <h5 className="fw-bold mb-1">Ana Martínez</h5>
+                  <p className="text-info small fw-semibold mb-2">Jefa de Atención al Cliente</p>
+                  <p className="text-muted small">Dedicada a la satisfacción del cliente</p>
+                </div>
+              </div>
             </div>
-            <h3>Ana Martínez</h3>
-            <p className="miembro-cargo">Jefa de Atención al Cliente</p>
-            <p className="miembro-descripcion">
-              Dedicada a la satisfacción del cliente
-            </p>
-          </div>
 
-          <div className="miembro-equipo">
-            <div className="miembro-foto">
-              <img src="/images/equipo-4.jpg" alt="Pedro Silva" />
+            <div className="col-sm-6 col-lg-3">
+              <div className="card border-0 shadow-sm h-100 text-center">
+                <div className="card-body p-4">
+                  <div className="mb-3">
+                    <div className="rounded-circle bg-warning d-inline-flex align-items-center justify-content-center text-white" 
+                         style={{ width: '100px', height: '100px', fontSize: '3rem' }}>
+                      👨‍🔬
+                    </div>
+                  </div>
+                  <h5 className="fw-bold mb-1">Pedro Silva</h5>
+                  <p className="text-warning small fw-semibold mb-2">Especialista en Productos</p>
+                  <p className="text-muted small">Curador de nuestro catálogo</p>
+                </div>
+              </div>
             </div>
-            <h3>Pedro Silva</h3>
-            <p className="miembro-cargo">Especialista en Productos</p>
-            <p className="miembro-descripcion">
-              Curador de nuestro catálogo
-            </p>
           </div>
         </div>
       </section>
 
       {/* Estadísticas */}
-      <section className="seccion-estadisticas">
-        <h2>📊 Nuestros Números</h2>
-        <div className="grid-estadisticas">
-          <div className="estadistica">
-            <div className="estadistica-numero">5,000+</div>
-            <div className="estadistica-texto">Clientes Felices</div>
-          </div>
+      <section className="py-5">
+        <div className="container">
+          <h2 className="display-5 fw-bold text-center mb-5">📊 Nuestros Números</h2>
+          <div className="row g-4 text-center">
+            <div className="col-sm-6 col-lg-3">
+              <div className="p-4">
+                <div className="display-3 fw-bold text-primary mb-2">5,000+</div>
+                <div className="text-muted">Clientes Felices</div>
+              </div>
+            </div>
 
-          <div className="estadistica">
-            <div className="estadistica-numero">15,000+</div>
-            <div className="estadistica-texto">Productos Vendidos</div>
-          </div>
+            <div className="col-sm-6 col-lg-3">
+              <div className="p-4">
+                <div className="display-3 fw-bold text-success mb-2">15,000+</div>
+                <div className="text-muted">Productos Vendidos</div>
+              </div>
+            </div>
 
-          <div className="estadistica">
-            <div className="estadistica-numero">500+</div>
-            <div className="estadistica-texto">Productos Diferentes</div>
-          </div>
+            <div className="col-sm-6 col-lg-3">
+              <div className="p-4">
+                <div className="display-3 fw-bold text-info mb-2">500+</div>
+                <div className="text-muted">Productos Diferentes</div>
+              </div>
+            </div>
 
-          <div className="estadistica">
-            <div className="estadistica-numero">4.8⭐</div>
-            <div className="estadistica-texto">Calificación Promedio</div>
+            <div className="col-sm-6 col-lg-3">
+              <div className="p-4">
+                <div className="display-3 fw-bold text-warning mb-2">4.8⭐</div>
+                <div className="text-muted">Calificación Promedio</div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
       {/* Call to Action */}
-      <section className="seccion-cta">
-        <div className="cta-contenido">
-          <h2>¿Listo para cuidar mejor a tu mascota?</h2>
-          <p>Explora nuestra amplia selección de productos</p>
-          <a href="/productos" className="boton-cta">
+      <section className="py-5 bg-primary text-white text-center"
+               style={{ background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' }}>
+        <div className="container py-4">
+          <h2 className="display-5 fw-bold mb-3">¿Listo para cuidar mejor a tu mascota?</h2>
+          <p className="lead mb-4">Explora nuestra amplia selección de productos</p>
+          <a href="/productos" className="btn btn-light btn-lg px-5 py-3 fw-bold">
             Ver Productos
           </a>
         </div>

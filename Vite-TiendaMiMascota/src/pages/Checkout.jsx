@@ -6,9 +6,8 @@
 
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useCarrito } from '../hooks/useCarrito';
+import useCarrito from '../hooks/useCarrito';
 import { formatearPrecio } from '../util/formatters';
-import '../styles/pages/Checkout.css';
 
 function Checkout() {
   const navigate = useNavigate();
@@ -108,16 +107,15 @@ function Checkout() {
   const total = subtotal() + costoEnvio;
 
   return (
-    <div className="pagina-checkout">
-      <div className="container py-5">
-        <h1 className="text-center mb-5">🛒 Finalizar Compra</h1>
+    <div className="container py-5">
+      <h1 className="text-center mb-5 display-4 fw-bold">🛒 Finalizar Compra</h1>
 
         <div className="row g-4">
           {/* Formulario de envío */}
           <div className="col-lg-7">
-            <div className="card">
-              <div className="card-body">
-                <h3 className="card-title mb-4">📦 Información de Envío</h3>
+            <div className="card shadow-sm border-0">
+              <div className="card-body p-4">
+                <h3 className="card-title mb-4 fw-bold">📦 Información de Envío</h3>
                 
                 <form onSubmit={procesarPago}>
                   {/* Datos personales */}
@@ -262,12 +260,12 @@ function Checkout() {
 
           {/* Resumen de la orden */}
           <div className="col-lg-5">
-            <div className="card position-sticky" style={{ top: '100px' }}>
-              <div className="card-body">
-                <h3 className="card-title mb-4">📋 Resumen de Compra</h3>
+            <div className="card shadow-sm border-0 position-sticky" style={{ top: '100px' }}>
+              <div className="card-body p-4">
+                <h3 className="card-title mb-4 fw-bold">📋 Resumen de Compra</h3>
 
                 {/* Lista de productos */}
-                <div className="lista-productos mb-4">
+                <div className="mb-4">
                   {carrito.map((item) => (
                     <div key={item.id} className="d-flex gap-3 mb-3 pb-3 border-bottom">
                       <img
@@ -287,7 +285,7 @@ function Checkout() {
                 </div>
 
                 {/* Totales */}
-                <div className="totales">
+                <div>
                   <div className="d-flex justify-content-between mb-2">
                     <span>Subtotal:</span>
                     <span>{formatearPrecio(subtotal())}</span>
@@ -318,7 +316,6 @@ function Checkout() {
             </div>
           </div>
         </div>
-      </div>
     </div>
   );
 }

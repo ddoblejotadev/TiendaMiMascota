@@ -3,8 +3,6 @@
  * Permite filtrar productos por categoría y ordenar
  */
 
-import '../styles/components/ProductFilter.css';
-
 function ProductFilter({ 
   categoriaSeleccionada, 
   alCambiarCategoria,

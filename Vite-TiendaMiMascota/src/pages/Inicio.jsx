@@ -1,15 +1,15 @@
 /**
  * PÁGINA: INICIO
- * Página principal de la tienda
+ * Página principal de la tienda - 100% Bootstrap
  */
 
 import { Link, useNavigate } from 'react-router-dom';
 import useProductos from '../hooks/useProductos';
+import ProductCard from '../components/ProductCard';
 import imagenComida from '../assets/Comida.jpg';
 import imagenJuguetes from '../assets/jugetes.png';
 import imagenAccesorios from '../assets/accesorios.png';
 import imagenHigiene from '../assets/higiene.png';
-import '../styles/pages/Inicio.css';
 
 function Inicio() {
   const navigate = useNavigate();
@@ -17,13 +17,6 @@ function Inicio() {
   
   // Mostrar solo los primeros 4 productos destacados
   const productosDestacados = todosLosProductos.slice(0, 4);
-
-  /**
-   * Formatear precio
-   */
-  const formatearPrecio = (precio) => {
-    return '$' + precio.toLocaleString('es-CL');
-  };
   
   /**
    * Ir a la categoría seleccionada
@@ -33,149 +26,169 @@ function Inicio() {
   };
 
   return (
-    <div className="pagina-inicio">
-      {/* SECCIÓN 1: Banner Principal */}
-      <section className="hero">
-        <div className="hero-contenido">
-          <h1>🐾 Bienvenido a Mi Mascota</h1>
-          <p>Los mejores productos para tu mejor amigo</p>
-          <p className="hero-descripcion">
+    <div>
+      {/* SECCIÓN 1: Banner Principal con gradiente */}
+      <section className="bg-primary text-white py-5" style={{ background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' }}>
+        <div className="container text-center py-5">
+          <h1 className="display-3 fw-bold mb-3">🐾 Bienvenido a Mi Mascota</h1>
+          <p className="lead fs-4 mb-2">Los mejores productos para tu mejor amigo</p>
+          <p className="fs-5 mb-4 opacity-75">
             Encuentra todo lo que necesita tu mascota: alimento, juguetes, accesorios y más
           </p>
-          <Link to="/productos" className="boton-hero">
+          <Link to="/productos" className="btn btn-light btn-lg px-5 py-3 rounded-pill shadow">
             Ver Todos los Productos
           </Link>
         </div>
       </section>
 
       {/* SECCIÓN 2: Productos Destacados */}
-      <section className="seccion-destacados">
-        <h2>⭐ Productos Destacados</h2>
-        <p className="subtitulo">Los productos más populares de nuestra tienda</p>
-        
-        {cargando ? (
-          <p className="texto-cargando">Cargando productos...</p>
-        ) : (
-          <div className="grid-productos">
-            {productosDestacados.map(producto => (
-              <div key={producto.id} className="tarjeta-producto">
-                <div className="producto-imagen">
-                  <img 
-                    src={producto.imagen} 
-                    alt={producto.nombre}
-                    onError={(e) => {
-                      e.target.src = '/images/placeholder.jpg';
-                    }}
-                  />
-                  {producto.stock < 10 && (
-                    <span className="badge-stock">¡Últimas unidades!</span>
-                  )}
-                </div>
-                
-                <div className="producto-contenido">
-                  <h3>{producto.nombre}</h3>
-                  <p>{producto.descripcion}</p>
-                  <div className="producto-footer">
-                    <span className="precio">{formatearPrecio(producto.precio)}</span>
-                    <Link 
-                      to={`/producto/${producto.id}`} 
-                      className="boton-ver"
-                    >
-                      Ver Detalles
-                    </Link>
-                  </div>
-                </div>
-              </div>
-            ))}
+      <section className="py-5 bg-light">
+        <div className="container">
+          <div className="text-center mb-5">
+            <h2 className="display-5 fw-bold">⭐ Productos Destacados</h2>
+            <p className="text-muted fs-5">Los productos más populares de nuestra tienda</p>
           </div>
-        )}
-        
-        <div className="contenedor-boton-ver-mas">
-          <Link to="/productos" className="boton-ver-mas">
-            Ver Todos los Productos →
-          </Link>
+          
+          {cargando ? (
+            <div className="text-center py-5">
+              <div className="spinner-border text-primary" role="status">
+                <span className="visually-hidden">Cargando...</span>
+              </div>
+              <p className="text-muted mt-3">Cargando productos...</p>
+            </div>
+          ) : (
+            <>
+              <div className="row g-4">
+                {productosDestacados.map(producto => (
+                  <div key={producto.id} className="col-sm-6 col-md-4 col-lg-3">
+                    <ProductCard producto={producto} />
+                  </div>
+                ))}
+              </div>
+              
+              <div className="text-center mt-5">
+                <Link to="/productos" className="btn btn-primary btn-lg px-5">
+                  Ver Todos los Productos →
+                </Link>
+              </div>
+            </>
+          )}
         </div>
       </section>
 
       {/* SECCIÓN 3: Categorías */}
-      <section className="seccion-categorias">
-        <h2>🏷️ Categorías</h2>
-        <p className="subtitulo">Explora nuestras categorías de productos</p>
-        
-        <div className="grid-categorias">
-          <div 
-            className="tarjeta-categoria"
-            onClick={() => irACategoria('Alimento')}
-          >
-            <div className="categoria-imagen">
-              <img src={imagenComida} alt="Alimento" />
-            </div>
-            <h3>Alimento</h3>
-            <p>Nutrición balanceada para tu mascota</p>
+      <section className="py-5">
+        <div className="container">
+          <div className="text-center mb-5">
+            <h2 className="display-5 fw-bold">🏷️ Categorías</h2>
+            <p className="text-muted fs-5">Explora nuestras categorías de productos</p>
           </div>
-
-          <div 
-            className="tarjeta-categoria"
-            onClick={() => irACategoria('Juguetes')}
-          >
-            <div className="categoria-imagen">
-              <img src={imagenJuguetes} alt="Juguetes" />
+          
+          <div className="row g-4">
+            <div className="col-sm-6 col-lg-3">
+              <div 
+                className="card h-100 shadow-sm border-0 cursor-pointer"
+                onClick={() => irACategoria('Alimento')}
+                style={{ cursor: 'pointer', transition: 'transform 0.2s' }}
+                onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-10px)'}
+                onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}
+              >
+                <img src={imagenComida} className="card-img-top" alt="Alimento" style={{ height: '200px', objectFit: 'cover' }} />
+                <div className="card-body text-center">
+                  <h5 className="card-title fw-bold">Alimento</h5>
+                  <p className="card-text text-muted small">Nutrición balanceada para tu mascota</p>
+                </div>
+              </div>
             </div>
-            <h3>Juguetes</h3>
-            <p>Diversión y entretenimiento garantizado</p>
-          </div>
 
-          <div 
-            className="tarjeta-categoria"
-            onClick={() => irACategoria('Accesorios')}
-          >
-            <div className="categoria-imagen">
-              <img src={imagenAccesorios} alt="Accesorios" />
+            <div className="col-sm-6 col-lg-3">
+              <div 
+                className="card h-100 shadow-sm border-0 cursor-pointer"
+                onClick={() => irACategoria('Juguetes')}
+                style={{ cursor: 'pointer', transition: 'transform 0.2s' }}
+                onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-10px)'}
+                onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}
+              >
+                <img src={imagenJuguetes} className="card-img-top" alt="Juguetes" style={{ height: '200px', objectFit: 'cover' }} />
+                <div className="card-body text-center">
+                  <h5 className="card-title fw-bold">Juguetes</h5>
+                  <p className="card-text text-muted small">Diversión y entretenimiento garantizado</p>
+                </div>
+              </div>
             </div>
-            <h3>Accesorios</h3>
-            <p>Todo lo que necesita tu mascota</p>
-          </div>
 
-          <div 
-            className="tarjeta-categoria"
-            onClick={() => irACategoria('Higiene')}
-          >
-            <div className="categoria-imagen">
-              <img src={imagenHigiene} alt="Higiene" />
+            <div className="col-sm-6 col-lg-3">
+              <div 
+                className="card h-100 shadow-sm border-0 cursor-pointer"
+                onClick={() => irACategoria('Accesorios')}
+                style={{ cursor: 'pointer', transition: 'transform 0.2s' }}
+                onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-10px)'}
+                onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}
+              >
+                <img src={imagenAccesorios} className="card-img-top" alt="Accesorios" style={{ height: '200px', objectFit: 'cover' }} />
+                <div className="card-body text-center">
+                  <h5 className="card-title fw-bold">Accesorios</h5>
+                  <p className="card-text text-muted small">Todo lo que necesita tu mascota</p>
+                </div>
+              </div>
             </div>
-            <h3>Higiene</h3>
-            <p>Productos para su cuidado e higiene</p>
+
+            <div className="col-sm-6 col-lg-3">
+              <div 
+                className="card h-100 shadow-sm border-0 cursor-pointer"
+                onClick={() => irACategoria('Higiene')}
+                style={{ cursor: 'pointer', transition: 'transform 0.2s' }}
+                onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-10px)'}
+                onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}
+              >
+                <img src={imagenHigiene} className="card-img-top" alt="Higiene" style={{ height: '200px', objectFit: 'cover' }} />
+                <div className="card-body text-center">
+                  <h5 className="card-title fw-bold">Higiene</h5>
+                  <p className="card-text text-muted small">Productos para su cuidado e higiene</p>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
       {/* SECCIÓN 4: Beneficios */}
-      <section className="seccion-beneficios">
-        <h2>¿Por qué comprar con nosotros?</h2>
-        
-        <div className="grid-beneficios">
-          <div className="tarjeta-beneficio">
-            <div className="beneficio-icono">🚚</div>
-            <h3>Envío Gratis</h3>
-            <p>En compras sobre $30.000</p>
-          </div>
+      <section className="py-5 bg-light">
+        <div className="container">
+          <h2 className="text-center display-5 fw-bold mb-5">¿Por qué comprar con nosotros?</h2>
+          
+          <div className="row g-4">
+            <div className="col-sm-6 col-lg-3">
+              <div className="card h-100 border-0 shadow-sm text-center p-4">
+                <div className="display-1 mb-3">🚚</div>
+                <h5 className="fw-bold">Envío Gratis</h5>
+                <p className="text-muted mb-0">En compras sobre $30.000</p>
+              </div>
+            </div>
 
-          <div className="tarjeta-beneficio">
-            <div className="beneficio-icono">💳</div>
-            <h3>Pago Seguro</h3>
-            <p>Todas las tarjetas aceptadas</p>
-          </div>
+            <div className="col-sm-6 col-lg-3">
+              <div className="card h-100 border-0 shadow-sm text-center p-4">
+                <div className="display-1 mb-3">💳</div>
+                <h5 className="fw-bold">Pago Seguro</h5>
+                <p className="text-muted mb-0">Todas las tarjetas aceptadas</p>
+              </div>
+            </div>
 
-          <div className="tarjeta-beneficio">
-            <div className="beneficio-icono">🔄</div>
-            <h3>Devolución Fácil</h3>
-            <p>30 días para devolver</p>
-          </div>
+            <div className="col-sm-6 col-lg-3">
+              <div className="card h-100 border-0 shadow-sm text-center p-4">
+                <div className="display-1 mb-3">🔄</div>
+                <h5 className="fw-bold">Devolución Fácil</h5>
+                <p className="text-muted mb-0">30 días para devolver</p>
+              </div>
+            </div>
 
-          <div className="tarjeta-beneficio">
-            <div className="beneficio-icono">🎧</div>
-            <h3>Soporte 24/7</h3>
-            <p>Atención personalizada</p>
+            <div className="col-sm-6 col-lg-3">
+              <div className="card h-100 border-0 shadow-sm text-center p-4">
+                <div className="display-1 mb-3">🎧</div>
+                <h5 className="fw-bold">Soporte 24/7</h5>
+                <p className="text-muted mb-0">Atención personalizada</p>
+              </div>
+            </div>
           </div>
         </div>
       </section>

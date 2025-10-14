@@ -3,8 +3,6 @@
  * Muestra el resumen de compra con totales
  */
 
-import '../styles/components/CartSummary.css';
-
 function CartSummary({ 
   subtotal, 
   envio, 

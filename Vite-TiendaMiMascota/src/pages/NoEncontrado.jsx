@@ -4,7 +4,6 @@
  */
 
 import { useNavigate } from 'react-router-dom';
-import '../styles/pages/NoEncontrado.css';
 
 function NoEncontrado() {
   const navegar = useNavigate();
@@ -24,29 +23,29 @@ function NoEncontrado() {
   };
 
   return (
-    <div className="pagina-no-encontrado">
-      <div className="no-encontrado-contenido">
+    <div className="container py-5 text-center" style={{ minHeight: '80vh' }}>
+      <div className="py-5">
         {/* Número 404 grande */}
-        <div className="error-codigo">404</div>
+        <div className="display-1 fw-bold text-primary mb-4" style={{ fontSize: '10rem' }}>
+          404
+        </div>
 
         {/* Ilustración */}
-        <div className="error-ilustracion">
-          <div className="mascota-triste">
-            🐕‍🦺
-          </div>
+        <div className="mb-4">
+          <span className="display-1">🐕‍🦺</span>
         </div>
 
         {/* Mensaje */}
-        <h1>¡Ups! Página No Encontrada</h1>
-        <p className="error-descripcion">
+        <h1 className="display-4 fw-bold mb-3">¡Ups! Página No Encontrada</h1>
+        <p className="lead text-muted mb-5">
           Parece que esta página se fue a pasear con los perritos 
           y no ha vuelto todavía...
         </p>
 
         {/* Sugerencias */}
-        <div className="error-sugerencias">
-          <p>Esto puede haber pasado por:</p>
-          <ul>
+        <div className="alert alert-info d-inline-block text-start mb-5">
+          <p className="fw-bold mb-2">Esto puede haber pasado por:</p>
+          <ul className="mb-0">
             <li>La URL está mal escrita</li>
             <li>La página fue movida o eliminada</li>
             <li>El enlace está desactualizado</li>

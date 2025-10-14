@@ -24,9 +24,6 @@ import CompraExitosa from './pages/CompraExitosa';
 import ErrorPago from './pages/ErrorPago';
 import Ofertas from './pages/Ofertas';
 
-// Importar CSS global
-import './styles/global.css';
-
 function App() {
   return (
     <BrowserRouter>

@@ -1,12 +1,11 @@
 /**
  * PÁGINA: REGISTRARSE
- * Formulario de registro de nuevos usuarios
+ * Formulario de registro de nuevos usuarios - 100% Bootstrap
  */
 
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import useAutenticacion from '../hooks/useAutenticacion';
-import '../styles/pages/Registrarse.css';
 
 function Registrarse() {
   const navegar = useNavigate();
@@ -42,150 +41,167 @@ function Registrarse() {
   };
 
   return (
-    <div className="pagina-registrarse">
-      <div className="registrarse-contenedor">
+    <div className="container py-5" style={{ minHeight: '80vh' }}>
+      <div className="row g-0 shadow-lg rounded-4 overflow-hidden" style={{ maxWidth: '1000px', margin: '0 auto' }}>
         {/* Lado izquierdo: Formulario */}
-        <div className="registrarse-formulario">
-          <h2>Crear Cuenta</h2>
-          <p className="registrarse-subtitulo">
-            Regístrate para empezar a comprar
-          </p>
+        <div className="col-lg-7 bg-white p-5">
+          <div className="mx-auto" style={{ maxWidth: '400px' }}>
+            <h2 className="fw-bold mb-2">Crear Cuenta</h2>
+            <p className="text-muted mb-4">Regístrate para empezar a comprar</p>
 
-          <form onSubmit={manejarEnvio}>
-            {/* Nombre completo */}
-            <div className="grupo-formulario">
-              <label htmlFor="nombre">Nombre Completo</label>
-              <input
-                type="text"
-                id="nombre"
-                placeholder="Juan Pérez"
-                value={nombre}
-                onChange={(e) => setNombre(e.target.value)}
-                required
-              />
-            </div>
+            <form onSubmit={manejarEnvio}>
+              {/* Nombre completo */}
+              <div className="mb-3">
+                <label htmlFor="nombre" className="form-label fw-semibold">Nombre Completo</label>
+                <input
+                  type="text"
+                  id="nombre"
+                  className="form-control form-control-lg"
+                  placeholder="Juan Pérez"
+                  value={nombre}
+                  onChange={(e) => setNombre(e.target.value)}
+                  required
+                />
+              </div>
 
-            {/* Correo electrónico */}
-            <div className="grupo-formulario">
-              <label htmlFor="correo">Correo Electrónico</label>
-              <input
-                type="email"
-                id="correo"
-                placeholder="tu@correo.com"
-                value={correo}
-                onChange={(e) => setCorreo(e.target.value)}
-                required
-              />
-            </div>
+              {/* Correo electrónico */}
+              <div className="mb-3">
+                <label htmlFor="correo" className="form-label fw-semibold">Correo Electrónico</label>
+                <input
+                  type="email"
+                  id="correo"
+                  className="form-control form-control-lg"
+                  placeholder="tu@correo.com"
+                  value={correo}
+                  onChange={(e) => setCorreo(e.target.value)}
+                  required
+                />
+              </div>
 
-            {/* Contraseña */}
-            <div className="grupo-formulario">
-              <label htmlFor="contrasena">Contraseña</label>
-              <div className="campo-contrasena">
+              {/* Contraseña */}
+              <div className="mb-3">
+                <label htmlFor="contrasena" className="form-label fw-semibold">Contraseña</label>
+                <div className="input-group">
+                  <input
+                    type={mostrarContrasena ? 'text' : 'password'}
+                    id="contrasena"
+                    className="form-control form-control-lg"
+                    placeholder="Mínimo 6 caracteres"
+                    value={contrasena}
+                    onChange={(e) => setContrasena(e.target.value)}
+                    required
+                    minLength="6"
+                  />
+                  <button
+                    type="button"
+                    className="btn btn-outline-secondary"
+                    onClick={() => setMostrarContrasena(!mostrarContrasena)}
+                  >
+                    {mostrarContrasena ? '👁️' : '👁️‍🗨️'}
+                  </button>
+                </div>
+              </div>
+
+              {/* Confirmar contraseña */}
+              <div className="mb-3">
+                <label htmlFor="confirmar-contrasena" className="form-label fw-semibold">Confirmar Contraseña</label>
                 <input
                   type={mostrarContrasena ? 'text' : 'password'}
-                  id="contrasena"
-                  placeholder="Mínimo 6 caracteres"
-                  value={contrasena}
-                  onChange={(e) => setContrasena(e.target.value)}
+                  id="confirmar-contrasena"
+                  className="form-control form-control-lg"
+                  placeholder="Repite tu contraseña"
+                  value={confirmarContrasena}
+                  onChange={(e) => setConfirmarContrasena(e.target.value)}
                   required
                   minLength="6"
                 />
-                <button
-                  type="button"
-                  className="boton-mostrar-contrasena"
-                  onClick={() => setMostrarContrasena(!mostrarContrasena)}
-                >
-                  {mostrarContrasena ? '👁️' : '👁️‍🗨️'}
-                </button>
               </div>
+
+              {/* Checkbox términos */}
+              <div className="mb-4">
+                <div className="form-check">
+                  <input
+                    type="checkbox"
+                    className="form-check-input"
+                    id="terminos"
+                    checked={aceptoTerminos}
+                    onChange={(e) => setAceptoTerminos(e.target.checked)}
+                    required
+                  />
+                  <label className="form-check-label" htmlFor="terminos">
+                    Acepto los{' '}
+                    <a href="#" onClick={(e) => e.preventDefault()} className="text-decoration-none">
+                      términos y condiciones
+                    </a>
+                  </label>
+                </div>
+              </div>
+
+              {/* Botón enviar */}
+              <button type="submit" className="btn btn-primary btn-lg w-100 fw-bold mb-3">
+                Crear Cuenta
+              </button>
+            </form>
+
+            {/* Link a iniciar sesión */}
+            <div className="text-center">
+              <p className="text-muted mb-0">
+                ¿Ya tienes cuenta?{' '}
+                <Link to="/iniciar-sesion" className="text-decoration-none fw-semibold">
+                  Inicia sesión aquí
+                </Link>
+              </p>
             </div>
-
-            {/* Confirmar contraseña */}
-            <div className="grupo-formulario">
-              <label htmlFor="confirmar-contrasena">Confirmar Contraseña</label>
-              <input
-                type={mostrarContrasena ? 'text' : 'password'}
-                id="confirmar-contrasena"
-                placeholder="Repite tu contraseña"
-                value={confirmarContrasena}
-                onChange={(e) => setConfirmarContrasena(e.target.value)}
-                required
-                minLength="6"
-              />
-            </div>
-
-            {/* Checkbox términos */}
-            <div className="grupo-checkbox">
-              <label className="etiqueta-checkbox">
-                <input
-                  type="checkbox"
-                  checked={aceptoTerminos}
-                  onChange={(e) => setAceptoTerminos(e.target.checked)}
-                  required
-                />
-                <span>
-                  Acepto los{' '}
-                  <a href="#" onClick={(e) => e.preventDefault()}>
-                    términos y condiciones
-                  </a>
-                </span>
-              </label>
-            </div>
-
-            {/* Botón enviar */}
-            <button type="submit" className="boton-registrarse">
-              Crear Cuenta
-            </button>
-          </form>
-
-          {/* Link a iniciar sesión */}
-          <div className="registrarse-enlace-login">
-            <p>
-              ¿Ya tienes cuenta?{' '}
-              <Link to="/iniciar-sesion">Inicia sesión aquí</Link>
-            </p>
           </div>
         </div>
 
-        {/* Lado derecho: Información */}
-        <div className="registrarse-informacion">
-          <h1>🐾 Únete a Mi Mascota</h1>
-          <p>Crea tu cuenta y disfruta de:</p>
+        {/* Lado derecho: Información decorativa */}
+        <div className="col-lg-5 d-none d-lg-flex flex-column justify-content-center text-white p-5" 
+             style={{ background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' }}>
+          <h1 className="display-5 fw-bold mb-3">🐾 Únete a Mi Mascota</h1>
+          <p className="lead mb-4">Crea tu cuenta y disfruta de:</p>
           
-          <ul className="lista-beneficios">
-            <li>
-              <span className="icono">✓</span>
-              <div>
-                <strong>Compras Rápidas</strong>
-                <p>Guarda tus direcciones y datos</p>
+          <div className="d-flex flex-column gap-3">
+            <div className="d-flex align-items-start gap-3">
+              <div className="bg-white bg-opacity-25 rounded-circle d-flex align-items-center justify-content-center" 
+                   style={{ minWidth: '50px', height: '50px' }}>
+                <span className="fs-4 fw-bold">✓</span>
               </div>
-            </li>
-            <li>
-              <span className="icono">✓</span>
               <div>
-                <strong>Historial de Pedidos</strong>
-                <p>Revisa todas tus compras</p>
+                <h5 className="mb-1 fw-bold">Compras Rápidas</h5>
+                <p className="text-white-50 mb-0 small">Guarda tus direcciones y datos</p>
               </div>
-            </li>
-            <li>
-              <span className="icono">✓</span>
+            </div>
+            <div className="d-flex align-items-start gap-3">
+              <div className="bg-white bg-opacity-25 rounded-circle d-flex align-items-center justify-content-center" 
+                   style={{ minWidth: '50px', height: '50px' }}>
+                <span className="fs-4 fw-bold">✓</span>
+              </div>
               <div>
-                <strong>Ofertas Exclusivas</strong>
-                <p>Descuentos solo para miembros</p>
+                <h5 className="mb-1 fw-bold">Historial de Pedidos</h5>
+                <p className="text-white-50 mb-0 small">Revisa todas tus compras</p>
               </div>
-            </li>
-            <li>
-              <span className="icono">✓</span>
+            </div>
+            <div className="d-flex align-items-start gap-3">
+              <div className="bg-white bg-opacity-25 rounded-circle d-flex align-items-center justify-content-center" 
+                   style={{ minWidth: '50px', height: '50px' }}>
+                <span className="fs-4 fw-bold">✓</span>
+              </div>
               <div>
-                <strong>Envío Gratis</strong>
-                <p>En tu primera compra</p>
+                <h5 className="mb-1 fw-bold">Ofertas Exclusivas</h5>
+                <p className="text-white-50 mb-0 small">Descuentos solo para miembros</p>
               </div>
-            </li>
-          </ul>
-
-          <div className="registrarse-ilustracion">
-            <img src="/images/registro-mascota.jpg" alt="Mascota feliz" />
+            </div>
+            <div className="d-flex align-items-start gap-3">
+              <div className="bg-white bg-opacity-25 rounded-circle d-flex align-items-center justify-content-center" 
+                   style={{ minWidth: '50px', height: '50px' }}>
+                <span className="fs-4 fw-bold">✓</span>
+              </div>
+              <div>
+                <h5 className="mb-1 fw-bold">Envío Gratis</h5>
+                <p className="text-white-50 mb-0 small">En tu primera compra</p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
