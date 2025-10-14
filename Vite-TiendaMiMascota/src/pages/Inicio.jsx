@@ -24,7 +24,7 @@ function Inicio() {
   const formatearPrecio = (precio) => {
     return '$' + precio.toLocaleString('es-CL');
   };
-
+  
   /**
    * Ir a la categoría seleccionada
    */
