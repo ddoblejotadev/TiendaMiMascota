@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import ProductCard from '../components/ProductCard'
 import ProductFilter from '../components/ProductFilter'
-import { useProducts } from '../hooks/useProducts'
+import { useProducts } from '../hooks/useProductos'
 import '../styles/global.css'
 
 function Products() {
