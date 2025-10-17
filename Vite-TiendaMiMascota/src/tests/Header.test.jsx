@@ -1,11 +1,11 @@
 import { describe, it, expect } from 'vitest';
-import { render, screen } from '@testing-library/react';
-import { BrowserRouter } from 'react-router-dom';
+import { screen } from '@testing-library/react';
 import Header from '../components/Header';
+import { renderWithProviders } from './test-utils';
 
 describe('Header', () => {
   it('renderiza correctamente', () => {
-    render(<BrowserRouter><Header /></BrowserRouter>);
+  renderWithProviders(<Header />);
     expect(screen.getByText(/Inicio/i)).toBeInTheDocument();
   });
 });

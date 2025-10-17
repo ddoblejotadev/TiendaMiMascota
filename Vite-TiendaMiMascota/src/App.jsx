@@ -1,12 +1,5 @@
-/**
- * APLICACIÓN PRINCIPAL
- * Configuración de rutas y layout
- */
-
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import MainLayout from './layouts/MainLayout';
-
-// Importar páginas
 import Inicio from './pages/Inicio';
 import Productos from './pages/Productos';
 import DetalleProducto from './pages/DetalleProducto';
@@ -16,14 +9,18 @@ import Registrarse from './pages/Registrarse';
 import Contacto from './pages/Contacto';
 import Acerca from './pages/Acerca';
 import NoEncontrado from './pages/NoEncontrado';
-
-// Nuevas páginas según requisitos del PDF
 import Categorias from './pages/Categorias';
 import Checkout from './pages/Checkout';
 import CompraExitosa from './pages/CompraExitosa';
 import ErrorPago from './pages/ErrorPago';
 import Ofertas from './pages/Ofertas';
 import Blog from './pages/Blog';
+import PanelAdministrador from './pages/PanelAdministrador';
+import AdminRoute from './components/AdminRoute';
+import AdminLayout from './layouts/AdminLayout';
+import AdminProductos from './pages/admin/AdminProductos';
+import AdminPedidos from './pages/admin/AdminPedidos';
+import AdminUsuarios from './pages/admin/AdminUsuarios';
 
 function App() {
   return (
@@ -47,6 +44,13 @@ function App() {
           <Route path="checkout" element={<Checkout />} />
           <Route path="compra-exitosa" element={<CompraExitosa />} />
           <Route path="error-pago" element={<ErrorPago />} />
+          {/* Rutas protegidas para administradores (layout + subrutas) */}
+          <Route path="admin" element={<AdminRoute><AdminLayout /></AdminRoute>}>
+            <Route index element={<PanelAdministrador />} />
+            <Route path="productos" element={<AdminProductos />} />
+            <Route path="pedidos" element={<AdminPedidos />} />
+            <Route path="usuarios" element={<AdminUsuarios />} />
+          </Route>
           
           {/* Página 404 */}
           <Route path="*" element={<NoEncontrado />} />
