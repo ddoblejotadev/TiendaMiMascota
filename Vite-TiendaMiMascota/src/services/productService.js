@@ -3,17 +3,19 @@
  * Maneja todas las operaciones relacionadas con productos
  */
 
-// Importar imágenes desde assets (si no existen en entorno de test, usar placeholders)
-let imagenComida = '';
-let imagenJuguetes = '';
-let imagenAccesorios = '';
-let imagenHigiene = '';
-let imagenCama = '';
+// Importar imágenes desde assets
+import imagenComida from '../assets/prod.png';
+import imagenJuguetes from '../assets/jugetes.png';
+import imagenAccesorios from '../assets/accesorios.png';
+import imagenHigiene from '../assets/higiene.png';
+import imagenCama from '../assets/cama2.png';
+
 try {
-  // Si las imágenes existen durante runtime, Vite las resolverá.
-  // En el entorno de tests las rutas pueden no estar presentes, por eso usamos try.
-  // eslint-disable-next-line no-undef
-  // Note: no-op; en bundler real se reemplazan por imports estáticos.
+  imagenComida;
+  imagenJuguetes;
+  imagenAccesorios;
+  imagenHigiene;
+  imagenCama;
 } catch (e) {
   // ignore
 }
