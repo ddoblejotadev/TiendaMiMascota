@@ -160,8 +160,8 @@ Vite-TiendaMiMascota/
 
 1. **Clonar el repositorio**
    ```bash
-   git clone https://github.com/ddoblejotadev/TiendaMiMascota.git
-   cd TiendaMiMascota/Vite-TiendaMiMascota
+   git clone https://github.com/ddoblejotadev/TiendaMiMascota
+   cd TiendaMiMascota
    ```
 
 2. **Instalar dependencias**
@@ -479,33 +479,4 @@ Este proyecto está bajo la Licencia MIT. Ver el archivo `LICENSE` para más det
 
 ---
 
-## 📧 Contacto y Soporte
-
-¿Preguntas o sugerencias? Ponte en contacto:
-
-- 📧 **Email:** ddoblejotadev@gmail.com
-- 🐙 **GitHub:** [@ddoblejotadev](https://github.com/ddoblejotadev)
-- 💼 **LinkedIn:** [Tu perfil](https://linkedin.com)
-
-## 📝 Notas Importantes
-
-- Este proyecto utiliza **localStorage** para persistencia (no base de datos backend)
-- Las credenciales son para propósitos educativos/demo
-- El proyecto está optimizado para navegadores modernos (Chrome, Firefox, Safari, Edge)
-- Se recomienda usar Node.js 16+ para mejor compatibilidad
-
-## 🎓 Créditos Educativos
-
-Proyecto desarrollado como parte de la evaluación formativa del curso **Desarrollo Fullstack** del Instituto DUOC UC.
-
-**Evaluación:** Migración de proyecto Vanilla JS a React + Vite  
-**Stack:** React 19 + Vite 7 + Vitest + React Testing Library  
-**Pruebas:** 103 tests unitarios  
-**Versión:** 2.0 (React + Vite migrado)
-
----
-
-
-*Actualizado: Octubre 2025*
-
-</div>
+*Proyecto desarrollado como parte de la evaluación parcial de desarrollo fullstack II.*
