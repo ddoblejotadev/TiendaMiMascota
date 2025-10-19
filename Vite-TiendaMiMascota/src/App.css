@@ -1,0 +1,32 @@
+/* App.css - Estilos específicos de la aplicación */
+
+/* El root ahora solo maneja el layout general sin restricciones de ancho */
+#root {
+  width: 100%;
+  min-height: 100vh;
+}
+
+/* Transiciones suaves para interacciones */
+.btn {
+  transition: all 0.3s ease;
+}
+
+.card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* Asegurar que los containers de Bootstrap no causen overflow */
+.container,
+.container-fluid {
+  overflow-x: hidden;
+}
+
+/* Scroll suave */
+html {
+  scroll-behavior: smooth;
+}
