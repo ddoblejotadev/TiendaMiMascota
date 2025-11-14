@@ -41,7 +41,6 @@ TiendaMiMascota es una tienda en línea completa y funcional especializada en pr
 - **13 archivos de test** cubriendo componentes, hooks y páginas
 - **4 tipos de pruebas**: Renderizado, Props, Estado y Eventos
 - **Cobertura completa**: 11 componentes + 3 hooks + 3 páginas principales
-- Ver detalle completo en [COBERTURA-TESTING.md](./COBERTURA-TESTING.md)
 
 ## 🚀 Inicio Rápido
 
@@ -57,7 +56,7 @@ TiendaMiMascota es una tienda en línea completa y funcional especializada en pr
 git clone https://github.com/ddoblejotadev/TiendaMiMascota.git
 
 # Navegar al directorio
-cd TiendaMiMascota/Vite-TiendaMiMascota
+cd TiendaMiMascota
 
 # Instalar dependencias (incluyendo dependencias de testing)
 npm install
@@ -293,8 +292,6 @@ El proyecto incluye **103 casos de prueba** organizados en 13 archivos:
 3. **Estado** (27 tests): Gestión de estado en hooks y componentes
 4. **Eventos** (15 tests): Interacciones del usuario (clicks, inputs)
 
-Para más detalles, ver [COBERTURA-TESTING.md](./COBERTURA-TESTING.md)
-
 ## 📦 Productos Incluidos
 
 El proyecto incluye 18 productos de ejemplo en 6 categorías:
@@ -367,8 +364,6 @@ Password: admin123
 ## 📄 Documentación
 
 - **README.md** (este archivo): Guía completa del proyecto
-- **[COBERTURA-TESTING.md](./COBERTURA-TESTING.md)**: Documento detallado de testing
-- **[RESUMEN-CUMPLIMIENTO-PDF.md](./RESUMEN-CUMPLIMIENTO-PDF.md)**: Cumplimiento de requisitos del PDF
 
 ## ✅ Cumplimiento de Requisitos (Evaluación Parcial 2)
 
@@ -427,7 +422,7 @@ Este proyecto está bajo la Licencia MIT.
 
 **ddoblejotadev**
 - GitHub: [@ddoblejotadev](https://github.com/ddoblejotadev)
-
+- GitHub: [@yasser-duoc](https://github.com/yasser-duoc)
 ## 🙏 Agradecimientos
 
 - Imágenes de productos de uso educativo
