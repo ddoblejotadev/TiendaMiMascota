@@ -1,482 +1,456 @@
-# 🐾 TiendaMiMascota - React + Vite
+# 🐾 TiendaMiMascota - E-commerce para Mascotas
 
-[![React](https://img.shields.io/badge/React-19.1.1-61dafb.svg)](https://react.dev/)
-[![Vite](https://img.shields.io/badge/Vite-7.1.12-646cff.svg)](https://vitejs.dev/)
-[![Bootstrap](https://img.shields.io/badge/Bootstrap-5.3.8-blue.svg)](https://getbootstrap.com/)
-[![Vitest](https://img.shields.io/badge/Vitest-3.2.4-6e9f18.svg)](https://vitest.dev/)
-[![React Router](https://img.shields.io/badge/React%20Router-7.9.4-f44250.svg)](https://reactrouter.com/)
-[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+![React](https://img.shields.io/badge/React-19.1-blue)
+![Vite](https://img.shields.io/badge/Vite-7.1-purple)
+![React Router](https://img.shields.io/badge/React_Router-7.9-red)
+![Bootstrap](https://img.shields.io/badge/Bootstrap-5.3-blueviolet)
+![Tests](https://img.shields.io/badge/Tests-103_pruebas-brightgreen)
+![Status](https://img.shields.io/badge/Status-Completado-success)
 
-**Tienda online moderna para productos de mascotas**, migrada completamente a **React + Vite**. Sistema completo de e-commerce con autenticación, gestión de roles, carrito de compras, paneles de administración y más de 100 pruebas unitarias.
+## 📖 Descripción
 
-> 🚀 **Versión Vite:** Migración exitosa del proyecto original de vanilla JS a React con Vite, mejorando rendimiento, mantenibilidad y escalabilidad.
+TiendaMiMascota es una tienda en línea completa y funcional especializada en productos para mascotas. Desarrollada con **React 19**, **Vite**, **React Router** y **Bootstrap 5**, ofrece una experiencia de compra moderna, fluida y completamente probada.
 
-## 📋 Tabla de Contenidos
+> **✅ Proyecto completo según requisitos de Evaluación Parcial 2 - DSY1104 (Duoc UC)**
 
-- [Características](#-características)
-- [Tecnologías Utilizadas](#-tecnologías-utilizadas)
-- [Estructura del Proyecto](#-estructura-del-proyecto)
-- [Instalación](#-instalación)
-- [Uso](#-uso)
-- [Roles de Usuario](#-roles-de-usuario)
-- [Funcionalidades](#-funcionalidades)
-- [API y Datos](#-api-y-datos)
-- [Contribución](#-contribución)
-- [Licencia](#-licencia)
-- [Autor](#-autor)
+## ✨ Características Principales
 
-## ✨ Características
+### 🛍️ E-commerce Completo
+- **Catálogo de productos** con filtros avanzados y búsqueda en tiempo real
+- **Carrito de compras** funcional con persistencia en localStorage
+- **Proceso de checkout** completo con formulario de envío
+- **5 vistas nuevas**: Categorías, Checkout, Compra Exitosa, Error Pago, Ofertas
+- **Cálculo automático** de descuentos y envío gratis (>$50.000)
+- **18 productos** organizados en 6 categorías
 
-- 🛒 **Carrito de Compras** - Sistema completo de carrito con persistencia local
-- 👥 **Sistema de Usuarios** - Autenticación y gestión de roles
-- 📊 **Panel de Administración** - Dashboard completo para administradores
-- 🏪 **Panel de Vendedor** - Vista especializada para vendedores
-- 📱 **Responsive Design** - Optimizado para móviles y desktop
-- 🎨 **Interfaz Moderna** - Bootstrap 5 con diseño personalizado
-- 💾 **Persistencia Local** - Almacenamiento en localStorage
-- 🔒 **Validaciones Seguras** - Formularios validados y seguros
-- 📧 **Sistema de Contacto** - Formulario de contacto funcional
-- 📝 **Blog Integrado** - Artículos y contenido informativo
+### 👤 Gestión de Usuarios
+- Sistema de **autenticación** completo (login/registro)
+- **Auto-completado** de datos en checkout si el usuario está logueado
+- **Panel de usuario** con historial de compras
+- **Validación de formularios** en tiempo real
 
-## 🛠 Tecnologías Utilizadas
+### 🎨 Diseño y UX
+- **Bootstrap 5.3.8** integrado (CSS + JavaScript)
+- **Diseño responsive** optimizado para móviles, tablets y desktop
+- **Notificaciones toast** para feedback inmediato
+- **Animaciones CSS** suaves y profesionales
+- **Interfaz moderna** e intuitiva
 
-### Frontend - Stack Moderno
-- **React 19.1.1** - Librería de UI con componentes reutilizables
-- **Vite 7.1.12** - Bundler ultra-rápido con HMR instantáneo
-- **React Router 7.9.4** - Enrutamiento declarativo y moderno
-- **Bootstrap 5.3.8** - Framework CSS responsive
-- **JavaScript ES6+** - Sintaxis moderna y características avanzadas
+### 🧪 Testing Exhaustivo
+- **103 casos de prueba** implementados con Vitest
+- **13 archivos de test** cubriendo componentes, hooks y páginas
+- **4 tipos de pruebas**: Renderizado, Props, Estado y Eventos
+- **Cobertura completa**: 11 componentes + 3 hooks + 3 páginas principales
+- Ver detalle completo en [COBERTURA-TESTING.md](./COBERTURA-TESTING.md)
 
-### Testing & Calidad
-- **Vitest 3.2.4** - Framework de testing de próxima generación
-- **React Testing Library** - Herramientas para testear componentes React
-- **ESLint 9.36.0** - Linter para código limpio y consistente
-- **103 pruebas unitarias** - Cobertura completa de funcionalidades
-
-### Estado & Context
-- **React Context API** - Gestión de estado global (carrito, autenticación)
-- **Custom Hooks** - Lógica reutilizable en múltiples componentes
-- **localStorage API** - Persistencia de datos en cliente
-
-### Desarrollo
-- **Node.js** - Entorno de ejecución JavaScript
-- **npm** - Gestor de dependencias
-- **Git** - Control de versiones
-- **GitHub** - Repositorio remoto
-
-## 📊 Comparación: Antes (Vanilla JS) vs Después (React + Vite)
-
-| Aspecto | Antes | Después | Mejora |
-|---------|-------|---------|---------|
-| **Bundler** | No (archivos sueltos) | Vite | ✅ HMR instantáneo |
-| **Componentes** | Funciones HTML dispersas | Componentes React | ✅ Reutilizables |
-| **Gestión de Estado** | Variables globales | Hooks + Context | ✅ Más limpio |
-| **Rendering** | DOM manual | Virtual DOM | ✅ Más eficiente |
-| **Testing** | Difícil | Fácil con Vitest | ✅ 103 tests |
-| **Rendimiento** | Lento en dev | Vite (480ms dev) | ✅ 10x más rápido |
-| **Escalabilidad** | Limitada | Excelente | ✅ Código mantenible |
-
-## 📁 Estructura del Proyecto (Vite + React)
-
-```
-Vite-TiendaMiMascota/
-├── 📄 package.json                  # Dependencias y scripts
-├── 📄 vite.config.js                # Configuración de Vite
-├── 📄 eslint.config.js              # Configuración de ESLint
-├── 📁 public/                       # Archivos estáticos públicos
-├── 📁 src/                          # Código fuente
-│   ├── 📄 main.jsx                  # Punto de entrada
-│   ├── 📄 App.jsx                   # Componente raíz
-│   ├── 📁 components/               # Componentes reutilizables
-│   │   ├── Header.jsx               # Navegación principal
-│   │   ├── Footer.jsx               # Pie de página
-│   │   ├── ProductCard.jsx          # Tarjeta de producto
-│   │   ├── CartSummary.jsx          # Resumen del carrito
-│   │   ├── ProductFilter.jsx        # Filtros de productos
-│   │   ├── AdminRoute.jsx           # Ruta protegida admin
-│   │   └── ui/
-│   │       ├── Notification.jsx     # Notificaciones
-│   │       └── ConfirmDialog.jsx    # Diálogos de confirmación
-│   ├── � pages/                    # Páginas (vistas)
-│   │   ├── Inicio.jsx               # Página de inicio
-│   │   ├── Productos.jsx            # Catálogo de productos
-│   │   ├── Carrito.jsx              # Carrito de compras
-│   │   ├── Checkout.jsx             # Proceso de compra
-│   │   ├── DetalleProducto.jsx      # Detalle individual
-│   │   ├── IniciarSesion.jsx        # Login
-│   │   ├── Registrarse.jsx          # Registro
-│   │   ├── Contacto.jsx             # Formulario contacto
-│   │   ├── Blog.jsx                 # Artículos del blog
-│   │   ├── admin/
-│   │   │   ├── AdminProductos.jsx   # CRUD de productos
-│   │   │   ├── AdminUsuarios.jsx    # CRUD de usuarios
-│   │   │   └── AdminPedidos.jsx     # Gestión de órdenes
-│   │   └── ...más páginas
-│   ├── 📁 hooks/                    # Custom hooks
-│   │   ├── useProductos.jsx         # Hook para productos
-│   │   ├── useCarrito.jsx           # Hook para carrito
-│   │   ├── useAutenticacion.jsx     # Hook para auth
-│   │   ├── useForm.jsx              # Hook para formularios
-│   │   ├── useLocalStorage.jsx      # Hook para localStorage
-│   │   └── ...más hooks
-│   ├── � context/                  # React Context
-│   │   ├── CartContext.jsx          # Contexto del carrito
-│   │   └── AuthContext.jsx          # Contexto de autenticación
-│   ├── 📁 services/                 # Servicios de datos
-│   │   ├── productService.js        # Lógica de productos
-│   │   ├── authService.js           # Lógica de autenticación
-│   │   ├── cartService.js           # Lógica del carrito
-│   │   ├── adminProductService.js   # Admin: productos
-│   │   └── adminUserService.js      # Admin: usuarios
-│   ├── 📁 layouts/                  # Layouts reutilizables
-│   │   ├── MainLayout.jsx           # Layout principal
-│   │   └── AdminLayout.jsx          # Layout administración
-│   ├── � util/                     # Utilidades
-│   │   ├── constants.js             # Constantes
-│   │   ├── validators.js            # Validaciones
-│   │   └── formatters.js            # Formateadores
-│   ├── 📁 tests/                    # Pruebas unitarias (103 tests)
-│   │   ├── Inicio.test.jsx
-│   │   ├── Productos.test.jsx
-│   │   ├── ProductCard.test.jsx
-│   │   ├── AdminProductos.test.jsx
-│   │   ├── AdminUsuarios.test.jsx
-│   │   ├── useProductos.test.jsx
-│   │   ├── useCarrito.test.jsx
-│   │   └── ...más tests
-│   ├── 📄 App.css                   # Estilos globales
-│   └── 📄 index.css                 # Estilos base
-└── � node_modules/                 # Dependencias instaladas
-```
-
-## 🚀 Instalación y Setup
+## 🚀 Inicio Rápido
 
 ### Prerrequisitos
-- **Node.js** 16+ (verificar con `node --version`)
-- **npm** 7+ (verificar con `npm --version`)
-- **Git** para clonar el repositorio
 
-### Pasos de Instalación
+- Node.js 16+ instalado
+- npm o yarn
 
-1. **Clonar el repositorio**
-   ```bash
-   git clone https://github.com/ddoblejotadev/TiendaMiMascota
-   cd TiendaMiMascota
-   ```
+### Instalación
 
-2. **Instalar dependencias**
-   ```bash
-   npm install
-   ```
+```bash
+# Clonar el repositorio
+git clone https://github.com/ddoblejotadev/TiendaMiMascota.git
 
-3. **Iniciar servidor de desarrollo**
-   ```bash
-   npm run dev
-   ```
-   Abre: `http://localhost:5173`
+# Navegar al directorio
+cd TiendaMiMascota/Vite-TiendaMiMascota
 
-### Scripts Disponibles
+# Instalar dependencias (incluyendo dependencias de testing)
+npm install
+
+# Iniciar el servidor de desarrollo
+npm run dev
+```
+
+La aplicación estará disponible en `http://localhost:5173`
+
+### Ejecutar Pruebas
+
+```bash
+# Ejecutar todos los tests una vez
+npm test
+
+# Ejecutar tests en modo watch (auto-recarga)
+npm run test
+
+# Ejecutar tests con interfaz visual
+npm run test:ui
+
+# Generar reporte de cobertura
+npm run test:coverage
+```
+
+## 📁 Estructura del Proyecto
+
+```
+src/
+├── components/          # Componentes reutilizables (11 componentes)
+│   ├── CartSummary.jsx       # Resumen del carrito
+│   ├── Footer.jsx            # Pie de página
+│   ├── Header.jsx            # Encabezado con navegación
+│   ├── ProductCard.jsx       # Tarjeta de producto
+│   ├── ProductFilter.jsx     # Filtros de productos
+│   └── ui/                   # Componentes de UI
+│       ├── ConfirmDialog.jsx # Diálogo de confirmación
+│       └── Notification.jsx  # Notificaciones toast
+├── hooks/              # Custom hooks (6 hooks)
+│   ├── useAutenticacion.jsx  # Gestión de autenticación
+│   ├── useCarrito.jsx        # Gestión del carrito
+│   ├── useForm.jsx           # Manejo de formularios
+│   ├── useLocalStorage.jsx   # Persistencia local
+│   ├── useProductos.jsx      # Gestión de productos
+│   └── useToggle.jsx         # Toggle states
+├── layouts/            # Layouts de páginas
+│   └── MainLayout.jsx        # Layout principal
+├── pages/              # Páginas de la aplicación (14 páginas)
+│   ├── Acerca.jsx           # Acerca de nosotros
+│   ├── Carrito.jsx          # Carrito de compras
+│   ├── Categorias.jsx       # ⭐ NUEVO: Vista de categorías
+│   ├── Checkout.jsx         # ⭐ NUEVO: Proceso de pago
+│   ├── CompraExitosa.jsx    # ⭐ NUEVO: Confirmación exitosa
+│   ├── Contacto.jsx         # Formulario de contacto
+│   ├── DetalleProducto.jsx  # Detalle del producto
+│   ├── ErrorPago.jsx        # ⭐ NUEVO: Error en el pago
+│   ├── Inicio.jsx           # Página de inicio
+│   ├── IniciarSesion.jsx    # Login
+│   ├── NoEncontrado.jsx     # Página 404
+│   ├── Ofertas.jsx          # ⭐ NUEVO: Productos en oferta
+│   ├── Productos.jsx        # Catálogo de productos
+│   └── Registrarse.jsx      # Registro de usuario
+├── services/           # Servicios y lógica de negocio
+│   ├── authService.js       # Servicio de autenticación
+│   ├── cartService.js       # Servicio del carrito
+│   └── productService.js    # Servicio de productos
+├── styles/             # Estilos CSS modulares
+│   ├── global.css
+│   ├── components/          # Estilos de componentes
+│   └── pages/              # Estilos de páginas
+├── tests/              # ⭐ NUEVO: Pruebas unitarias (13 archivos, 103 tests)
+│   ├── setupTests.js            # Configuración de testing
+│   ├── Header.test.jsx          # 5 tests
+│   ├── Footer.test.jsx          # 4 tests
+│   ├── ProductCard.test.jsx     # 8 tests
+│   ├── ProductFilter.test.jsx   # 7 tests
+│   ├── CartSummary.test.jsx     # 7 tests
+│   ├── ConfirmDialog.test.jsx   # 7 tests
+│   ├── Notification.test.jsx    # 11 tests
+│   ├── useCarrito.test.jsx      # 11 tests
+│   ├── useProductos.test.jsx    # 6 tests
+│   ├── useAutenticacion.test.jsx # 10 tests
+│   ├── Inicio.test.jsx          # 4 tests
+│   ├── Productos.test.jsx       # 8 tests
+│   └── Carrito.test.jsx         # 15 tests
+└── util/               # Utilidades
+    ├── constants.js         # Constantes de la app
+    ├── formatters.js        # Formateadores (precios, fechas)
+    └── validators.js        # Validadores de formularios
+```
+
+## 🎯 Funcionalidades Principales
+
+### 🏠 Página de Inicio
+- Hero section con llamadas a la acción
+- Grid de categorías principales con Bootstrap
+- Productos destacados
+- Sección de características con iconos
+- Integración completa con el sistema de productos
+
+### 📦 Categorías (⭐ NUEVA)
+- Grid responsive de categorías
+- Filtrado interactivo por categoría
+- Contador de productos por categoría
+- Navegación con breadcrumbs
+- Diseño con Bootstrap grid system
+
+### 🛍️ Catálogo de Productos
+- Visualización en grid responsive (Bootstrap)
+- Filtros por categoría y búsqueda en tiempo real
+- Ordenamiento por nombre y precio
+- Estados de carga con spinners
+- ProductCard component reutilizable
+- Badges de stock y categoría
+
+### 🔍 Detalle de Producto
+- Información completa del producto
+- Selector de cantidad con validación de stock
+- Botón "Agregar al carrito" con feedback
+- Breadcrumb navigation
+- Diseño responsive con Bootstrap
+
+### 🛒 Carrito de Compras
+- Lista completa de productos agregados
+- Actualizar cantidad o eliminar productos
+- Cálculo automático de subtotal, envío y total
+- Envío GRATIS en compras sobre $50.000
+- Botón para vaciar carrito con confirmación
+- Persistencia en localStorage
+- Integración con Checkout
+
+### 💳 Checkout (⭐ NUEVA)
+- Formulario completo de datos de envío (Bootstrap Forms)
+- **Auto-completado** de datos si el usuario está logueado (requisito PDF)
+- Selector de método de pago (radio buttons)
+- Resumen de compra con sticky positioning
+- Validación de campos requeridos
+- Simulación de procesamiento de pago (90% éxito, 10% fallo)
+- Redirección a CompraExitosa o ErrorPago según resultado
+
+### ✅ Compra Exitosa (⭐ NUEVA)
+- Confirmación visual con animación de checkmark
+- Número de orden único generado
+- Resumen de productos comprados
+- Información de envío
+- Total pagado
+- Botón para volver a la tienda
+
+### ❌ Error de Pago (⭐ NUEVA)
+- Mensaje de error con animación visual
+- Razones del rechazo del pago
+- Recomendaciones para el usuario
+- Botón para reintentar el pago
+- Botón para volver al carrito
+- Diseño con Bootstrap alerts
+
+### 🏷️ Ofertas (⭐ NUEVA)
+- Banner destacado con gradiente
+- Productos con descuento (<$15.000)
+- Badges de descuento animados
+- Grid responsive de productos
+- Filtrado automático de productos en oferta
+
+### 👤 Autenticación
+- Registro de nuevos usuarios
+- Inicio de sesión
+- Validación de formularios
+- Persistencia de sesión
+
+### � Autenticación
+- Sistema de registro con validación completa
+- Inicio de sesión con credenciales
+- Persistencia de sesión en localStorage
+- Auto-completado de datos en Checkout si está logueado
+
+### �📞 Contacto
+- Formulario de contacto con validación
+- Información de la empresa
+- Redes sociales
+
+## 🎨 Tecnologías Utilizadas
+
+### Frontend
+- **React 19.1** - Framework de JavaScript para UI
+- **Vite 7.1** - Build tool y dev server ultra-rápido
+- **React Router 7.9** - Enrutamiento SPA
+- **Bootstrap 5.3.8** - Framework CSS (CSS + JS Bundle)
+
+### Testing
+- **Vitest 2.1.8** - Framework de testing moderno
+- **React Testing Library** - Testing de componentes React
+- **@testing-library/jest-dom** - Matchers personalizados
+- **@testing-library/user-event** - Simulación de interacciones
+- **jsdom** - Implementación de DOM para Node.js
+
+### Persistencia
+- **localStorage** - Almacenamiento local del navegador
+
+### Estilos
+- **CSS3 Modular** - Estilos organizados por componente
+- **Bootstrap Utilities** - Clases utilitarias de Bootstrap
+- **CSS Custom Properties** - Variables CSS para temas
+- **Animaciones CSS** - Transiciones y animaciones suaves
+
+## 🧪 Testing
+
+### Cobertura de Pruebas
+El proyecto incluye **103 casos de prueba** organizados en 13 archivos:
+
+#### Componentes (49 tests)
+- Header: 5 tests
+- Footer: 4 tests  
+- ProductCard: 8 tests
+- ProductFilter: 7 tests
+- CartSummary: 7 tests
+- ConfirmDialog: 7 tests
+- Notification: 11 tests
+
+#### Hooks Personalizados (27 tests)
+- useCarrito: 11 tests
+- useProductos: 6 tests
+- useAutenticacion: 10 tests
+
+#### Páginas (27 tests)
+- Inicio: 4 tests
+- Productos: 8 tests
+- Carrito: 15 tests
+
+### Tipos de Pruebas Implementadas
+1. **Renderizado** (49 tests): Verificación de estructura DOM
+2. **Props** (28 tests): Validación de propiedades de componentes
+3. **Estado** (27 tests): Gestión de estado en hooks y componentes
+4. **Eventos** (15 tests): Interacciones del usuario (clicks, inputs)
+
+Para más detalles, ver [COBERTURA-TESTING.md](./COBERTURA-TESTING.md)
+
+## 📦 Productos Incluidos
+
+El proyecto incluye 18 productos de ejemplo en 6 categorías:
+
+- 🍖 **Alimento** - Alimentos balanceados premium
+- 🧸 **Juguetes** - Pelotas, cuerdas, ratones, rascadores
+- 🎀 **Accesorios** - Collares, correas, arneses, comederos
+- 🧼 **Higiene** - Shampoo, cepillos, kit dental
+- 💊 **Salud** - Vitaminas, antipulgas, probióticos
+- 🛏️ **Camas** - Camas ortopédicas, acolchadas, iglú
+
+## 👨‍💻 Scripts Disponibles
 
 ```bash
 # Desarrollo
-npm run dev              # Inicia Vite con HMR
+npm run dev              # Iniciar servidor de desarrollo en puerto 5173
 
 # Testing
-npm run test            # Ejecuta todas las pruebas
-npm run test:ui         # Interfaz visual de pruebas
-npm run test:coverage   # Cobertura de código
+npm test                 # Ejecutar tests una vez
+npm run test:ui          # Interfaz visual de tests (recomendado)
+npm run test:coverage    # Generar reporte de cobertura
 
-# Linting
-npm run lint            # Verifica código con ESLint
+# Producción
+npm run build            # Compilar para producción
+npm run preview          # Vista previa de la compilación
 
-# Build Producción
-npm run build           # Genera build optimizado
-npm run preview         # Vista previa del build
+# Calidad de código
+npm run lint             # Ejecutar ESLint
 ```
 
-## 📖 Uso y Guías
-
-### Para Usuarios Normales
-1. **Navegar catálogo** - Ver todos los productos disponibles
-2. **Filtrar por categoría** - Encontrar productos específicos
-3. **Ver detalles** - Información completa de cada producto
-4. **Agregar carrito** - Seleccionar cantidad y agregar
-5. **Registrarse** - Crear cuenta con email validado
-6. **Realizar compra** - Checkout y confirmación
-
-### Para Administradores
-1. **Iniciar sesión** - admin@duoc.cl / admin123
-2. **Panel Admin** - Acceso a todas las funcionalidades
-3. **Gestionar productos** - CRUD completo con validaciones
-4. **Gestionar usuarios** - Crear, editar, eliminar usuarios
-5. **Ver estadísticas** - Dashboard con métricas clave
-6. **Cambiar roles** - Asignar permisos a usuarios
-
-### Para Vendedores
-1. **Iniciar sesión** - vendedor@duoc.cl / pass1234
-2. **Ver productos** - Catálogo completo (solo lectura)
-3. **Ver órdenes** - Historial de compras de clientes
-4. **Ver estadísticas** - Gráficos de ventas básicos
-
-## 👥 Usuarios de Prueba
-
-### 🛡️ Administrador (Acceso Total)
-```
-Email:      admin@duoc.cl
-Contraseña: admin123
-Permisos:   CRUD de todo, estadísticas, gestión completa
-```
-
-### 🏪 Vendedor (Solo Lectura)
-```
-Email:      vendedor@duoc.cl
-Contraseña: pass1234
-Permisos:   Ver productos, ver órdenes, estadísticas básicas
-```
-
-### 👤 Cliente (Comprador)
-```
-Email:      cliente@gmail.com
-Contraseña: pass1234
-Permisos:   Compras, carrito, perfil
-```
-
-*Nota: Puedes registrar más usuarios desde el formulario de registro.*
-
-## 🎯 Funcionalidades
-
-### 🛒 Carrito de Compras
-- ✅ Agregar/eliminar productos
-- ✅ Modificar cantidades
-- ✅ Cálculo automático de totales
-- ✅ Persistencia entre sesiones
-- ✅ Modal responsive
-
-### 👥 Gestión de Usuarios
-- ✅ Registro con validaciones
-- ✅ Inicio de sesión seguro
-- ✅ Sistema de roles
-- ✅ Perfiles de usuario
-- ✅ Gestión de sesiones
-
-### 📊 Panel de Administración
-- ✅ Dashboard con estadísticas
-- ✅ CRUD de usuarios
-- ✅ CRUD de productos
-- ✅ Gestión de roles
-- ✅ Alertas de stock bajo
-
-### 📱 Responsive Design
-- ✅ Optimizado para móviles
-- ✅ Tablets y desktop
-- ✅ Navegación adaptativa
-- ✅ Componentes Bootstrap
-
-### 🔍 Búsqueda y Filtros
-- ✅ Búsqueda por nombre
-- ✅ Filtros por categoría
-- ✅ Resultados en tiempo real
-
-## 📊 API y Datos
-
-### Almacenamiento Local
-El proyecto utiliza `localStorage` para persistir datos:
-
-```javascript
-// Productos
-localStorage.getItem('productos')
-
-// Carrito de compras
-localStorage.getItem('carrito')
-
-// Usuarios
-localStorage.getItem('usuarios')
-
-// Sesión actual
-localStorage.getItem('usuarioActual')
-```
-
-### Estructura de Datos
-
-#### Producto
-```javascript
-{
-  id: 1,
-  codigo: "COM001",
-  nombre: "Comida para Perros Premium",
-  descripcion: "Alimento balanceado para perros adultos",
-  precio: 15000,
-  stock: 50,
-  stockCritico: 10,
-  categoria: "Comida",
-  imagen: "assets/img/Comida.jpg"
-}
-```
-
-#### Usuario
-```javascript
-{
-  id: 1,
-  run: "19011022K",
-  nombre: "Admin",
-  apellidos: "Sistema",
-  email: "admin@duoc.cl",
-  rol: "administrador",
-  password: "admin123",
-  activo: true
-}
-```
-
-## 🎓 Migración: Vanilla JS → React + Vite
-
-### Objetivos de la Migración
-
-Este proyecto fue migrado de Vanilla JavaScript a React + Vite como parte del curso de Evaluación Formativa Full Stack. Los principales objetivos fueron:
-
-- ✅ **Modernizar el stack tecnológico** - De vanilla JS a React 19
-- ✅ **Mejorar experiencia de desarrollo** - Con Vite y HMR instantáneo
-- ✅ **Aumentar mantenibilidad** - Componentes reutilizables y hooks
-- ✅ **Agregar cobertura de tests** - 103 pruebas unitarias con Vitest
-- ✅ **Implementar mejores prácticas** - Context API, custom hooks, service layer
-
-### Logros Principales
-
-| Aspecto | Resultado |
-|---------|-----------|
-| **Componentes React** | 20+ componentes funcionales |
-| **Custom Hooks** | 7+ hooks reutilizables |
-| **Pruebas Unitarias** | 103 tests con cobertura |
-| **Páginas** | 18 páginas + subrutas |
-| **Tiempo de Dev** | De 15s a 480ms con Vite |
-| **Tamaño Bundle** | Optimizado con tree-shaking |
-| **Rendimiento** | Virtual DOM + React.lazy |
-
-### Características Implementadas
-
-#### 🎨 Componentes Reutilizables
-- `ProductCard` - Tarjeta de producto con badges inteligentes
-- `Header` - Navegación con búsqueda integrada
-- `Footer` - Pie de página completo
-- `CartSummary` - Resumen dinámico del carrito
-- `AdminRoute` - Rutas protegidas para admin
-- `Notification` - Sistema de notificaciones
-- `ConfirmDialog` - Diálogos de confirmación
-
-#### 🪝 Custom Hooks
-- `useProductos()` - Gestión de productos con filtrado
-- `useCarrito()` - Lógica del carrito de compras
-- `useAutenticacion()` - Autenticación y roles
-- `useForm()` - Manejo de formularios controlados
-- `useLocalStorage()` - Persistencia en localStorage
-- `useToggle()` - Estados booleanos comunes
-
-#### 🧪 Pruebas Unitarias (Vitest)
-```javascript
-// Ejemplo: Testing de hook
-import { renderHook, waitFor } from '@testing-library/react';
-import { useProductos } from './useProductos';
-
-test('carga productos al montar', async () => {
-  const { result } = renderHook(() => useProductos());
-  
-  await waitFor(() => {
-    expect(result.current.cargando).toBe(false);
-    expect(result.current.productos.length).toBeGreaterThan(0);
-  });
-});
-```
-
-#### 🏗️ Arquitectura Moderna
-```
-Services Layer (productService, authService)
-        ↓
-Hooks Layer (useProductos, useCarrito)
-        ↓
-Context Layer (CartContext, AuthContext)
-        ↓
-Component Layer (Pages + Components)
-```
-
-### Comparación de Rendimiento
-
-**Antes (Vanilla JS):**
-- Desarrollo: ~15 segundos para cambios
-- Build: No optimizado
-- Testing: Manual, sin automatización
-- Estado: Variables globales dispersas
-
-**Después (React + Vite):**
-- Desarrollo: ~480ms (HMR instantáneo) ⚡
-- Build: Optimizado con tree-shaking
-- Testing: 103 tests automáticos ✅
-- Estado: Context API + Hooks centralizados
-
-### Tecnologías Aprendidas
-
-- **React 19.1.1** - Componentes funcionales, Hooks, Context API
-- **Vite 7.1.12** - Bundler moderno con dev server ultra-rápido
-- **React Router 7.9.4** - Enrutamiento SPA declarativo
-- **Vitest 3.2.4** - Testing framework de próxima generación
-- **React Testing Library** - Testing enfocado en UX
-- **ESLint** - Linting automático y consistencia de código
-
-### Patrón: Página Productos (Caso de Estudio)
-
-La página de Productos es un excelente ejemplo de la arquitectura React moderna:
+## 🔐 Usuarios de Prueba
 
 ```
-Productos.jsx (componente página)
-    ├── usa: useProductos() hook
-    ├── usa: ProductCard componente
-    └── mapea: list rendering
-        └── ProductCard.jsx
-            ├── props: { producto }
-            ├── usa: useCarrito() hook
-            └── usa: React Router Link
+Usuario Regular:
+Email: usuario@example.com
+Password: password123
+
+Administrador (para funcionalidades futuras):
+Email: admin@mimascota.cl
+Password: admin123
 ```
 
-**Flujo de datos:**
-1. `Productos.jsx` consume `useProductos()` hook
-2. Hook gestiona: cargando, productos, busqueda, filtros
-3. ProductCard recibe producto como prop
-4. ProductCard usa `useCarrito()` para agregar al carrito
+## 🎨 Características de Diseño
 
-**Testing:**
-- `useProductos.test.jsx` - Verifica lógica del hook
-- `ProductCard.test.jsx` - Verifica renderizado del componente
+### UX/UI Moderna
+- **Bootstrap 5.3.8** como base del diseño
+- **Grid System** responsive (12 columnas)
+- **Componentes Bootstrap**: Cards, Forms, Buttons, Badges, Alerts
+- **Paleta de colores** moderna y amigable para mascotas
+- **Tipografía** clara con fuentes web modernas
 
-## 🤝 Contribución
+### Responsive Design
+- **Mobile First**: Optimizado para móviles
+- **Breakpoints**: xs, sm, md, lg, xl
+- **Navegación adaptativa**: Menú hamburguesa en móvil
+- **Grids flexibles**: Ajuste automático de columnas
 
-¡Las contribuciones son bienvenidas! Para contribuir:
+### Animaciones y Transiciones
+- **Animaciones CSS** personalizadas (checkmark, error-x)
+- **Hover effects** en botones y cards
+- **Loading spinners** de Bootstrap
+- **Transiciones suaves** entre estados
 
-1. **Fork** el proyecto
-2. **Crear** una rama para tu feature (`git checkout -b feature/AmazingFeature`)
-3. **Commit** tus cambios (`git commit -m 'Add some AmazingFeature'`)
-4. **Push** a la rama (`git push origin feature/AmazingFeature`)
-5. **Abrir** un Pull Request
+### Accesibilidad
+- **Aria-labels** en elementos interactivos
+- **HTML semántico** (nav, main, article, section)
+- **Contraste** adecuado en textos
+- **Focus visible** en navegación por teclado
 
-### Guías de Contribución
-- Mantener el código limpio y bien comentado
-- Seguir las convenciones de nomenclatura
-- Probar cambios en múltiples navegadores
-- Actualizar documentación si es necesario
+## 📄 Documentación
+
+- **README.md** (este archivo): Guía completa del proyecto
+- **[COBERTURA-TESTING.md](./COBERTURA-TESTING.md)**: Documento detallado de testing
+- **[RESUMEN-CUMPLIMIENTO-PDF.md](./RESUMEN-CUMPLIMIENTO-PDF.md)**: Cumplimiento de requisitos del PDF
+
+## ✅ Cumplimiento de Requisitos (Evaluación Parcial 2)
+
+### Requisitos Funcionales
+✅ **5 Nuevas Vistas**: Categorías, Checkout, Compra Exitosa, Error Pago, Ofertas  
+✅ **Framework Bootstrap**: Integrado (CSS + JS Bundle)  
+✅ **Auto-completado en Checkout**: Implementado si usuario está logueado  
+✅ **Simulación de Pago**: 90% éxito, 10% fallo  
+✅ **Navegación Completa**: 14 rutas con React Router  
+
+### Requisitos Técnicos
+✅ **Testing Completo**: 103 tests (4 tipos)  
+✅ **Renderizado**: 49 tests en 11 componentes  
+✅ **Props**: 28 tests en 5 componentes  
+✅ **Estado**: 27 tests en 3 hooks (mínimo 6 ✅)  
+✅ **Eventos**: 15 tests en 5 componentes (mínimo 5 ✅)  
+
+### Documentación
+✅ **README actualizado**: Con toda la información  
+✅ **Documento de Cobertura**: Análisis completo de tests  
+✅ **Comentarios en código**: Explicativos y claros  
+
+## 🎓 Contexto Académico
+
+**Asignatura**: DSY1104 - Desarrollo Web  
+**Institución**: Duoc UC  
+**Evaluación**: Parcial 2  
+**Objetivo**: Implementar vistas adicionales con framework CSS y testing exhaustivo
+
+## 📝 Próximas Mejoras
+
+- [ ] Implementar backend real
+- [ ] Agregar panel de administración
+- [ ] Sistema de reviews y comentarios
+- [ ] Integración con pasarelas de pago
+- [ ] Tracking de pedidos
+- [ ] Sistema de favoritos/wishlist
+- [ ] Comparador de productos
+- [ ] Chat en vivo
+
+## 🤝 Contribuciones
+
+Las contribuciones son bienvenidas. Por favor:
+
+1. Forkea el proyecto
+2. Crea una rama para tu feature (`git checkout -b feature/AmazingFeature`)
+3. Commit tus cambios (`git commit -m 'Add some AmazingFeature'`)
+4. Push a la rama (`git push origin feature/AmazingFeature`)
+5. Abre un Pull Request
 
 ## 📄 Licencia
 
-Este proyecto está bajo la Licencia MIT. Ver el archivo `LICENSE` para más detalles.
+Este proyecto está bajo la Licencia MIT.
 
-## 👨‍💻 Autor
+## 👤 Autor
 
-**Desarrollado por:** 
-- **GitHub:** [@ddoblejotadev](https://github.com/ddoblejotadev)
-- **GitHub:** [@yasser-duoc](https://github.com/yasser-duoc)
+**ddoblejotadev**
+- GitHub: [@ddoblejotadev](https://github.com/ddoblejotadev)
+
+## 🙏 Agradecimientos
+
+- Imágenes de productos de uso educativo
+- Iconos de emojis nativos
+- Comunidad de React y Vite
 
 ---
 
-⭐ **¡Si te gusta este proyecto, dale una estrella!**
+⭐ Si te ha gustado este proyecto, ¡no olvides darle una estrella!
 
-📧 **¿Preguntas o sugerencias?** Abre un issue en GitHub.
+**Desarrollado con ❤️ y React**+ Vite
 
----
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-*Proyecto desarrollado como parte de la evaluación parcial de desarrollo fullstack II.*
+Currently, two official plugins are available:
+
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+
+## React Compiler
+
+The React Compiler is not enabled on this template. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+
+## Expanding the ESLint configuration
+
+If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
