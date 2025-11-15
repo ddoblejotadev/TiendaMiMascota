@@ -461,6 +461,7 @@ export async function crearOrden(datosOrden) {
     };
     
     console.log('🔄 Orden transformada para backend:', ordenBackend);
+    console.log('📋 Items a enviar:', JSON.stringify(ordenBackend.items, null, 2));
     
     const response = await api.post('/ordenes', ordenBackend);
     console.log('✅ Orden guardada, respuesta:', response.data);
@@ -468,6 +469,8 @@ export async function crearOrden(datosOrden) {
   } catch (error) {
     console.error('❌ Error al crear orden:', error);
     console.error('📋 Detalles del error:', error.response?.data || error.message);
+    console.error('🔍 Error completo:', JSON.stringify(error.response?.data, null, 2));
+    console.error('📤 Datos que se enviaron:', JSON.stringify(ordenBackend, null, 2));
     throw error;
   }
 }
