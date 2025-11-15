@@ -45,14 +45,14 @@ export const MENSAJES = {
 };
 
 /**
- * API SERVICE - PRODUCTOS
- * Consume datos del backend en lugar de datos locales
+ * API SERVICE - CONFIGURACIÓN
  */
 
 import axios from 'axios';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080/api';
 
+// Crear instancia de axios
 const api = axios.create({
   baseURL: API_URL,
   timeout: 10000,
@@ -61,20 +61,23 @@ const api = axios.create({
   }
 });
 
-// Interceptor para agregar token JWT
+// Interceptor para agregar token JWT a todas las peticiones
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem('token');
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
   return config;
+}, (error) => {
+  return Promise.reject(error);
 });
 
-// Interceptor para manejar errores
+// Interceptor para manejar errores (401 Unauthorized)
 api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
+      console.warn('Token expirado o inválido');
       localStorage.removeItem('token');
       localStorage.removeItem('usuario');
       window.location.href = '/iniciar-sesion';
@@ -82,6 +85,175 @@ api.interceptors.response.use(
     return Promise.reject(error);
   }
 );
+
+/**
+ * API SERVICE - AUTENTICACIÓN
+ */
+
+const USER_KEY = 'usuario';
+const TOKEN_KEY = 'token';
+
+/**
+ * Inicia sesión contra el backend
+ */
+export async function login(email, password) {
+  try {
+    const response = await api.post('/auth/login', { 
+      email, 
+      password 
+    });
+
+    const { 
+      token, 
+      usuario_id, 
+      email: userEmail, 
+      nombre, 
+      telefono, 
+      direccion, 
+      run 
+    } = response.data;
+
+    // Guardar token
+    localStorage.setItem(TOKEN_KEY, token);
+
+    // Guardar datos del usuario
+    const usuarioData = {
+      usuario_id,
+      email: userEmail,
+      nombre,
+      telefono: telefono || null,
+      direccion: direccion || null,
+      run: run || null
+    };
+    localStorage.setItem(USER_KEY, JSON.stringify(usuarioData));
+
+    return usuarioData;
+  } catch (error) {
+    console.error('Error al login:', error);
+    const mensaje = error.response?.data?.mensaje || 'Email o contraseña incorrectos';
+    throw new Error(mensaje);
+  }
+}
+
+/**
+ * Registra un nuevo usuario contra el backend
+ */
+export async function registrar(datosUsuario) {
+  try {
+    const response = await api.post('/auth/registro', {
+      email: datosUsuario.email,
+      password: datosUsuario.password,
+      nombre: datosUsuario.nombre,
+      telefono: datosUsuario.telefono || null,
+      direccion: datosUsuario.direccion || null,
+      run: datosUsuario.run || null
+    });
+
+    const { 
+      token, 
+      usuario_id, 
+      email: userEmail, 
+      nombre,
+      telefono,
+      direccion,
+      run
+    } = response.data;
+
+    // Guardar token
+    localStorage.setItem(TOKEN_KEY, token);
+
+    // Guardar datos del usuario
+    const usuarioData = {
+      usuario_id,
+      email: userEmail,
+      nombre,
+      telefono: telefono || null,
+      direccion: direccion || null,
+      run: run || null
+    };
+    localStorage.setItem(USER_KEY, JSON.stringify(usuarioData));
+
+    return usuarioData;
+  } catch (error) {
+    console.error('Error al registrar:', error);
+    const mensaje = error.response?.data?.mensaje || 'Error al registrarse';
+    throw new Error(mensaje);
+  }
+}
+
+/**
+ * Cierra sesión
+ */
+export function logout() {
+  localStorage.removeItem(USER_KEY);
+  localStorage.removeItem(TOKEN_KEY);
+}
+
+/**
+ * Obtiene el usuario actual desde localStorage
+ */
+export function obtenerUsuarioActual() {
+  const usuarioJSON = localStorage.getItem(USER_KEY);
+  if (!usuarioJSON) {
+    return null;
+  }
+  try {
+    return JSON.parse(usuarioJSON);
+  } catch (error) {
+    console.error('Error al parsear usuario:', error);
+    return null;
+  }
+}
+
+/**
+ * Verifica si hay un usuario logueado
+ */
+export function estaLogueado() {
+  const token = localStorage.getItem(TOKEN_KEY);
+  return !!token;
+}
+
+/**
+ * Obtiene el token JWT
+ */
+export function obtenerToken() {
+  return localStorage.getItem(TOKEN_KEY);
+}
+
+/**
+ * Actualiza los datos del usuario actual
+ */
+export async function actualizarPerfil(datosActualizados) {
+  try {
+    const usuarioActual = obtenerUsuarioActual();
+    if (!usuarioActual) {
+      throw new Error('No hay usuario logueado');
+    }
+
+    const response = await api.put(`/usuarios/${usuarioActual.usuario_id}`, datosActualizados);
+
+    // Actualizar en localStorage
+    const usuarioData = {
+      usuario_id: response.data.usuario_id,
+      email: response.data.email,
+      nombre: response.data.nombre,
+      telefono: response.data.telefono,
+      direccion: response.data.direccion,
+      run: response.data.run
+    };
+    localStorage.setItem(USER_KEY, JSON.stringify(usuarioData));
+
+    return usuarioData;
+  } catch (error) {
+    console.error('Error al actualizar perfil:', error);
+    throw error;
+  }
+}
+
+/**
+ * API SERVICE - PRODUCTOS
+ * Consume datos del backend
+ */
 
 /**
  * Obtiene todos los productos del backend
@@ -110,12 +282,12 @@ export async function obtenerProductoPorId(id) {
 }
 
 /**
- * Obtiene productos destacados (backend filtra)
+ * Obtiene productos destacados
  */
 export async function obtenerProductosDestacados() {
   try {
     const productos = await obtenerProductos();
-    return productos.filter(p => p.highlighted === true);
+    return productos.filter(p => p.destacado === true);
   } catch (error) {
     console.error('Error:', error);
     return [];
@@ -145,10 +317,10 @@ export async function buscarProductos(termino) {
   try {
     const productos = await obtenerProductos();
     if (!termino) return productos;
-    
+
     const terminoLower = termino.toLowerCase();
-    return productos.filter(p => 
-      p.name.toLowerCase().includes(terminoLower) ||
+    return productos.filter(p =>
+      p.nombre.toLowerCase().includes(terminoLower) ||
       (p.description && p.description.toLowerCase().includes(terminoLower))
     );
   } catch (error) {
@@ -197,89 +369,6 @@ export async function eliminarProducto(id) {
 }
 
 /**
- * API SERVICE - AUTENTICACIÓN
+ * Exportar instancia de axios para uso general
  */
-
-const USER_KEY = 'tienda_mimascota_usuario';
-const TOKEN_KEY = 'tienda_mimascota_token';
-
-/**
- * Inicia sesión
- */
-export async function login(email, password) {
-  try {
-    const response = await api.post('/auth/login', { email, password });
-    const { token, usuario } = response.data;
-    
-    localStorage.setItem(TOKEN_KEY, token);
-    localStorage.setItem(USER_KEY, JSON.stringify(usuario));
-    
-    return usuario;
-  } catch (error) {
-    console.error('Error al login:', error);
-    throw new Error('Email o contraseña incorrectos');
-  }
-}
-
-/**
- * Registra un nuevo usuario
- */
-export async function registrar(datosUsuario) {
-  try {
-    const response = await api.post('/auth/registro', datosUsuario);
-    const { token, usuario } = response.data;
-    
-    localStorage.setItem(TOKEN_KEY, token);
-    localStorage.setItem(USER_KEY, JSON.stringify(usuario));
-    
-    return usuario;
-  } catch (error) {
-    console.error('Error al registrar:', error);
-    throw error;
-  }
-}
-
-/**
- * Cierra sesión
- */
-export function logout() {
-  localStorage.removeItem(USER_KEY);
-  localStorage.removeItem(TOKEN_KEY);
-}
-
-/**
- * Obtiene el usuario actual
- */
-export function obtenerUsuarioActual() {
-  const usuarioJSON = localStorage.getItem(USER_KEY);
-  return usuarioJSON ? JSON.parse(usuarioJSON) : null;
-}
-
-/**
- * Verifica si hay un usuario logueado
- */
-export function estaLogueado() {
-  return obtenerUsuarioActual() !== null;
-}
-
-/**
- * Actualiza los datos del usuario actual
- */
-export async function actualizarPerfil(datosActualizados) {
-  try {
-    const usuarioActual = obtenerUsuarioActual();
-    if (!usuarioActual) {
-      throw new Error('No hay usuario logueado');
-    }
-    
-    const response = await api.put(`/usuarios/${usuarioActual.id}`, datosActualizados);
-    
-    // Actualizar en localStorage
-    localStorage.setItem(USER_KEY, JSON.stringify(response.data));
-    
-    return response.data;
-  } catch (error) {
-    console.error('Error al actualizar perfil:', error);
-    throw error;
-  }
-}
+export default api;
