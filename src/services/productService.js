@@ -1,146 +1,117 @@
 /**
  * SERVICIO DE PRODUCTOS
  * Maneja todas las operaciones relacionadas con productos
+ * Consume datos del backend via API REST
  */
 
-// Importar imágenes desde assets
+import api from '../util/constants';
+
+// Importar imágenes desde assets (usadas como fallback)
 import imagenComida from '../assets/prod.png';
 import imagenJuguetes from '../assets/jugetes.png';
 import imagenAccesorios from '../assets/accesorios.png';
 import imagenHigiene from '../assets/higiene.png';
 import imagenCama from '../assets/cama2.png';
 
-try {
-  imagenComida;
-  imagenJuguetes;
-  imagenAccesorios;
-  imagenHigiene;
-  imagenCama;
-} catch (e) {
-  // ignore
-}
-
-// Base de datos simulada de productos
-let productosDB = [
-  {
-    id: 1,
-    nombre: "Alimento Premium para Perros",
-    descripcion: "Alimento balanceado de alta calidad para perros adultos de todas las razas. Rico en proteínas y nutrientes esenciales.",
-    precio: 25990,
-    precioAnterior: 29990,
-    imagen: imagenComida,
-    categoria: "Alimento",
-    stock: 50,
-    destacado: true,
-    valoracion: 4.5
-  },
-  {
-    id: 2,
-    nombre: "Juguete Mordedor Resistente",
-    descripcion: "Juguete de goma resistente ideal para perros de todas las edades. Ayuda a mantener dientes limpios.",
-    precio: 8990,
-    imagen: imagenJuguetes,
-    categoria: "Juguetes",
-    stock: 30,
-    destacado: false,
-    valoracion: 4.0
-  },
-  {
-    id: 3,
-    nombre: "Collar Ajustable Premium",
-    descripcion: "Collar cómodo y ajustable para perros medianos y grandes. Material resistente y duradero.",
-    precio: 12990,
-    imagen: imagenAccesorios,
-    categoria: "Accesorios",
-    stock: 20,
-    destacado: true,
-    valoracion: 4.8
-  },
-  {
-    id: 4,
-    nombre: "Shampoo Hipoalergénico para Gatos",
-    descripcion: "Shampoo especial para el cuidado del pelaje de gatos. Fórmula suave e hipoalergénica.",
-    precio: 7990,
-    imagen: imagenHigiene,
-    categoria: "Higiene",
-    stock: 40,
-    destacado: false,
-    valoracion: 4.3
-  },
-  {
-    id: 5,
-    nombre: "Cama Acolchada para Mascotas",
-    descripcion: "Cama suave y cómoda para perros y gatos. Relleno de espuma de alta densidad.",
-    precio: 35990,
-    precioAnterior: 42990,
-    imagen: imagenCama,
-    categoria: "Accesorios",
-    stock: 15,
-    destacado: true,
-    valoracion: 4.7
-  },
-  {
-    id: 6,
-    nombre: "Alimento para Gatos Adultos",
-    descripcion: "Alimento completo y balanceado para gatos adultos. Con taurina y omega 3.",
-    precio: 22990,
-    imagen: imagenComida,
-    categoria: "Alimento",
-    stock: 45,
-    destacado: false,
-    valoracion: 4.4
-  },
-  {
-    id: 7,
-    nombre: "Rascador para Gatos",
-    descripcion: "Torre rascadora multi-nivel para gatos. Incluye plataformas y juguetes colgantes.",
-    precio: 45990,
-    imagen: imagenJuguetes,
-    categoria: "Juguetes",
-    stock: 8,
-    destacado: true,
-    valoracion: 4.9
-  },
-  {
-    id: 8,
-    nombre: "Correa Retráctil 5 metros",
-    descripcion: "Correa retráctil automática de 5 metros. Sistema de freno seguro y cómodo.",
-    precio: 15990,
-    imagen: imagenAccesorios,
-    categoria: "Accesorios",
-    stock: 25,
-    destacado: false,
-    valoracion: 4.2
-  }
-];
+// Mapeo de imágenes por categoría (fallback si backend no tiene imagen)
+const imagenesPorCategoria = {
+  'Alimento': imagenComida,
+  'Juguetes': imagenJuguetes,
+  'Accesorios': imagenAccesorios,
+  'Higiene': imagenHigiene,
+  'Medicamentos': imagenHigiene,
+  'default': imagenAccesorios
+};
 
 /**
- * Obtiene todos los productos
+ * Mapea los datos del backend al formato del frontend
+ * Backend usa: name, description, price, category, imageUrl, highlighted, rating, previousPrice
+ * Frontend usa: nombre, descripcion, precio, categoria, imagen, destacado, valoracion, precioAnterior
+ */
+function mapearProductoBackend(productoBackend) {
+  // Siempre usar imágenes locales del assets (el backend no tiene imágenes físicas)
+  const categoria = productoBackend.category || productoBackend.categoria || 'default';
+  const imagenLocal = imagenesPorCategoria[categoria] || imagenesPorCategoria.default;
+  
+  return {
+    id: productoBackend.id || productoBackend.producto_id || productoBackend.productoId,
+    nombre: productoBackend.name || productoBackend.producto_nombre || productoBackend.nombre,
+    descripcion: productoBackend.description || productoBackend.descripcion || '',
+    precio: productoBackend.price || productoBackend.precio || 0,
+    precioAnterior: productoBackend.previousPrice || productoBackend.precioAnterior || null,
+    imagen: imagenLocal, // SIEMPRE usar imágenes locales
+    categoria: categoria,
+    stock: productoBackend.stock !== undefined ? productoBackend.stock : 0,
+    destacado: productoBackend.highlighted !== undefined ? productoBackend.highlighted : productoBackend.destacado || false,
+    valoracion: productoBackend.rating || productoBackend.valoracion || 0,
+    marca: productoBackend.marca || null,
+    peso: productoBackend.peso || null
+  };
+}
+
+/**
+ * Obtiene todos los productos desde el backend
  * @returns {Promise<Array>} - Array de productos
  */
 export async function obtenerProductos() {
-  // Simular delay de red
-  await delay(300);
-  return [...productosDB];
+  try {
+    console.log('📡 Obteniendo productos del backend...');
+    const response = await api.get('/productos');
+    console.log('✅ Productos recibidos:', response.data.length);
+    
+    // LOG TEMPORAL: Ver estructura del primer producto
+    if (response.data.length > 0) {
+      console.log('🔍 ESTRUCTURA DEL PRIMER PRODUCTO:', response.data[0]);
+    }
+    
+    // Mapear productos del backend al formato frontend
+    const productosMapeados = response.data.map(mapearProductoBackend);
+    
+    // LOG TEMPORAL: Ver producto mapeado
+    if (productosMapeados.length > 0) {
+      console.log('🔍 PRODUCTO MAPEADO (debe tener id):', productosMapeados[0]);
+    }
+    
+    return productosMapeados;
+  } catch (error) {
+    console.error('❌ Error al obtener productos:', error);
+    console.error('Detalles:', error.response?.data || error.message);
+    throw new Error('No se pudieron cargar los productos del backend. Verifica que esté corriendo en http://localhost:8080');
+  }
 }
 
 /**
- * Obtiene un producto por su ID
+ * Obtiene un producto por su ID desde el backend
  * @param {number} id - ID del producto
  * @returns {Promise<Object|null>} - Producto encontrado o null
  */
 export async function obtenerProductoPorId(id) {
-  await delay(200);
-  return productosDB.find(p => p.id === id) || null;
+  try {
+    console.log(`📡 Obteniendo producto ${id} del backend...`);
+    const response = await api.get(`/productos/${id}`);
+    console.log(`✅ Producto ${id} recibido:`, response.data);
+    const productoMapeado = mapearProductoBackend(response.data);
+    console.log(`✅ Producto mapeado:`, productoMapeado);
+    return productoMapeado;
+  } catch (error) {
+    console.error(`❌ Error al obtener producto ${id}:`, error);
+    console.error('Detalles:', error.response?.data || error.message);
+    return null;
+  }
 }
 
 /**
- * Obtiene productos destacados
+ * Obtiene productos destacados desde el backend
  * @returns {Promise<Array>} - Array de productos destacados
  */
 export async function obtenerProductosDestacados() {
-  await delay(200);
-  return productosDB.filter(p => p.destacado);
+  try {
+    const productos = await obtenerProductos();
+    return productos.filter(p => p.destacado === true);
+  } catch (error) {
+    console.error('Error al obtener destacados:', error);
+    return [];
+  }
 }
 
 /**
@@ -149,11 +120,18 @@ export async function obtenerProductosDestacados() {
  * @returns {Promise<Array>} - Productos filtrados
  */
 export async function filtrarPorCategoria(categoria) {
-  await delay(200);
-  if (!categoria || categoria === 'Todos') {
-    return [...productosDB];
+  try {
+    const productos = await obtenerProductos();
+    if (!categoria || categoria === 'Todos' || categoria === 'Todas') {
+      return productos;
+    }
+    return productos.filter(p => 
+      p.categoria.toLowerCase() === categoria.toLowerCase()
+    );
+  } catch (error) {
+    console.error('Error al filtrar por categoría:', error);
+    return [];
   }
-  return productosDB.filter(p => p.categoria === categoria);
 }
 
 /**
@@ -162,73 +140,90 @@ export async function filtrarPorCategoria(categoria) {
  * @returns {Promise<Array>} - Productos encontrados
  */
 export async function buscarProductos(termino) {
-  await delay(200);
-  if (!termino) return [...productosDB];
-  
-  const terminoLower = termino.toLowerCase();
-  return productosDB.filter(p => 
-    p.nombre.toLowerCase().includes(terminoLower) ||
-    p.descripcion.toLowerCase().includes(terminoLower)
-  );
+  try {
+    const productos = await obtenerProductos();
+    if (!termino) return productos;
+    
+    const terminoLower = termino.toLowerCase();
+    return productos.filter(p => 
+      p.nombre.toLowerCase().includes(terminoLower) ||
+      (p.descripcion && p.descripcion.toLowerCase().includes(terminoLower))
+    );
+  } catch (error) {
+    console.error('Error al buscar productos:', error);
+    return [];
+  }
 }
 
 /**
- * Agrega un nuevo producto (CRUD)
+ * Agrega un nuevo producto al backend (CRUD)
  * @param {Object} producto - Datos del producto
  * @returns {Promise<Object>} - Producto creado
  */
 export async function agregarProducto(producto) {
-  await delay(300);
-  
-  const nuevoProducto = {
-    id: Math.max(...productosDB.map(p => p.id)) + 1,
-    ...producto,
-    destacado: false,
-    valoracion: 0
-  };
-  
-  productosDB.push(nuevoProducto);
-  return nuevoProducto;
+  try {
+    // Convertir campos frontend → backend
+    const productoBackend = {
+      name: producto.nombre,
+      description: producto.descripcion,
+      price: producto.precio,
+      category: producto.categoria,
+      imageUrl: producto.imagen,
+      stock: producto.stock || 0,
+      highlighted: producto.destacado || false,
+      rating: producto.valoracion || 0,
+      previousPrice: producto.precioAnterior || null
+    };
+    
+    const response = await api.post('/productos', productoBackend);
+    return mapearProductoBackend(response.data);
+  } catch (error) {
+    console.error('Error al crear producto:', error);
+    throw error;
+  }
 }
 
 /**
- * Actualiza un producto existente (CRUD)
+ * Actualiza un producto existente en el backend (CRUD)
  * @param {number} id - ID del producto
  * @param {Object} datosActualizados - Datos a actualizar
  * @returns {Promise<Object|null>} - Producto actualizado o null
  */
 export async function actualizarProducto(id, datosActualizados) {
-  await delay(300);
-  
-  const index = productosDB.findIndex(p => p.id === id);
-  if (index === -1) return null;
-  
-  productosDB[index] = {
-    ...productosDB[index],
-    ...datosActualizados
-  };
-  
-  return productosDB[index];
+  try {
+    // Convertir campos frontend → backend si es necesario
+    const datosBackend = {
+      ...(datosActualizados.nombre && { name: datosActualizados.nombre }),
+      ...(datosActualizados.descripcion && { description: datosActualizados.descripcion }),
+      ...(datosActualizados.precio && { price: datosActualizados.precio }),
+      ...(datosActualizados.categoria && { category: datosActualizados.categoria }),
+      ...(datosActualizados.imagen && { imageUrl: datosActualizados.imagen }),
+      ...(datosActualizados.stock !== undefined && { stock: datosActualizados.stock }),
+      ...(datosActualizados.destacado !== undefined && { highlighted: datosActualizados.destacado }),
+      ...(datosActualizados.valoracion !== undefined && { rating: datosActualizados.valoracion }),
+      ...(datosActualizados.precioAnterior !== undefined && { previousPrice: datosActualizados.precioAnterior })
+    };
+    
+    const response = await api.put(`/productos/${id}`, datosBackend);
+    return mapearProductoBackend(response.data);
+  } catch (error) {
+    console.error('Error al actualizar producto:', error);
+    throw error;
+  }
 }
 
 /**
- * Elimina un producto (CRUD)
+ * Elimina un producto del backend (CRUD)
  * @param {number} id - ID del producto
  * @returns {Promise<boolean>} - true si se eliminó
  */
 export async function eliminarProducto(id) {
-  await delay(300);
-  
-  const index = productosDB.findIndex(p => p.id === id);
-  if (index === -1) return false;
-  
-  productosDB.splice(index, 1);
-  return true;
-}
-
-/**
- * Función auxiliar para simular delay de red
- */
-function delay(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
+  try {
+    await api.delete(`/productos/${id}`);
+    console.log(`✅ Producto ${id} eliminado`);
+    return true;
+  } catch (error) {
+    console.error('Error al eliminar producto:', error);
+    throw error;
+  }
 }

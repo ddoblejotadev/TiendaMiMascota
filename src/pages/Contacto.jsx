@@ -4,6 +4,7 @@
  */
 
 import { useState } from 'react';
+import { notify } from '../components/ui/notificationHelper';
 
 function Contacto() {
   // Estados del formulario
@@ -21,12 +22,12 @@ function Contacto() {
     
     // Validaciones básicas
     if (!nombre || !correo || !asunto || !mensaje) {
-      alert('❌ Por favor completa todos los campos');
+      notify('Por favor completa todos los campos', 'error', 3000);
       return;
     }
 
     if (!correo.includes('@')) {
-      alert('❌ Correo electrónico inválido');
+      notify('Correo electrónico inválido', 'error', 3000);
       return;
     }
 
@@ -34,7 +35,7 @@ function Contacto() {
     setEnviando(true);
     
     setTimeout(() => {
-      alert('✅ Mensaje enviado con éxito. Te responderemos pronto.');
+      notify('Mensaje enviado con éxito. Te responderemos pronto.', 'success', 4000);
       
       // Limpiar formulario
       setNombre('');

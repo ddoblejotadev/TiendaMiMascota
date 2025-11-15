@@ -5,41 +5,65 @@
 
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
+import { obtenerProductoPorId as obtenerProductoAPI } from '../services/productService';
 import useProductos from '../hooks/useProductos';
 import useCarrito from '../hooks/useCarrito';
+import { notify } from '../components/ui/notificationHelper';
 
 function DetalleProducto() {
   const { id } = useParams(); // Obtener ID de la URL
   const navigate = useNavigate();
   const { obtenerProductoPorId, todosLosProductos, cargando: cargandoProductos } = useProductos();
-  const { agregarAlCarrito } = useCarrito();
+  const { agregarAlCarrito, obtenerCantidadEnCarrito } = useCarrito();
   
   const [producto, setProducto] = useState(null);
   const [cantidad, setCantidad] = useState(1);
   const [cargando, setCargando] = useState(true);
+  const [error, setError] = useState(null);
+  
+  // Obtener cantidad actual en el carrito (se actualiza automáticamente)
+  const cantidadEnCarrito = producto ? obtenerCantidadEnCarrito(producto.id) : 0;
 
   // Cargar producto al montar el componente
   useEffect(() => {
-    // Esperar a que los productos se carguen
-    if (cargandoProductos) {
-      setCargando(true);
-      return;
-    }
-
-    const productoEncontrado = obtenerProductoPorId(id);
-    
-    if (productoEncontrado) {
-      setProducto(productoEncontrado);
-      setCargando(false);
-    } else {
-      // Solo mostrar error si ya se cargaron todos los productos
-      if (todosLosProductos.length > 0) {
+    const cargarProducto = async () => {
+      try {
+        setCargando(true);
+        setError(null);
+        setProducto(null);
+        
+        console.log('🔍 Cargando producto ID:', id);
+        
+        // Cargar directamente desde el backend
+        const productoBackend = await obtenerProductoAPI(id);
+        
+        if (productoBackend) {
+          console.log('✅ Producto cargado:', productoBackend.nombre);
+          setProducto(productoBackend);
+          setCargando(false);
+        } else {
+          console.error('❌ Producto no encontrado en backend');
+          setError('Producto no encontrado');
+          setCargando(false);
+          setTimeout(() => {
+            navigate('/productos');
+          }, 1500);
+        }
+      } catch (err) {
+        console.error('❌ Error al cargar producto:', err);
+        console.error('Detalles del error:', err.response?.data || err.message);
+        setError('Error al cargar el producto. Verifica que el backend esté corriendo.');
         setCargando(false);
-        alert('Producto no encontrado');
-        navigate('/productos');
+        setTimeout(() => {
+          navigate('/productos');
+        }, 2000);
       }
+    };
+
+    if (id) {
+      cargarProducto();
     }
-  }, [id, obtenerProductoPorId, navigate, cargandoProductos, todosLosProductos]);
+  }, [id, navigate]);
 
   /**
    * Formatear precio
@@ -70,37 +94,70 @@ function DetalleProducto() {
    * Agregar al carrito
    */
   const manejarAgregarCarrito = () => {
-    for (let i = 0; i < cantidad; i++) {
-      agregarAlCarrito(producto);
-    }
-    alert(`✅ ${cantidad} x "${producto.nombre}" agregado al carrito`);
+    agregarAlCarrito(producto, cantidad);
+    notify(`${cantidad} x "${producto.nombre}" agregado al carrito`, 'success', 3000);
   };
 
   /**
    * Comprar ahora (agregar y ir al carrito)
    */
   const comprarAhora = () => {
-    for (let i = 0; i < cantidad; i++) {
-      agregarAlCarrito(producto);
-    }
+    agregarAlCarrito(producto, cantidad);
     navigate('/carrito');
   };
 
   // Mostrar cargando
   if (cargando) {
     return (
-      <div className="container py-5 text-center">
-        <div className="spinner-border text-primary" role="status">
-          <span className="visually-hidden">Cargando...</span>
+      <div className="container py-5">
+        <div className="row justify-content-center">
+          <div className="col-md-8 text-center">
+            <div className="card border-0 shadow-sm p-5">
+              <div className="spinner-border text-primary mx-auto mb-3" style={{ width: '3rem', height: '3rem' }} role="status">
+                <span className="visually-hidden">Cargando...</span>
+              </div>
+              <h5 className="text-muted">Cargando producto...</h5>
+              <p className="text-muted small mb-0">Obteniendo información del backend</p>
+            </div>
+          </div>
         </div>
-        <p className="mt-3">Cargando producto...</p>
+      </div>
+    );
+  }
+
+  // Si hay error
+  if (error) {
+    return (
+      <div className="container py-5">
+        <div className="row justify-content-center">
+          <div className="col-md-8">
+            <div className="alert alert-danger text-center shadow-sm">
+              <h4 className="alert-heading mb-3">❌ {error}</h4>
+              <p className="mb-3">Redirigiendo a productos en unos segundos...</p>
+              <div className="spinner-border spinner-border-sm text-danger" role="status">
+                <span className="visually-hidden">Redirigiendo...</span>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     );
   }
 
   // Si no hay producto
   if (!producto) {
-    return null;
+    return (
+      <div className="container py-5">
+        <div className="row justify-content-center">
+          <div className="col-md-8">
+            <div className="alert alert-warning text-center shadow-sm">
+              <h4 className="mb-3">⚠️ Producto no encontrado</h4>
+              <p>Redirigiendo a la lista de productos...</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -124,9 +181,6 @@ function DetalleProducto() {
               alt={producto.nombre}
               className="img-fluid rounded shadow-lg"
               style={{ width: '100%', height: '500px', objectFit: 'cover' }}
-              onError={(e) => {
-                e.target.src = '/images/placeholder.jpg';
-              }}
             />
             
             {/* Badge de stock */}
@@ -184,7 +238,14 @@ function DetalleProducto() {
           {/* Selector de cantidad */}
           {producto.stock > 0 && (
             <div className="mb-4">
-              <label className="form-label fw-bold fs-5">Cantidad:</label>
+              <div className="d-flex justify-content-between align-items-center mb-2">
+                <label className="form-label fw-bold fs-5 mb-0">Cantidad:</label>
+                {cantidadEnCarrito > 0 && (
+                  <span className="badge bg-success fs-6">
+                    ✓ {cantidadEnCarrito} en el carrito
+                  </span>
+                )}
+              </div>
               <div className="d-flex align-items-center gap-3">
                 <div className="input-group" style={{ maxWidth: '150px' }}>
                   <button 
@@ -223,7 +284,7 @@ function DetalleProducto() {
                   className="btn btn-primary btn-lg fw-bold"
                   onClick={manejarAgregarCarrito}
                 >
-                  🛒 Agregar al Carrito
+                  🛒 Agregar {cantidad > 1 ? `${cantidad} unidades` : 'al Carrito'}
                 </button>
                 
                 <button 
@@ -239,6 +300,18 @@ function DetalleProducto() {
               </button>
             )}
           </div>
+          
+          {/* Resumen del subtotal */}
+          {cantidad > 1 && (
+            <div className="alert alert-info mb-4">
+              <div className="d-flex justify-content-between align-items-center">
+                <span className="fw-bold">Subtotal ({cantidad} unidades):</span>
+                <span className="fs-4 fw-bold text-primary">
+                  {formatearPrecio(producto.precio * cantidad)}
+                </span>
+              </div>
+            </div>
+          )}
 
           {/* Información adicional */}
           <div className="card border-0 bg-light">

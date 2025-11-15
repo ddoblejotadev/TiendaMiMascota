@@ -13,12 +13,14 @@ function Productos() {
   const {
     productos,
     cargando,
+    error,
     busqueda,
     categoriaSeleccionada,
     buscarProductos,
     filtrarPorCategoria,
     limpiarFiltros,
-    obtenerCategorias
+    obtenerCategorias,
+    recargarProductos
   } = useProductos();
 
   // Si viene una categoría desde la navegación, aplicarla
@@ -51,6 +53,32 @@ function Productos() {
           <p className="lead">Encuentra todo lo que tu mascota necesita</p>
         </div>
       </div>
+
+      {/* Mensaje de error si falla la conexión con el backend */}
+      {error && (
+        <div className="container my-4">
+          <div className="alert alert-danger d-flex align-items-center" role="alert">
+            <div className="me-3 display-4">⚠️</div>
+            <div className="flex-grow-1">
+              <h4 className="alert-heading mb-2">Error al conectar con el backend</h4>
+              <p className="mb-2">{error}</p>
+              <hr />
+              <div className="d-flex gap-2 align-items-center">
+                <small className="text-muted">
+                  Verifica que el backend esté corriendo en:{' '}
+                  <code>http://localhost:8080/api/productos</code>
+                </small>
+                <button 
+                  onClick={recargarProductos}
+                  className="btn btn-sm btn-outline-danger ms-auto"
+                >
+                  🔄 Reintentar
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Filtros */}
       <div className="container my-4">
@@ -118,7 +146,27 @@ function Productos() {
 
       {/* Grid de productos */}
       <div className="container my-5">
-        {!cargando && productos.length > 0 && (
+        {cargando ? (
+          /* Skeleton loader mientras carga */
+          <div className="row g-4">
+            {[1, 2, 3, 4, 5, 6, 7, 8].map(i => (
+              <div key={i} className="col-sm-6 col-md-4 col-lg-3">
+                <div className="card h-100 shadow-sm border-0">
+                  <div className="image-loading" style={{ height: '250px' }}></div>
+                  <div className="card-body">
+                    <div className="bg-light rounded mb-2" style={{ height: '20px', width: '60%' }}></div>
+                    <div className="bg-light rounded mb-2" style={{ height: '24px', width: '100%' }}></div>
+                    <div className="bg-light rounded mb-3" style={{ height: '40px', width: '100%' }}></div>
+                    <div className="d-flex justify-content-between">
+                      <div className="bg-light rounded" style={{ height: '32px', width: '80px' }}></div>
+                      <div className="bg-light rounded" style={{ height: '32px', width: '100px' }}></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : productos.length > 0 ? (
           <div className="row g-4">
             {productos.map(producto => (
               <div key={producto.id} className="col-sm-6 col-md-4 col-lg-3">
@@ -126,10 +174,8 @@ function Productos() {
               </div>
             ))}
           </div>
-        )}
-
-        {/* Mensaje si no hay productos */}
-        {!cargando && productos.length === 0 && (
+        ) : (
+          /* Mensaje si no hay productos */
           <div className="text-center py-5">
             <div className="display-1 mb-3">🔍</div>
             <h3 className="mb-3">No encontramos productos con esos filtros</h3>

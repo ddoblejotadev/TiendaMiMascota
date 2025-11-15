@@ -1,6 +1,7 @@
 /**
  * HOOK DE PRODUCTOS
  * Maneja la lista de productos y filtros
+ * Consume datos del backend via API REST
  */
 
 import { useState, useEffect } from 'react';
@@ -11,27 +12,38 @@ function useProductos() {
   const [productos, setProductos] = useState([]);
   const [productosFiltrados, setProductosFiltrados] = useState([]);
   const [cargando, setCargando] = useState(true);
+  const [error, setError] = useState(null);
   const [busqueda, setBusqueda] = useState('');
   const [categoriaSeleccionada, setCategoriaSeleccionada] = useState('Todas');
 
-  // EFECTO 1: Cargar productos al inicio
+  // EFECTO 1: Cargar productos al inicio desde el backend
   useEffect(() => {
-    // Función async para cargar productos
-    const cargarProductos = async () => {
-      try {
-        setCargando(true);
-        const productosObtenidos = await obtenerProductos();
-        setProductos(productosObtenidos);
-        setProductosFiltrados(productosObtenidos);
-      } catch (error) {
-        console.error('Error al cargar productos:', error);
-      } finally {
-        setCargando(false);
-      }
-    };
-
-    cargarProductos();
+    cargarProductosDelBackend();
   }, []);
+
+  /**
+   * Carga productos desde el backend
+   */
+  const cargarProductosDelBackend = async () => {
+    try {
+      setCargando(true);
+      setError(null);
+      console.log('🔄 Cargando productos desde http://localhost:8080/api/productos');
+      
+      const productosObtenidos = await obtenerProductos();
+      
+      console.log('✅ Productos cargados correctamente:', productosObtenidos.length);
+      setProductos(productosObtenidos);
+      setProductosFiltrados(productosObtenidos);
+    } catch (error) {
+      console.error('❌ Error al cargar productos:', error);
+      setError(error.message || 'Error al cargar productos del backend');
+      setProductos([]);
+      setProductosFiltrados([]);
+    } finally {
+      setCargando(false);
+    }
+  };
 
   // EFECTO 2: Filtrar productos cuando cambia búsqueda o categoría
   useEffect(() => {
@@ -95,13 +107,15 @@ function useProductos() {
     productos: productosFiltrados,
     todosLosProductos: productos,
     cargando,
+    error,
     busqueda,
     categoriaSeleccionada,
     buscarProductos,
     filtrarPorCategoria,
     limpiarFiltros,
     obtenerProductoPorId,
-    obtenerCategorias
+    obtenerCategorias,
+    recargarProductos: cargarProductosDelBackend
   };
 }
 
