@@ -418,7 +418,7 @@ export async function eliminarProducto(id) {
  */
 export async function obtenerOrdenesUsuario(usuarioId) {
   try {
-    const response = await api.get(`/api/ordenes/usuario/${usuarioId}`);
+    const response = await api.get(`/ordenes/usuario/${usuarioId}`);
     return response.data;
   } catch (error) {
     console.error('Error al obtener órdenes:', error);
@@ -431,7 +431,7 @@ export async function obtenerOrdenesUsuario(usuarioId) {
  */
 export async function crearOrden(datosOrden) {
   try {
-    const response = await api.post('/api/ordenes', datosOrden);
+    const response = await api.post('/ordenes', datosOrden);
     return response.data;
   } catch (error) {
     console.error('Error al crear orden:', error);
@@ -444,7 +444,7 @@ export async function crearOrden(datosOrden) {
  */
 export async function verificarToken() {
   try {
-    const response = await api.get('/api/auth/verificar');
+    const response = await api.get('/auth/verificar');
     return response.data;
   } catch (error) {
     console.error('Token inválido:', error);
@@ -457,7 +457,7 @@ export async function verificarToken() {
  */
 export async function obtenerProductos(page = 0, size = 20) {
   try {
-    const response = await api.get(`/api/productos?page=${page}&size=${size}`);
+    const response = await api.get(`/productos?page=${page}&size=${size}`);
     return response.data;
   } catch (error) {
     console.error('Error al obtener productos:', error);
@@ -470,7 +470,7 @@ export async function obtenerProductos(page = 0, size = 20) {
  */
 export async function obtenerProductoPorId(id) {
   try {
-    const response = await api.get(`/api/productos/${id}`);
+    const response = await api.get(`/productos/${id}`);
     return response.data;
   } catch (error) {
     console.error('Error al obtener producto:', error);
