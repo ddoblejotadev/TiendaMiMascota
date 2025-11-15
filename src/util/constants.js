@@ -277,6 +277,52 @@ export async function actualizarPerfil(datosActualizados) {
  */
 
 /**
+ * Verifica la disponibilidad de stock para los productos del carrito
+ * @param {Array} carrito - Array de items con {id, cantidad}
+ * @returns {Promise<Object>} - {disponible: boolean, productosAgotados: Array}
+ */
+export async function verificarStockCarrito(carrito) {
+  try {
+    const resultado = {
+      disponible: true,
+      productosAgotados: [],
+      productosActualizados: []
+    };
+
+    // Verificar cada producto del carrito
+    for (const item of carrito) {
+      const producto = await obtenerProductoPorId(item.id);
+      
+      if (!producto) {
+        resultado.disponible = false;
+        resultado.productosAgotados.push({
+          ...item,
+          motivo: 'Producto no encontrado'
+        });
+        continue;
+      }
+
+      // Verificar si hay stock suficiente
+      if (producto.stock < item.cantidad) {
+        resultado.disponible = false;
+        resultado.productosAgotados.push({
+          ...item,
+          stockDisponible: producto.stock,
+          motivo: producto.stock === 0 
+            ? 'Producto agotado' 
+            : `Solo quedan ${producto.stock} unidades disponibles`
+        });
+      }
+    }
+
+    return resultado;
+  } catch (error) {
+    console.error('Error al verificar stock:', error);
+    throw new Error('No se pudo verificar la disponibilidad de los productos');
+  }
+}
+
+/**
  * Obtiene todos los productos del backend
  */
 export async function obtenerProductos() {
