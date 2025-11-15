@@ -423,7 +423,7 @@ export async function actualizarProducto(id, datosActualizados) {
 }
 
 /**
- * Elimina un producto
+ * Elimina un producto por ID
  */
 export async function eliminarProducto(id) {
   try {
@@ -431,6 +431,75 @@ export async function eliminarProducto(id) {
     return true;
   } catch (error) {
     console.error('Error al eliminar producto:', error);
+    throw error;
+  }
+}
+
+/**
+ * API SERVICE - ÓRDENES/PEDIDOS
+ */
+
+/**
+ * Obtiene todas las órdenes de un usuario
+ */
+export async function obtenerOrdenesUsuario(usuarioId) {
+  try {
+    const response = await api.get(`/api/ordenes/usuario/${usuarioId}`);
+    return response.data;
+  } catch (error) {
+    console.error('Error al obtener órdenes:', error);
+    throw error;
+  }
+}
+
+/**
+ * Crea una nueva orden de compra
+ */
+export async function crearOrden(datosOrden) {
+  try {
+    const response = await api.post('/api/ordenes', datosOrden);
+    return response.data;
+  } catch (error) {
+    console.error('Error al crear orden:', error);
+    throw error;
+  }
+}
+
+/**
+ * Verifica si el token JWT es válido
+ */
+export async function verificarToken() {
+  try {
+    const response = await api.get('/api/auth/verificar');
+    return response.data;
+  } catch (error) {
+    console.error('Token inválido:', error);
+    throw error;
+  }
+}
+
+/**
+ * Obtiene todos los productos con paginación
+ */
+export async function obtenerProductos(page = 0, size = 20) {
+  try {
+    const response = await api.get(`/api/productos?page=${page}&size=${size}`);
+    return response.data;
+  } catch (error) {
+    console.error('Error al obtener productos:', error);
+    throw error;
+  }
+}
+
+/**
+ * Obtiene un producto por ID
+ */
+export async function obtenerProductoPorId(id) {
+  try {
+    const response = await api.get(`/api/productos/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error('Error al obtener producto:', error);
     throw error;
   }
 }

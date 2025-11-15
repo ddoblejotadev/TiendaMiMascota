@@ -3,7 +3,7 @@
  * Maneja login, registro y sesión del usuario consumiendo el backend
  */
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { login as loginAPI, registrar as registrarAPI, logout as logoutAPI, obtenerUsuarioActual, estaLogueado as estaLogueadoLS } from '../util/constants';
 import { notify } from '../components/ui/notificationHelper';
 
@@ -163,8 +163,20 @@ function useAutenticacion() {
     setError(null);
   };
 
-  // Verificar si hay sesión activa EN TIEMPO REAL
-  const estaLogueado = usuario !== null && estaLogueadoLS();
+  // Verificar si hay sesión activa EN TIEMPO REAL usando useMemo
+  const estaLogueado = useMemo(() => {
+    const tieneUsuario = usuario !== null;
+    const tieneToken = estaLogueadoLS();
+    const resultado = tieneUsuario && tieneToken;
+    
+    console.log('🔍 useAutenticacion - estaLogueado:', { 
+      usuario: usuario?.nombre, 
+      tieneToken, 
+      resultado 
+    });
+    
+    return resultado;
+  }, [usuario]);
 
   // Retornar todo (con alias para compatibilidad)
   return {

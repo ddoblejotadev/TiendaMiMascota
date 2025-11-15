@@ -9,7 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import useCarrito from '../hooks/useCarrito';
 import useAutenticacion from '../hooks/useAutenticacion';
 import { formatearPrecio } from '../util/formatters';
-import { verificarStockCarrito } from '../util/constants';
+import { verificarStockCarrito, crearOrden } from '../util/constants';
 import { notify } from '../components/ui/notificationHelper';
 import { confirmDialog } from '../components/ui/confirmDialogHelper';
 
@@ -133,7 +133,7 @@ function Checkout() {
       const exito = Math.random() > 0.1;
 
       if (exito) {
-        // Guardar orden en localStorage
+        // Preparar datos de la orden
         const orden = {
           id: Date.now(),
           fecha: new Date().toISOString(),
@@ -148,6 +148,22 @@ function Checkout() {
         
         console.log('💾 Guardando orden:', orden);
         
+        // Intentar guardar en el backend
+        try {
+          if (estaLogueado) {
+            console.log('📡 Guardando orden en el backend...');
+            await crearOrden(orden);
+            console.log('✅ Orden guardada en el backend');
+          } else {
+            console.log('👤 Usuario invitado, guardando solo en localStorage');
+          }
+        } catch (error) {
+          console.error('❌ Error al guardar orden en backend:', error);
+          console.log('⚠️ Guardando orden solo en localStorage');
+          notify('Orden guardada localmente (backend no disponible)', 'warning', 3000);
+        }
+
+        // Siempre guardar en localStorage como respaldo
         const ordenesGuardadas = JSON.parse(localStorage.getItem('ordenes') || '[]');
         ordenesGuardadas.push(orden);
         localStorage.setItem('ordenes', JSON.stringify(ordenesGuardadas));
