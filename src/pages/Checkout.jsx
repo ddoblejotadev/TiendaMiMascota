@@ -147,18 +147,24 @@ function Checkout() {
         };
         
         console.log('💾 Guardando orden:', orden);
+        console.log('🔐 Estado de autenticación - estaLogueado:', estaLogueado);
+        console.log('👤 Usuario actual:', usuario);
         
         // Intentar guardar en el backend
         try {
           if (estaLogueado) {
             console.log('📡 Guardando orden en el backend...');
-            await crearOrden(orden);
+            console.log('📤 Datos a enviar:', JSON.stringify(orden, null, 2));
+            const respuesta = await crearOrden(orden);
             console.log('✅ Orden guardada en el backend');
+            console.log('📥 Respuesta del servidor:', respuesta);
           } else {
             console.log('👤 Usuario invitado, guardando solo en localStorage');
           }
         } catch (error) {
           console.error('❌ Error al guardar orden en backend:', error);
+          console.error('📋 Detalles del error:', error.response?.data || error.message);
+          console.error('🔴 Status code:', error.response?.status);
           console.log('⚠️ Guardando orden solo en localStorage');
           notify('Orden guardada localmente (backend no disponible)', 'warning', 3000);
         }

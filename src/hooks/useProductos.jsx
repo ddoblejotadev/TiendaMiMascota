@@ -28,7 +28,7 @@ function useProductos() {
     try {
       setCargando(true);
       setError(null);
-      console.log('🔄 Cargando productos desde http://localhost:8080/api/productos');
+      console.log('🔄 Cargando productos desde el backend...');
       
       const productosObtenidos = await obtenerProductos();
       

@@ -418,10 +418,15 @@ export async function eliminarProducto(id) {
  */
 export async function obtenerOrdenesUsuario(usuarioId) {
   try {
-    const response = await api.get(`/api/ordenes/usuario/${usuarioId}`);
+    console.log('🔍 Buscando órdenes para usuario:', usuarioId);
+    const response = await api.get(`/ordenes/usuario/${usuarioId}`);
+    console.log('📦 Respuesta del backend:', response.data);
+    console.log('📊 Tipo de respuesta:', Array.isArray(response.data) ? 'Array' : typeof response.data);
+    console.log('📈 Cantidad de órdenes:', Array.isArray(response.data) ? response.data.length : 'No es array');
     return response.data;
   } catch (error) {
-    console.error('Error al obtener órdenes:', error);
+    console.error('❌ Error al obtener órdenes:', error);
+    console.error('📋 Detalles del error:', error.response?.data || error.message);
     throw error;
   }
 }
@@ -430,11 +435,41 @@ export async function obtenerOrdenesUsuario(usuarioId) {
  * Crea una nueva orden de compra
  */
 export async function crearOrden(datosOrden) {
+  // Transformar la orden al formato que espera el backend ANTES del try
+  const ordenBackend = {
+    usuario_id: datosOrden.usuarioId,
+    items: datosOrden.productos.map(producto => ({
+      producto_id: producto.id,
+      cantidad: producto.cantidad,
+      precio_unitario: producto.precio
+    })),
+    datos_envio: {
+      nombre_completo: datosOrden.datosEnvio.nombreCompleto,
+      email: datosOrden.datosEnvio.email,
+      telefono: datosOrden.datosEnvio.telefono,
+      direccion: datosOrden.datosEnvio.direccion,
+      ciudad: datosOrden.datosEnvio.ciudad,
+      region: datosOrden.datosEnvio.region,
+      codigo_postal: datosOrden.datosEnvio.codigoPostal || '',
+      metodo_pago: datosOrden.datosEnvio.metodoPago
+    },
+    total: datosOrden.total,
+    estado: datosOrden.estado
+  };
+
   try {
-    const response = await api.post('/api/ordenes', datosOrden);
+    console.log('📡 Enviando orden al backend:', datosOrden);
+    console.log('🔄 Orden transformada para backend:', ordenBackend);
+    console.log('📋 Items a enviar:', JSON.stringify(ordenBackend.items, null, 2));
+    
+    const response = await api.post('/ordenes', ordenBackend);
+    console.log('✅ Orden guardada, respuesta:', response.data);
     return response.data;
   } catch (error) {
-    console.error('Error al crear orden:', error);
+    console.error('❌ Error al crear orden:', error);
+    console.error('📋 Detalles del error:', error.response?.data || error.message);
+    console.error('🔍 Error completo:', JSON.stringify(error.response?.data, null, 2));
+    console.error('📤 Datos que se enviaron:', JSON.stringify(ordenBackend, null, 2));
     throw error;
   }
 }
@@ -444,7 +479,7 @@ export async function crearOrden(datosOrden) {
  */
 export async function verificarToken() {
   try {
-    const response = await api.get('/api/auth/verificar');
+    const response = await api.get('/auth/verificar');
     return response.data;
   } catch (error) {
     console.error('Token inválido:', error);
@@ -457,7 +492,7 @@ export async function verificarToken() {
  */
 export async function obtenerProductos(page = 0, size = 20) {
   try {
-    const response = await api.get(`/api/productos?page=${page}&size=${size}`);
+    const response = await api.get(`/productos?page=${page}&size=${size}`);
     return response.data;
   } catch (error) {
     console.error('Error al obtener productos:', error);
@@ -470,7 +505,7 @@ export async function obtenerProductos(page = 0, size = 20) {
  */
 export async function obtenerProductoPorId(id) {
   try {
-    const response = await api.get(`/api/productos/${id}`);
+    const response = await api.get(`/productos/${id}`);
     return response.data;
   } catch (error) {
     console.error('Error al obtener producto:', error);

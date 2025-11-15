@@ -57,15 +57,39 @@ export async function obtenerProductos() {
   try {
     console.log('📡 Obteniendo productos del backend...');
     const response = await api.get('/productos');
-    console.log('✅ Productos recibidos:', response.data.length);
+    
+    console.log('🔍 RESPUESTA COMPLETA DEL BACKEND:', response.data);
+    
+    // El backend puede devolver:
+    // 1. Array directo: [producto1, producto2, ...]
+    // 2. Objeto con contenido: { content: [...], totalElements: 10, ... }
+    // 3. Objeto con data: { data: [...] }
+    
+    let productosArray = [];
+    
+    if (Array.isArray(response.data)) {
+      // Caso 1: Array directo
+      productosArray = response.data;
+    } else if (response.data.content && Array.isArray(response.data.content)) {
+      // Caso 2: Paginación de Spring Boot (Page<Producto>)
+      productosArray = response.data.content;
+    } else if (response.data.data && Array.isArray(response.data.data)) {
+      // Caso 3: Respuesta envuelta en {data: [...]}
+      productosArray = response.data.data;
+    } else {
+      console.error('❌ Formato de respuesta no reconocido:', response.data);
+      throw new Error('Formato de respuesta del backend no reconocido');
+    }
+    
+    console.log('✅ Productos recibidos:', productosArray.length);
     
     // LOG TEMPORAL: Ver estructura del primer producto
-    if (response.data.length > 0) {
-      console.log('🔍 ESTRUCTURA DEL PRIMER PRODUCTO:', response.data[0]);
+    if (productosArray.length > 0) {
+      console.log('🔍 ESTRUCTURA DEL PRIMER PRODUCTO:', productosArray[0]);
     }
     
     // Mapear productos del backend al formato frontend
-    const productosMapeados = response.data.map(mapearProductoBackend);
+    const productosMapeados = productosArray.map(mapearProductoBackend);
     
     // LOG TEMPORAL: Ver producto mapeado
     if (productosMapeados.length > 0) {
@@ -76,7 +100,7 @@ export async function obtenerProductos() {
   } catch (error) {
     console.error('❌ Error al obtener productos:', error);
     console.error('Detalles:', error.response?.data || error.message);
-    throw new Error('No se pudieron cargar los productos del backend. Verifica que esté corriendo en http://localhost:8080');
+    throw new Error(`No se pudieron cargar los productos del backend: ${error.message}`);
   }
 }
 
