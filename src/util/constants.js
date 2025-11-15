@@ -176,7 +176,28 @@ export async function registrar(datosUsuario) {
     return usuarioData;
   } catch (error) {
     console.error('Error al registrar:', error);
-    const mensaje = error.response?.data?.mensaje || 'Error al registrarse';
+    
+    // Capturar mensajes específicos del backend
+    let mensaje = 'Error al registrarse';
+    
+    if (error.response?.data) {
+      // Intentar obtener el mensaje del backend en diferentes formatos
+      mensaje = error.response.data.mensaje || 
+                error.response.data.message || 
+                error.response.data.error ||
+                mensaje;
+      
+      // Si el error contiene información sobre email duplicado
+      if (error.response.status === 400 || error.response.status === 409) {
+        if (mensaje.toLowerCase().includes('email') || 
+            mensaje.toLowerCase().includes('correo') ||
+            mensaje.toLowerCase().includes('existe') ||
+            mensaje.toLowerCase().includes('duplicate')) {
+          mensaje = 'Este correo electrónico ya está registrado';
+        }
+      }
+    }
+    
     throw new Error(mensaje);
   }
 }

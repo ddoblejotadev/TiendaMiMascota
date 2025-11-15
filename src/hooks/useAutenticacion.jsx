@@ -4,7 +4,8 @@
  */
 
 import { useState, useEffect } from 'react';
-import { login as loginAPI, registrar as registrarAPI, logout as logoutAPI, obtenerUsuarioActual, estaLogueado as verificarSesion } from '../util/constants';
+import { login as loginAPI, registrar as registrarAPI, logout as logoutAPI, obtenerUsuarioActual, estaLogueado as estaLogueadoLS } from '../util/constants';
+import { notify } from '../components/ui/notificationHelper';
 
 function useAutenticacion() {
   // Estado del usuario actual
@@ -16,17 +17,35 @@ function useAutenticacion() {
   useEffect(() => {
     console.log('🔍 useAutenticacion - Verificando sesión...');
     
-    const usuarioGuardado = obtenerUsuarioActual();
+    const cargarUsuario = () => {
+      const usuarioGuardado = obtenerUsuarioActual();
+      
+      if (usuarioGuardado) {
+        console.log('✅ useAutenticacion - Usuario encontrado:', usuarioGuardado);
+        setUsuario(usuarioGuardado);
+      } else {
+        console.log('ℹ️ useAutenticacion - No hay sesión activa');
+        setUsuario(null);
+      }
+      
+      setCargando(false);
+    };
     
-    if (usuarioGuardado) {
-      console.log('✅ useAutenticacion - Usuario encontrado:', usuarioGuardado);
-      setUsuario(usuarioGuardado);
-    } else {
-      console.log('ℹ️ useAutenticacion - No hay sesión activa');
-      setUsuario(null);
-    }
+    cargarUsuario();
     
-    setCargando(false);
+    // Listener para cambios en localStorage (sincroniza entre pestañas y componentes)
+    const handleStorageChange = (e) => {
+      if (e.key === 'usuario' || e.key === 'token') {
+        console.log('🔄 useAutenticacion - Cambio detectado en localStorage');
+        cargarUsuario();
+      }
+    };
+    
+    window.addEventListener('storage', handleStorageChange);
+    
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+    };
   }, []);
 
   // Helpers para gestión de usuarios en localStorage (solo para prototipo)
@@ -68,8 +87,11 @@ function useAutenticacion() {
       console.log('🔐 useAutenticacion - Iniciando login...');
       const usuarioLogueado = await loginAPI(email, password);
       
-      setUsuario(usuarioLogueado);
       console.log('✅ useAutenticacion - Login exitoso:', usuarioLogueado);
+      console.log('🔍 useAutenticacion - Verificando token guardado:', localStorage.getItem('token'));
+      
+      // Actualizar estado con el usuario
+      setUsuario(usuarioLogueado);
       
       return true;
     } catch (err) {
@@ -121,6 +143,10 @@ function useAutenticacion() {
       const mensajeError = err.message || 'Error al registrarse';
       setError(mensajeError);
       console.error('❌ useAutenticacion - Error en registro:', mensajeError);
+      
+      // Mostrar notificación con el error específico
+      notify(mensajeError, 'error', 4000);
+      
       return false;
     } finally {
       setCargando(false);
@@ -138,7 +164,7 @@ function useAutenticacion() {
   };
 
   // Verificar si hay sesión activa EN TIEMPO REAL
-  const estaLogueado = usuario !== null && verificarSesion();
+  const estaLogueado = usuario !== null && estaLogueadoLS();
 
   // Retornar todo (con alias para compatibilidad)
   return {

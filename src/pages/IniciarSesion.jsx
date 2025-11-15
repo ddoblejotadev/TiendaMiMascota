@@ -38,8 +38,12 @@ function IniciarSesion() {
     const exito = await iniciarSesion(email, password);
     
     if (exito) {
-      notify('Sesión iniciada con éxito', 'success', 3000);
-      navigate('/'); // Ir a inicio
+      notify('Sesión iniciada con éxito', 'success', 2000);
+      
+      // Recargar la página para que todos los componentes vean el nuevo estado
+      setTimeout(() => {
+        window.location.href = '/';
+      }, 500);
     } else {
       // El error ya se muestra desde el hook useAutenticacion
       notify('Email o contraseña incorrectos', 'error', 3000);

@@ -62,12 +62,14 @@ function Registrarse() {
     const exitoso = await registrarse(datosUsuario);
     
     if (exitoso) {
-      notify('Registro exitoso. ¡Bienvenido!', 'success', 3000);
-      navegar('/'); // Ir a inicio
-    } else {
-      // El error ya se muestra desde el hook
-      notify('Error al registrarse. Intenta nuevamente', 'error', 3000);
+      notify('Registro exitoso. ¡Bienvenido!', 'success', 2000);
+      
+      // Recargar la página para que todos los componentes vean el nuevo estado
+      setTimeout(() => {
+        window.location.href = '/';
+      }, 500);
     }
+    // Si falla, el error específico ya se muestra desde el hook useAutenticacion
   };
 
   return (
