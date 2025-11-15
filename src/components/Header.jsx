@@ -4,6 +4,7 @@
  */
 
 import { Link, useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
 import useCarrito from '../hooks/useCarrito';
 import useAutenticacion from '../hooks/useAutenticacion';
 import { confirmDialog } from '../components/ui/confirmDialogHelper';
@@ -13,7 +14,12 @@ import logo from '../assets/logo1.png';
 function Header() {
   const navegar = useNavigate();
   const { totalArticulos } = useCarrito();
-  const { usuario, estaAutenticado, cerrarSesion } = useAutenticacion();
+  const { usuario, estaLogueado, cerrarSesion } = useAutenticacion();
+
+  // 🔍 DEBUG: Ver estado de autenticación
+  useEffect(() => {
+    console.log('🔍 Header - Estado:', { usuario, estaLogueado });
+  }, [usuario, estaLogueado]);
 
   /**
    * Manejar cierre de sesión
@@ -111,7 +117,7 @@ function Header() {
             </Link>
 
             {/* Usuario */}
-            {estaAutenticado ? (
+            {estaLogueado ? (
               <div className="dropdown">
                 <button 
                   className="btn btn-outline-light dropdown-toggle d-flex align-items-center gap-2" 
@@ -119,7 +125,7 @@ function Header() {
                   data-bs-toggle="dropdown"
                 >
                   <span>👤</span>
-                  <span className="d-none d-md-inline">{usuario?.nombre}</span>
+                  <span className="d-none d-md-inline">{usuario?.nombre || 'Usuario'}</span>
                 </button>
                 <ul className="dropdown-menu dropdown-menu-end">
                   <li>
