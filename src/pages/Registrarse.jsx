@@ -6,10 +6,12 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import useAutenticacion from '../hooks/useAutenticacion';
+import useRutValidation from '../hooks/useRutValidation';
 
 function Registrarse() {
   const navegar = useNavigate();
   const { registrarse } = useAutenticacion();
+  const { rut, error: errorRut, validar: validarRut, formatear: formatearRut, esValido: esRutValido } = useRutValidation();
   
   // Estados del formulario
   const [nombre, setNombre] = useState('');
@@ -24,17 +26,38 @@ function Registrarse() {
   /**
    * Manejar envío del formulario
    */
-  const manejarEnvio = (evento) => {
+  const manejarEnvio = async (evento) => {
     evento.preventDefault();
     
-    // Validación simple de términos
+    // Validación de términos
     if (!aceptoTerminos) {
       alert('❌ Debes aceptar los términos y condiciones');
       return;
     }
+
+    // Validar RUT si fue ingresado
+    if (rut && rut.trim() !== '' && !esRutValido(rut)) {
+      alert('❌ El RUT ingresado no es válido');
+      return;
+    }
+    
+    // Preparar datos del usuario
+    const datosUsuario = {
+      nombre,
+      email: correo,
+      password: contrasena,
+      run: rut && rut.trim() !== '' ? rut : null, // Opcional
+      role
+    };
+
+    // Validar contraseñas
+    if (contrasena !== confirmarContrasena) {
+      alert('❌ Las contraseñas no coinciden');
+      return;
+    }
     
     // Intentar registrarse
-  const exitoso = registrarse(nombre, correo, contrasena, confirmarContrasena, role);
+    const exitoso = await registrarse(datosUsuario);
     
     if (exitoso) {
       alert('✅ Registro exitoso. ¡Bienvenido!');
@@ -64,6 +87,32 @@ function Registrarse() {
                   onChange={(e) => setNombre(e.target.value)}
                   required
                 />
+              </div>
+
+              {/* RUT (Opcional) */}
+              <div className="mb-3">
+                <label htmlFor="rut" className="form-label fw-semibold">
+                  RUT <span className="text-muted fw-normal">(Opcional)</span>
+                </label>
+                <input
+                  type="text"
+                  id="rut"
+                  name="run"
+                  className={`form-control form-control-lg ${errorRut ? 'is-invalid' : ''} ${rut && !errorRut && rut.trim() !== '' ? 'is-valid' : ''}`}
+                  placeholder="12.345.678-K"
+                  value={rut}
+                  onChange={(e) => validarRut(e.target.value)}
+                  onBlur={() => formatearRut()}
+                  maxLength="12"
+                />
+                {errorRut && (
+                  <div className="invalid-feedback d-block">
+                    {errorRut}
+                  </div>
+                )}
+                <div className="form-text">
+                  Formato: 12.345.678-K (opcional)
+                </div>
               </div>
 
               {/* Correo electrónico */}
