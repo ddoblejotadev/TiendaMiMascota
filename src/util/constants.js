@@ -438,6 +438,7 @@ export async function crearOrden(datosOrden) {
   // Transformar la orden al formato que espera el backend ANTES del try
   const ordenBackend = {
     usuario_id: datosOrden.usuarioId,
+    es_invitado: datosOrden.esInvitado || false,
     items: datosOrden.productos.map(producto => ({
       producto_id: producto.id,
       cantidad: producto.cantidad,
@@ -451,10 +452,12 @@ export async function crearOrden(datosOrden) {
       ciudad: datosOrden.datosEnvio.ciudad,
       region: datosOrden.datosEnvio.region,
       codigo_postal: datosOrden.datosEnvio.codigoPostal || '',
-      metodo_pago: datosOrden.datosEnvio.metodoPago
+      metodo_pago: datosOrden.datosEnvio.metodoPago || 'tarjeta',
+      pais: datosOrden.datosEnvio.pais || 'Chile'
     },
+    subtotal: datosOrden.subtotal,
     total: datosOrden.total,
-    estado: datosOrden.estado
+    estado: datosOrden.estado || 'completada'
   };
 
   try {
