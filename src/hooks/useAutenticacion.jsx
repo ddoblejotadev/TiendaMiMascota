@@ -121,15 +121,20 @@ function useAutenticacion() {
     return estaLogueado();
   };
 
-  // Retornar todo
+  // Retornar todo (con alias para compatibilidad)
   return {
     usuario,
     cargando,
     error,
+    // Nombres principales
     iniciarSesion,
     registrarse,
     cerrarSesion,
-    estaAutenticado
+    estaAutenticado,
+    // Alias para compatibilidad
+    login: iniciarSesion,
+    registrar: registrarse,
+    logout: cerrarSesion
   };
 }
 

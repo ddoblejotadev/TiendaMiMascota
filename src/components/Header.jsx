@@ -6,6 +6,8 @@
 import { Link, useNavigate } from 'react-router-dom';
 import useCarrito from '../hooks/useCarrito';
 import useAutenticacion from '../hooks/useAutenticacion';
+import { confirmDialog } from '../components/ui/confirmDialogHelper';
+import { notify } from '../components/ui/notificationHelper';
 import logo from '../assets/logo1.png';
 
 function Header() {
@@ -16,9 +18,17 @@ function Header() {
   /**
    * Manejar cierre de sesión
    */
-  const manejarCerrarSesion = () => {
-    if (confirm('¿Estás seguro de cerrar sesión?')) {
+  const manejarCerrarSesion = async () => {
+    const confirmar = await confirmDialog({
+      title: 'Cerrar sesión',
+      message: '¿Estás seguro de cerrar sesión?',
+      confirmText: 'Cerrar sesión',
+      cancelText: 'Cancelar'
+    });
+    
+    if (confirmar) {
       cerrarSesion();
+      notify('Sesión cerrada correctamente', 'success', 2500);
       navegar('/');
     }
   };

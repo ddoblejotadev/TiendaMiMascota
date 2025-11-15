@@ -31,7 +31,7 @@ function Registrarse() {
     evento.preventDefault();
     
     // Validación de términos
-    if (!aceptaTerminos) {
+    if (!aceptoTerminos) {
       notify('Debes aceptar los términos y condiciones', 'warning', 3000);
       return;
     }
@@ -47,8 +47,9 @@ function Registrarse() {
       nombre,
       email: correo,
       password: contrasena,
-      run: rut && rut.trim() !== '' ? rut : null, // Opcional
-      role
+      telefono: null,
+      direccion: null,
+      run: rut && rut.trim() !== '' ? rut : null // Opcional
     };
 
     // Validar contraseñas
@@ -57,12 +58,15 @@ function Registrarse() {
       return;
     }
     
-    // Intentar registrarse
+    // Intentar registrarse contra el backend
     const exitoso = await registrarse(datosUsuario);
     
     if (exitoso) {
       notify('Registro exitoso. ¡Bienvenido!', 'success', 3000);
       navegar('/'); // Ir a inicio
+    } else {
+      // El error ya se muestra desde el hook
+      notify('Error al registrarse. Intenta nuevamente', 'error', 3000);
     }
   };
 
