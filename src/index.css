@@ -102,6 +102,16 @@ img[loading="lazy"] {
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15) !important;
 }
 
+/* Efecto hover shadow para tarjetas de pedidos */
+.hover-shadow {
+  transition: all 0.3s ease;
+}
+
+.hover-shadow:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12) !important;
+}
+
 /* Timeline styles para la historia */
 .timeline .border-start {
   position: relative;

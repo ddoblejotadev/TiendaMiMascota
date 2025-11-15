@@ -20,15 +20,33 @@ function IniciarSesion() {
   /**
    * Manejar envío del formulario
    */
-  const manejarSubmit = (e) => {
+  const manejarSubmit = async (e) => {
     e.preventDefault();
     
-    // Intentar iniciar sesión
-    const exito = iniciarSesion(email, password);
+    // Validaciones
+    if (!email || !password) {
+      notify('Por favor completa todos los campos', 'error', 3000);
+      return;
+    }
+
+    if (!email.includes('@')) {
+      notify('Email inválido', 'error', 3000);
+      return;
+    }
+    
+    // Intentar iniciar sesión contra el backend
+    const exito = await iniciarSesion(email, password);
     
     if (exito) {
-      alert('✅ Sesión iniciada con éxito');
-      navigate('/'); // Ir a inicio
+      notify('Sesión iniciada con éxito', 'success', 2000);
+      
+      // Recargar la página para que todos los componentes vean el nuevo estado
+      setTimeout(() => {
+        window.location.href = '/';
+      }, 500);
+    } else {
+      // El error ya se muestra desde el hook useAutenticacion
+      notify('Email o contraseña incorrectos', 'error', 3000);
     }
   };
 

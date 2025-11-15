@@ -176,7 +176,28 @@ export async function registrar(datosUsuario) {
     return usuarioData;
   } catch (error) {
     console.error('Error al registrar:', error);
-    const mensaje = error.response?.data?.mensaje || 'Error al registrarse';
+    
+    // Capturar mensajes específicos del backend
+    let mensaje = 'Error al registrarse';
+    
+    if (error.response?.data) {
+      // Intentar obtener el mensaje del backend en diferentes formatos
+      mensaje = error.response.data.mensaje || 
+                error.response.data.message || 
+                error.response.data.error ||
+                mensaje;
+      
+      // Si el error contiene información sobre email duplicado
+      if (error.response.status === 400 || error.response.status === 409) {
+        if (mensaje.toLowerCase().includes('email') || 
+            mensaje.toLowerCase().includes('correo') ||
+            mensaje.toLowerCase().includes('existe') ||
+            mensaje.toLowerCase().includes('duplicate')) {
+          mensaje = 'Este correo electrónico ya está registrado';
+        }
+      }
+    }
+    
     throw new Error(mensaje);
   }
 }
@@ -254,6 +275,52 @@ export async function actualizarPerfil(datosActualizados) {
  * API SERVICE - PRODUCTOS
  * Consume datos del backend
  */
+
+/**
+ * Verifica la disponibilidad de stock para los productos del carrito
+ * @param {Array} carrito - Array de items con {id, cantidad}
+ * @returns {Promise<Object>} - {disponible: boolean, productosAgotados: Array}
+ */
+export async function verificarStockCarrito(carrito) {
+  try {
+    const resultado = {
+      disponible: true,
+      productosAgotados: [],
+      productosActualizados: []
+    };
+
+    // Verificar cada producto del carrito
+    for (const item of carrito) {
+      const producto = await obtenerProductoPorId(item.id);
+      
+      if (!producto) {
+        resultado.disponible = false;
+        resultado.productosAgotados.push({
+          ...item,
+          motivo: 'Producto no encontrado'
+        });
+        continue;
+      }
+
+      // Verificar si hay stock suficiente
+      if (producto.stock < item.cantidad) {
+        resultado.disponible = false;
+        resultado.productosAgotados.push({
+          ...item,
+          stockDisponible: producto.stock,
+          motivo: producto.stock === 0 
+            ? 'Producto agotado' 
+            : `Solo quedan ${producto.stock} unidades disponibles`
+        });
+      }
+    }
+
+    return resultado;
+  } catch (error) {
+    console.error('Error al verificar stock:', error);
+    throw new Error('No se pudo verificar la disponibilidad de los productos');
+  }
+}
 
 /**
  * Obtiene todos los productos del backend
@@ -356,7 +423,7 @@ export async function actualizarProducto(id, datosActualizados) {
 }
 
 /**
- * Elimina un producto
+ * Elimina un producto por ID
  */
 export async function eliminarProducto(id) {
   try {
@@ -364,6 +431,75 @@ export async function eliminarProducto(id) {
     return true;
   } catch (error) {
     console.error('Error al eliminar producto:', error);
+    throw error;
+  }
+}
+
+/**
+ * API SERVICE - ÓRDENES/PEDIDOS
+ */
+
+/**
+ * Obtiene todas las órdenes de un usuario
+ */
+export async function obtenerOrdenesUsuario(usuarioId) {
+  try {
+    const response = await api.get(`/api/ordenes/usuario/${usuarioId}`);
+    return response.data;
+  } catch (error) {
+    console.error('Error al obtener órdenes:', error);
+    throw error;
+  }
+}
+
+/**
+ * Crea una nueva orden de compra
+ */
+export async function crearOrden(datosOrden) {
+  try {
+    const response = await api.post('/api/ordenes', datosOrden);
+    return response.data;
+  } catch (error) {
+    console.error('Error al crear orden:', error);
+    throw error;
+  }
+}
+
+/**
+ * Verifica si el token JWT es válido
+ */
+export async function verificarToken() {
+  try {
+    const response = await api.get('/api/auth/verificar');
+    return response.data;
+  } catch (error) {
+    console.error('Token inválido:', error);
+    throw error;
+  }
+}
+
+/**
+ * Obtiene todos los productos con paginación
+ */
+export async function obtenerProductos(page = 0, size = 20) {
+  try {
+    const response = await api.get(`/api/productos?page=${page}&size=${size}`);
+    return response.data;
+  } catch (error) {
+    console.error('Error al obtener productos:', error);
+    throw error;
+  }
+}
+
+/**
+ * Obtiene un producto por ID
+ */
+export async function obtenerProductoPorId(id) {
+  try {
+    const response = await api.get(`/api/productos/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error('Error al obtener producto:', error);
     throw error;
   }
 }

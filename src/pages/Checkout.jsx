@@ -7,11 +7,16 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useCarrito from '../hooks/useCarrito';
+import useAutenticacion from '../hooks/useAutenticacion';
 import { formatearPrecio } from '../util/formatters';
+import { verificarStockCarrito, crearOrden } from '../util/constants';
+import { notify } from '../components/ui/notificationHelper';
+import { confirmDialog } from '../components/ui/confirmDialogHelper';
 
 function Checkout() {
   const navigate = useNavigate();
-  const { carrito, vaciarCarrito, calcularTotal } = useCarrito();
+  const { carrito, vaciarCarrito, calcularTotal, eliminarDelCarrito } = useCarrito();
+  const { usuario, estaLogueado } = useAutenticacion();
   
   // Estado del formulario de envío
   const [datosEnvio, setDatosEnvio] = useState({
@@ -26,26 +31,26 @@ function Checkout() {
   });
 
   const [procesando, setProcesando] = useState(false);
+  const [modoEdicion, setModoEdicion] = useState(!estaLogueado); // Si no está logueado, modo edición activo
 
   // Auto-completar con datos del usuario logueado
   useEffect(() => {
-    const usuarioGuardado = localStorage.getItem('usuarioActual');
-    if (usuarioGuardado) {
-      try {
-        const usuario = JSON.parse(usuarioGuardado);
-        setDatosEnvio(prev => ({
-          ...prev,
-          nombreCompleto: `${usuario.nombre || ''} ${usuario.apellidos || ''}`.trim(),
-          email: usuario.email || '',
-          telefono: usuario.telefono || '',
-          direccion: usuario.direccion || '',
-          region: usuario.region || ''
-        }));
-      } catch (error) {
-        console.error('Error al cargar datos del usuario:', error);
-      }
+    if (estaLogueado && usuario) {
+      console.log('👤 Usuario logueado detectado:', usuario);
+      setDatosEnvio(prev => ({
+        ...prev,
+        nombreCompleto: usuario.nombre || '',
+        email: usuario.email || '',
+        telefono: usuario.telefono || '',
+        direccion: usuario.direccion || ''
+      }));
+      // Si el usuario tiene dirección guardada, no activar modo edición
+      setModoEdicion(!usuario.direccion);
+    } else {
+      console.log('🛍️ Comprando como invitado');
+      setModoEdicion(true);
     }
-  }, []);
+  }, [estaLogueado, usuario]);
 
   // Redirigir si el carrito está vacío
   useEffect(() => {
@@ -73,39 +78,118 @@ function Checkout() {
     e.preventDefault();
     setProcesando(true);
 
-    // Simular procesamiento de pago
-    await new Promise(resolve => setTimeout(resolve, 2000));
-
-    // Simular probabilidad de éxito (90% éxito, 10% fallo)
-    const exito = Math.random() > 0.1;
-
-    if (exito) {
-      // Guardar orden en localStorage
-      const orden = {
-        id: Date.now(),
-        fecha: new Date().toISOString(),
-        productos: carrito,
-        datosEnvio,
-        subtotal: calcularTotal(),
-        total: calcularTotal() + (calcularTotal() >= 50000 ? 0 : 5000),
-        estado: 'completada'
-      };
+    try {
+      // 🔍 PASO 1: Verificar stock en tiempo real
+      notify('Verificando disponibilidad de productos...', 'info', 2000);
       
-      const ordenesGuardadas = JSON.parse(localStorage.getItem('ordenes') || '[]');
-      ordenesGuardadas.push(orden);
-      localStorage.setItem('ordenes', JSON.stringify(ordenesGuardadas));
+      const verificacion = await verificarStockCarrito(carrito);
 
-      // Vaciar carrito
-      vaciarCarrito();
+      // Si hay productos sin stock
+      if (!verificacion.disponible) {
+        setProcesando(false);
+        
+        // Mostrar detalles de productos agotados
+        const mensajes = verificacion.productosAgotados.map(p => 
+          `• ${p.nombre}: ${p.motivo}`
+        ).join('\n');
 
-      // Redirigir a página de éxito
-      navigate('/compra-exitosa', { state: { orden } });
-    } else {
-      // Redirigir a página de error
-      navigate('/error-pago');
+        const confirmar = await confirmDialog({
+          title: '⚠️ Productos no disponibles',
+          message: `Los siguientes productos no están disponibles:\n\n${mensajes}\n\n¿Deseas eliminarlos del carrito y continuar con los demás productos?`,
+          confirmText: 'Continuar sin estos productos',
+          cancelText: 'Revisar mi carrito'
+        });
+
+        if (!confirmar) {
+          notify('Revisa tu carrito antes de continuar', 'info', 3000);
+          return;
+        }
+
+        // Eliminar productos sin stock del carrito
+        for (const productoAgotado of verificacion.productosAgotados) {
+          eliminarDelCarrito(productoAgotado.id);
+        }
+
+        // Si se eliminaron todos los productos, no continuar
+        const productosRestantes = carrito.filter(item => 
+          !verificacion.productosAgotados.some(p => p.id === item.id)
+        );
+        
+        if (productosRestantes.length === 0) {
+          notify('No hay productos disponibles para comprar', 'error', 3000);
+          setTimeout(() => navigate('/carrito'), 1000);
+          return;
+        }
+
+        // Continuar con los productos restantes
+        notify(`Continuando con ${productosRestantes.length} producto(s) disponible(s)`, 'success', 2000);
+      }
+
+      // 💳 PASO 2: Simular procesamiento de pago
+      notify('Procesando pago...', 'info', 2000);
+      await new Promise(resolve => setTimeout(resolve, 2000));
+
+      // Simular probabilidad de éxito (90% éxito, 10% fallo)
+      const exito = Math.random() > 0.1;
+
+      if (exito) {
+        // Preparar datos de la orden
+        const orden = {
+          id: Date.now(),
+          fecha: new Date().toISOString(),
+          productos: carrito,
+          datosEnvio,
+          subtotal: calcularTotal(),
+          total: calcularTotal() + (calcularTotal() >= 50000 ? 0 : 5000),
+          estado: 'completada',
+          esInvitado: !estaLogueado,
+          usuarioId: usuario?.usuario_id || null
+        };
+        
+        console.log('💾 Guardando orden:', orden);
+        
+        // Intentar guardar en el backend
+        try {
+          if (estaLogueado) {
+            console.log('📡 Guardando orden en el backend...');
+            await crearOrden(orden);
+            console.log('✅ Orden guardada en el backend');
+          } else {
+            console.log('👤 Usuario invitado, guardando solo en localStorage');
+          }
+        } catch (error) {
+          console.error('❌ Error al guardar orden en backend:', error);
+          console.log('⚠️ Guardando orden solo en localStorage');
+          notify('Orden guardada localmente (backend no disponible)', 'warning', 3000);
+        }
+
+        // Siempre guardar en localStorage como respaldo
+        const ordenesGuardadas = JSON.parse(localStorage.getItem('ordenes') || '[]');
+        ordenesGuardadas.push(orden);
+        localStorage.setItem('ordenes', JSON.stringify(ordenesGuardadas));
+
+        // Guardar la última orden para CompraExitosa
+        localStorage.setItem('ultimaOrden', JSON.stringify(orden));
+
+        // Vaciar carrito
+        vaciarCarrito();
+
+        notify('¡Compra realizada con éxito! 🎉', 'success', 2000);
+
+        // Redirigir a página de éxito después de un momento
+        setTimeout(() => {
+          navigate('/compra-exitosa', { state: { orden }, replace: true });
+        }, 500);
+      } else {
+        // Redirigir a página de error
+        navigate('/error-pago');
+      }
+    } catch (error) {
+      console.error('Error al procesar pago:', error);
+      notify('Error al verificar disponibilidad. Intenta nuevamente.', 'error', 4000);
+    } finally {
+      setProcesando(false);
     }
-
-    setProcesando(false);
   };
 
   const subtotal = calcularTotal();
@@ -114,7 +198,39 @@ function Checkout() {
 
   return (
     <div className="container py-5">
-      <h1 className="text-center mb-5 display-4 fw-bold">🛒 Finalizar Compra</h1>
+      <h1 className="text-center mb-5 display-4 fw-bold">🛍️ Finalizar Compra</h1>
+
+      {/* Indicador de usuario */}
+      {estaLogueado ? (
+        <div className="alert alert-success d-flex align-items-center mb-4" style={{ maxWidth: '1200px', margin: '0 auto 2rem' }}>
+          <span className="fs-4 me-3">✅</span>
+          <div className="flex-grow-1">
+            <strong>Comprando como: {usuario?.nombre}</strong>
+            <p className="mb-0 small">Tus datos han sido pre-cargados. Puedes editarlos si lo necesitas.</p>
+          </div>
+          {!modoEdicion && (
+            <button 
+              onClick={() => setModoEdicion(true)}
+              className="btn btn-sm btn-outline-success"
+            >
+              ✏️ Editar Datos
+            </button>
+          )}
+        </div>
+      ) : (
+        <div className="alert alert-info d-flex align-items-center mb-4" style={{ maxWidth: '1200px', margin: '0 auto 2rem' }}>
+          <span className="fs-4 me-3">🛍️</span>
+          <div className="flex-grow-1">
+            <strong>Comprando como invitado</strong>
+            <p className="mb-0 small">
+              Completa tus datos de envío. 
+              <span className="ms-2">
+                ¿Ya tienes cuenta? <a href="/iniciar-sesion" className="alert-link">Inicia sesión</a>
+              </span>
+            </p>
+          </div>
+        </div>
+      )}
 
         <div className="row g-4">
           {/* Formulario de envío */}
@@ -134,6 +250,7 @@ function Checkout() {
                         className="form-control"
                         value={datosEnvio.nombreCompleto}
                         onChange={manejarCambio}
+                        readOnly={estaLogueado && !modoEdicion && datosEnvio.nombreCompleto}
                         required
                       />
                     </div>
@@ -145,6 +262,7 @@ function Checkout() {
                         className="form-control"
                         value={datosEnvio.email}
                         onChange={manejarCambio}
+                        readOnly={estaLogueado && !modoEdicion && datosEnvio.email}
                         required
                       />
                     </div>
@@ -156,6 +274,7 @@ function Checkout() {
                         className="form-control"
                         value={datosEnvio.telefono}
                         onChange={manejarCambio}
+                        placeholder={estaLogueado ? '' : '+56 9 1234 5678'}
                         required
                       />
                     </div>

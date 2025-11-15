@@ -4,27 +4,48 @@
  */
 
 import { Link, useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
 import useCarrito from '../hooks/useCarrito';
 import useAutenticacion from '../hooks/useAutenticacion';
+import { confirmDialog } from '../components/ui/confirmDialogHelper';
+import { notify } from '../components/ui/notificationHelper';
 import logo from '../assets/logo1.png';
 
 function Header() {
   const navegar = useNavigate();
   const { totalArticulos } = useCarrito();
-  const { usuario, estaAutenticado, cerrarSesion } = useAutenticacion();
+  const { usuario, estaLogueado, cerrarSesion } = useAutenticacion();
+
+  // 🔍 DEBUG: Ver estado de autenticación
+  useEffect(() => {
+    console.log('🔍 Header - Estado:', { 
+      usuario, 
+      estaLogueado,
+      token: localStorage.getItem('token'),
+      usuarioLocal: localStorage.getItem('usuario')
+    });
+  }, [usuario, estaLogueado]);
 
   /**
    * Manejar cierre de sesión
    */
-  const manejarCerrarSesion = () => {
-    if (confirm('¿Estás seguro de cerrar sesión?')) {
+  const manejarCerrarSesion = async () => {
+    const confirmar = await confirmDialog({
+      title: 'Cerrar sesión',
+      message: '¿Estás seguro de cerrar sesión?',
+      confirmText: 'Cerrar sesión',
+      cancelText: 'Cancelar'
+    });
+    
+    if (confirmar) {
       cerrarSesion();
+      notify('Sesión cerrada correctamente', 'success', 2500);
       navegar('/');
     }
   };
 
   return (
-    <nav className="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm sticky-top" style={{ background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' }}>
+    <nav className="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm" style={{ background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' }}>
       <div className="container-fluid" style={{ maxWidth: '100%', paddingLeft: '1rem', paddingRight: '1rem' }}>
         {/* Logo */}
         <Link to="/" className="navbar-brand d-flex align-items-center">
@@ -101,25 +122,33 @@ function Header() {
             </Link>
 
             {/* Usuario */}
-            {estaAutenticado ? (
-              <div className="dropdown">
+            {estaLogueado ? (
+              <div className="dropdown" style={{ minWidth: '150px', position: 'static' }}>
                 <button 
-                  className="btn btn-outline-light dropdown-toggle d-flex align-items-center gap-2" 
+                  className="btn btn-outline-light dropdown-toggle w-100" 
                   type="button" 
                   data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                  style={{ 
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    justifyContent: 'center', 
+                    gap: '0.5rem',
+                    whiteSpace: 'nowrap'
+                  }}
                 >
                   <span>👤</span>
-                  <span className="d-none d-md-inline">{usuario?.nombre}</span>
+                  <span className="d-none d-md-inline">{usuario?.nombre || 'Usuario'}</span>
                 </button>
-                <ul className="dropdown-menu dropdown-menu-end">
+                <ul className="dropdown-menu dropdown-menu-end shadow" style={{ minWidth: '200px', position: 'absolute', zIndex: 1050 }}>
                   <li>
                     <Link to="/perfil" className="dropdown-item">
-                      Mi Perfil
+                      👤 Mi Perfil
                     </Link>
                   </li>
                   <li>
                     <Link to="/pedidos" className="dropdown-item">
-                      Mis Pedidos
+                      📦 Mis Pedidos
                     </Link>
                   </li>
                   <li><hr className="dropdown-divider" /></li>
@@ -128,15 +157,20 @@ function Header() {
                       onClick={manejarCerrarSesion}
                       className="dropdown-item text-danger"
                     >
-                      Cerrar Sesión
+                      🚪 Cerrar Sesión
                     </button>
                   </li>
                 </ul>
               </div>
             ) : (
-              <Link to="/iniciar-sesion" className="btn btn-light">
-                Iniciar Sesión
-              </Link>
+              <div className="d-flex gap-2" style={{ minWidth: '150px' }}>
+                <Link to="/iniciar-sesion" className="btn btn-light">
+                  Iniciar Sesión
+                </Link>
+                <Link to="/registrarse" className="btn btn-outline-light d-none d-lg-inline">
+                  Registrarse
+                </Link>
+              </div>
             )}
           </div>
         </div>

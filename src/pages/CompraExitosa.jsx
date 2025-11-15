@@ -3,21 +3,44 @@
  * Muestra confirmación cuando el pago fue exitoso (Requisito del PDF - Figura 7)
  */
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { formatearPrecio } from '../util/formatters';
 
 function CompraExitosa() {
   const location = useLocation();
   const navigate = useNavigate();
-  const orden = location.state?.orden;
+  
+  // Intentar obtener la orden del state o del localStorage
+  const [orden, setOrden] = useState(null);
 
-  // Redirigir si no hay orden
   useEffect(() => {
-    if (!orden) {
-      navigate('/');
+    // Primero intentar obtener del state de navegación
+    if (location.state?.orden) {
+      console.log('✅ Orden obtenida del state:', location.state.orden);
+      setOrden(location.state.orden);
+      return;
     }
-  }, [orden, navigate]);
+
+    // Si no hay state, intentar desde localStorage
+    const ultimaOrden = localStorage.getItem('ultimaOrden');
+    if (ultimaOrden) {
+      try {
+        const ordenParseada = JSON.parse(ultimaOrden);
+        console.log('✅ Orden obtenida de localStorage:', ordenParseada);
+        setOrden(ordenParseada);
+        // Limpiar la última orden después de mostrarla
+        localStorage.removeItem('ultimaOrden');
+        return;
+      } catch (error) {
+        console.error('Error al parsear última orden:', error);
+      }
+    }
+
+    // Si no hay orden en ningún lado, redirigir al inicio
+    console.log('❌ No se encontró ninguna orden, redirigiendo...');
+    navigate('/', { replace: true });
+  }, [location, navigate]);
 
   if (!orden) return null;
 
@@ -121,6 +144,21 @@ function CompraExitosa() {
               📦 Podrás hacer seguimiento del envío con el número de orden
             </p>
           </div>
+
+          {/* Sugerencia para invitados */}
+          {orden.esInvitado && (
+            <div className="alert alert-success">
+              <h6 className="alert-heading">🎁 ¡Crea una cuenta y obtén beneficios!</h6>
+              <p className="mb-2">
+                ✨ Guarda tu dirección para compras más rápidas<br/>
+                📦 Rastrea tus pedidos fácilmente<br/>
+                🎉 Recibe ofertas exclusivas
+              </p>
+              <Link to="/registrarse" className="btn btn-success btn-sm">
+                Crear cuenta gratis
+              </Link>
+            </div>
+          )}
 
           {/* Botones de acción */}
           <div className="d-flex gap-3 justify-content-center mt-4">
