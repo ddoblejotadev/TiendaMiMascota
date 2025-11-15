@@ -418,10 +418,15 @@ export async function eliminarProducto(id) {
  */
 export async function obtenerOrdenesUsuario(usuarioId) {
   try {
+    console.log('🔍 Buscando órdenes para usuario:', usuarioId);
     const response = await api.get(`/ordenes/usuario/${usuarioId}`);
+    console.log('📦 Respuesta del backend:', response.data);
+    console.log('📊 Tipo de respuesta:', Array.isArray(response.data) ? 'Array' : typeof response.data);
+    console.log('📈 Cantidad de órdenes:', Array.isArray(response.data) ? response.data.length : 'No es array');
     return response.data;
   } catch (error) {
-    console.error('Error al obtener órdenes:', error);
+    console.error('❌ Error al obtener órdenes:', error);
+    console.error('📋 Detalles del error:', error.response?.data || error.message);
     throw error;
   }
 }
@@ -431,10 +436,13 @@ export async function obtenerOrdenesUsuario(usuarioId) {
  */
 export async function crearOrden(datosOrden) {
   try {
+    console.log('📡 Enviando orden al backend:', datosOrden);
     const response = await api.post('/ordenes', datosOrden);
+    console.log('✅ Orden guardada, respuesta:', response.data);
     return response.data;
   } catch (error) {
-    console.error('Error al crear orden:', error);
+    console.error('❌ Error al crear orden:', error);
+    console.error('📋 Detalles del error:', error.response?.data || error.message);
     throw error;
   }
 }
