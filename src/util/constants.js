@@ -323,37 +323,11 @@ export async function verificarStockCarrito(carrito) {
 }
 
 /**
- * Obtiene todos los productos del backend
- */
-export async function obtenerProductos() {
-  try {
-    const response = await api.get('/productos');
-    return response.data;
-  } catch (error) {
-    console.error('Error al obtener productos:', error);
-    throw error;
-  }
-}
-
-/**
- * Obtiene un producto por su ID
- */
-export async function obtenerProductoPorId(id) {
-  try {
-    const response = await api.get(`/productos/${id}`);
-    return response.data;
-  } catch (error) {
-    console.error('Error al obtener producto:', error);
-    return null;
-  }
-}
-
-/**
  * Obtiene productos destacados
  */
 export async function obtenerProductosDestacados() {
   try {
-    const productos = await obtenerProductos();
+    const productos = await obtenerProductos(0, 100);
     return productos.filter(p => p.destacado === true);
   } catch (error) {
     console.error('Error:', error);
@@ -366,7 +340,7 @@ export async function obtenerProductosDestacados() {
  */
 export async function filtrarPorCategoria(categoria) {
   try {
-    const productos = await obtenerProductos();
+    const productos = await obtenerProductos(0, 100);
     if (!categoria || categoria === 'Todos') {
       return productos;
     }

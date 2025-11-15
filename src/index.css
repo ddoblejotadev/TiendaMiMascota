@@ -413,7 +413,6 @@ img[loading="lazy"] {
     width: calc(100vw - 2rem);
   }
 }
-}
 
 .notification-message {
   flex: 1;
