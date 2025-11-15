@@ -437,7 +437,32 @@ export async function obtenerOrdenesUsuario(usuarioId) {
 export async function crearOrden(datosOrden) {
   try {
     console.log('📡 Enviando orden al backend:', datosOrden);
-    const response = await api.post('/ordenes', datosOrden);
+    
+    // Transformar la orden al formato que espera el backend
+    const ordenBackend = {
+      usuario_id: datosOrden.usuarioId,
+      items: datosOrden.productos.map(producto => ({
+        producto_id: producto.id,
+        cantidad: producto.cantidad,
+        precio_unitario: producto.precio
+      })),
+      datos_envio: {
+        nombre_completo: datosOrden.datosEnvio.nombreCompleto,
+        email: datosOrden.datosEnvio.email,
+        telefono: datosOrden.datosEnvio.telefono,
+        direccion: datosOrden.datosEnvio.direccion,
+        ciudad: datosOrden.datosEnvio.ciudad,
+        region: datosOrden.datosEnvio.region,
+        codigo_postal: datosOrden.datosEnvio.codigoPostal || '',
+        metodo_pago: datosOrden.datosEnvio.metodoPago
+      },
+      total: datosOrden.total,
+      estado: datosOrden.estado
+    };
+    
+    console.log('🔄 Orden transformada para backend:', ordenBackend);
+    
+    const response = await api.post('/ordenes', ordenBackend);
     console.log('✅ Orden guardada, respuesta:', response.data);
     return response.data;
   } catch (error) {
