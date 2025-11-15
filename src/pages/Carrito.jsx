@@ -5,6 +5,8 @@
 
 import { useNavigate } from 'react-router-dom';
 import useCarrito from '../hooks/useCarrito';
+import { confirmDialog } from '../components/ui/confirmDialogHelper';
+import { notify } from '../components/ui/notificationHelper';
 
 function Carrito() {
   const navigate = useNavigate();
@@ -42,20 +44,34 @@ function Carrito() {
   /**
    * Manejar eliminación de producto
    */
-  const manejarEliminar = (productoId, nombreProducto) => {
-    const confirmar = window.confirm(`¿Eliminar "${nombreProducto}" del carrito?`);
+  const manejarEliminar = async (productoId, nombreProducto) => {
+    const confirmar = await confirmDialog({
+      title: 'Eliminar producto',
+      message: `¿Eliminar "${nombreProducto}" del carrito?`,
+      confirmText: 'Eliminar',
+      cancelText: 'Cancelar'
+    });
+    
     if (confirmar) {
       eliminarDelCarrito(productoId);
+      notify(`"${nombreProducto}" eliminado del carrito`, 'success', 2500);
     }
   };
 
   /**
    * Manejar vaciar carrito
    */
-  const manejarVaciarCarrito = () => {
-    const confirmar = window.confirm('¿Vaciar todo el carrito?');
+  const manejarVaciarCarrito = async () => {
+    const confirmar = await confirmDialog({
+      title: 'Vaciar carrito',
+      message: '¿Estás seguro de vaciar todo el carrito? Esta acción no se puede deshacer.',
+      confirmText: 'Vaciar',
+      cancelText: 'Cancelar'
+    });
+    
     if (confirmar) {
       vaciarCarrito();
+      notify('Carrito vaciado correctamente', 'success', 2500);
     }
   };
 

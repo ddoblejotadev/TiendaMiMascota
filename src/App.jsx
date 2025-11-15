@@ -1,6 +1,8 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import './App.css';
 import MainLayout from './layouts/MainLayout';
+import NotificationContainer from './components/ui/Notification';
+import ConfirmDialogContainer from './components/ui/ConfirmDialog';
 import Inicio from './pages/Inicio';
 import Productos from './pages/Productos';
 import DetalleProducto from './pages/DetalleProducto';
@@ -26,6 +28,8 @@ import AdminUsuarios from './pages/admin/AdminUsuarios';
 function App() {
   return (
     <BrowserRouter>
+      <NotificationContainer position="top-right" maxNotifications={3} />
+      <ConfirmDialogContainer />
       <Routes>
         {/* Rutas con layout (Header + Footer) */}
         <Route path="/" element={<MainLayout />}>

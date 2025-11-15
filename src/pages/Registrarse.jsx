@@ -7,6 +7,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import useAutenticacion from '../hooks/useAutenticacion';
 import useRutValidation from '../hooks/useRutValidation';
+import { notify } from '../components/ui/notificationHelper';
 
 function Registrarse() {
   const navegar = useNavigate();
@@ -30,14 +31,14 @@ function Registrarse() {
     evento.preventDefault();
     
     // Validación de términos
-    if (!aceptoTerminos) {
-      alert('❌ Debes aceptar los términos y condiciones');
+    if (!aceptaTerminos) {
+      notify('Debes aceptar los términos y condiciones', 'warning', 3000);
       return;
     }
 
     // Validar RUT si fue ingresado
     if (rut && rut.trim() !== '' && !esRutValido(rut)) {
-      alert('❌ El RUT ingresado no es válido');
+      notify('El RUT ingresado no es válido', 'error', 3000);
       return;
     }
     
@@ -52,7 +53,7 @@ function Registrarse() {
 
     // Validar contraseñas
     if (contrasena !== confirmarContrasena) {
-      alert('❌ Las contraseñas no coinciden');
+      notify('Las contraseñas no coinciden', 'error', 3000);
       return;
     }
     
@@ -60,7 +61,7 @@ function Registrarse() {
     const exitoso = await registrarse(datosUsuario);
     
     if (exitoso) {
-      alert('✅ Registro exitoso. ¡Bienvenido!');
+      notify('Registro exitoso. ¡Bienvenido!', 'success', 3000);
       navegar('/'); // Ir a inicio
     }
   };

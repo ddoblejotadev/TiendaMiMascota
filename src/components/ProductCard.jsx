@@ -46,15 +46,18 @@ function ProductCard({ producto }) {
     <div className="card h-100 shadow-sm border-0">
       <Link to={`/productos/${producto.id}`} className="text-decoration-none">
         {/* Imagen del producto */}
-        <div className="position-relative">
+        <div className="position-relative" style={{ aspectRatio: '1/1', overflow: 'hidden', backgroundColor: '#f8f9fa' }}>
           <img 
             src={producto.imagen} 
             alt={producto.nombre}
             className="card-img-top"
-            style={{ height: '250px', objectFit: 'cover' }}
-            onError={(e) => {
-              e.target.src = '/images/placeholder.jpg';
+            style={{ 
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+              display: 'block'
             }}
+            loading="lazy"
           />
           
           {/* Badges */}
