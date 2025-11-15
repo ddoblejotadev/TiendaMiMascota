@@ -435,31 +435,30 @@ export async function obtenerOrdenesUsuario(usuarioId) {
  * Crea una nueva orden de compra
  */
 export async function crearOrden(datosOrden) {
+  // Transformar la orden al formato que espera el backend ANTES del try
+  const ordenBackend = {
+    usuario_id: datosOrden.usuarioId,
+    items: datosOrden.productos.map(producto => ({
+      producto_id: producto.id,
+      cantidad: producto.cantidad,
+      precio_unitario: producto.precio
+    })),
+    datos_envio: {
+      nombre_completo: datosOrden.datosEnvio.nombreCompleto,
+      email: datosOrden.datosEnvio.email,
+      telefono: datosOrden.datosEnvio.telefono,
+      direccion: datosOrden.datosEnvio.direccion,
+      ciudad: datosOrden.datosEnvio.ciudad,
+      region: datosOrden.datosEnvio.region,
+      codigo_postal: datosOrden.datosEnvio.codigoPostal || '',
+      metodo_pago: datosOrden.datosEnvio.metodoPago
+    },
+    total: datosOrden.total,
+    estado: datosOrden.estado
+  };
+
   try {
     console.log('📡 Enviando orden al backend:', datosOrden);
-    
-    // Transformar la orden al formato que espera el backend
-    const ordenBackend = {
-      usuario_id: datosOrden.usuarioId,
-      items: datosOrden.productos.map(producto => ({
-        producto_id: producto.id,
-        cantidad: producto.cantidad,
-        precio_unitario: producto.precio
-      })),
-      datos_envio: {
-        nombre_completo: datosOrden.datosEnvio.nombreCompleto,
-        email: datosOrden.datosEnvio.email,
-        telefono: datosOrden.datosEnvio.telefono,
-        direccion: datosOrden.datosEnvio.direccion,
-        ciudad: datosOrden.datosEnvio.ciudad,
-        region: datosOrden.datosEnvio.region,
-        codigo_postal: datosOrden.datosEnvio.codigoPostal || '',
-        metodo_pago: datosOrden.datosEnvio.metodoPago
-      },
-      total: datosOrden.total,
-      estado: datosOrden.estado
-    };
-    
     console.log('🔄 Orden transformada para backend:', ordenBackend);
     console.log('📋 Items a enviar:', JSON.stringify(ordenBackend.items, null, 2));
     
