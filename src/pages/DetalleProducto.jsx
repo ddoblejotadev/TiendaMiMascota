@@ -9,6 +9,7 @@ import { obtenerProductoPorId as obtenerProductoAPI } from '../services/productS
 import useProductos from '../hooks/useProductos';
 import useCarrito from '../hooks/useCarrito';
 import { notify } from '../components/ui/notificationHelper';
+import logger from '../util/logger';
 
 function DetalleProducto() {
   const { id } = useParams(); // Obtener ID de la URL
@@ -32,17 +33,17 @@ function DetalleProducto() {
         setError(null);
         setProducto(null);
         
-        console.log('🔍 Cargando producto ID:', id);
+        logger.debug('Cargando producto ID:', id);
         
         // Cargar directamente desde el backend
         const productoBackend = await obtenerProductoAPI(id);
         
         if (productoBackend) {
-          console.log('✅ Producto cargado:', productoBackend.nombre);
+          logger.success('Producto cargado:', productoBackend.nombre);
           setProducto(productoBackend);
           setCargando(false);
         } else {
-          console.error('❌ Producto no encontrado en backend');
+          logger.error('Producto no encontrado');
           setError('Producto no encontrado');
           setCargando(false);
           setTimeout(() => {
@@ -50,9 +51,10 @@ function DetalleProducto() {
           }, 1500);
         }
       } catch (err) {
-        console.error('❌ Error al cargar producto:', err);
-        console.error('Detalles del error:', err.response?.data || err.message);
-        setError('Error al cargar el producto. Verifica que el backend esté corriendo.');
+        logger.error('Error al cargar producto:', err);
+        setError(import.meta.env.PROD 
+          ? 'Error al cargar el producto. Por favor intenta más tarde.' 
+          : 'Error al cargar el producto. Verifica que el backend esté corriendo.');
         setCargando(false);
         setTimeout(() => {
           navigate('/productos');
@@ -117,7 +119,9 @@ function DetalleProducto() {
                 <span className="visually-hidden">Cargando...</span>
               </div>
               <h5 className="text-muted">Cargando producto...</h5>
-              <p className="text-muted small mb-0">Obteniendo información del backend</p>
+              <p className="text-muted small mb-0">
+                {import.meta.env.PROD ? 'Obteniendo información...' : 'Obteniendo información del backend'}
+              </p>
             </div>
           </div>
         </div>

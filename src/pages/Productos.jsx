@@ -54,23 +54,31 @@ function Productos() {
         </div>
       </div>
 
-      {/* Mensaje de error si falla la conexión con el backend */}
+      {/* Mensaje de error si falla la conexión */}
       {error && (
         <div className="container my-4">
           <div className="alert alert-danger d-flex align-items-center" role="alert">
             <div className="me-3 display-4">⚠️</div>
             <div className="flex-grow-1">
-              <h4 className="alert-heading mb-2">Error al conectar con el backend</h4>
+              <h4 className="alert-heading mb-2">
+                {import.meta.env.PROD ? 'Error al cargar los productos' : 'Error al conectar con el backend'}
+              </h4>
               <p className="mb-2">{error}</p>
-              <hr />
-              <div className="d-flex gap-2 align-items-center">
-                <small className="text-muted">
-                  Verifica que el backend esté corriendo en:{' '}
-                  <code>http://localhost:8080/api/productos</code>
-                </small>
+              {!import.meta.env.PROD && (
+                <>
+                  <hr />
+                  <div className="d-flex gap-2 align-items-center">
+                    <small className="text-muted">
+                      Verifica que el backend esté corriendo en:{' '}
+                      <code>http://localhost:8080/api/productos</code>
+                    </small>
+                  </div>
+                </>
+              )}
+              <div className="mt-3">
                 <button 
                   onClick={recargarProductos}
-                  className="btn btn-sm btn-outline-danger ms-auto"
+                  className="btn btn-sm btn-outline-danger"
                 >
                   🔄 Reintentar
                 </button>
