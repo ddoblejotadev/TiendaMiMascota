@@ -5,6 +5,8 @@
  */
 
 import api from '../util/constants';
+import logger from '../util/logger';
+import { handleError } from '../util/errorHandler';
 
 // Importar imágenes desde assets (usadas como fallback)
 import imagenComida from '../assets/prod.png';
@@ -55,10 +57,10 @@ function mapearProductoBackend(productoBackend) {
  */
 export async function obtenerProductos() {
   try {
-    console.log('📡 Obteniendo productos del backend...');
+    logger.debug('Obteniendo productos del backend...');
     const response = await api.get('/productos');
     
-    console.log('🔍 RESPUESTA COMPLETA DEL BACKEND:', response.data);
+    logger.debug('Respuesta del backend recibida');
     
     // El backend puede devolver:
     // 1. Array directo: [producto1, producto2, ...]
@@ -77,30 +79,20 @@ export async function obtenerProductos() {
       // Caso 3: Respuesta envuelta en {data: [...]}
       productosArray = response.data.data;
     } else {
-      console.error('❌ Formato de respuesta no reconocido:', response.data);
+      logger.error('Formato de respuesta no reconocido:', response.data);
       throw new Error('Formato de respuesta del backend no reconocido');
     }
     
-    console.log('✅ Productos recibidos:', productosArray.length);
-    
-    // LOG TEMPORAL: Ver estructura del primer producto
-    if (productosArray.length > 0) {
-      console.log('🔍 ESTRUCTURA DEL PRIMER PRODUCTO:', productosArray[0]);
-    }
+    logger.success('Productos recibidos:', productosArray.length);
     
     // Mapear productos del backend al formato frontend
     const productosMapeados = productosArray.map(mapearProductoBackend);
     
-    // LOG TEMPORAL: Ver producto mapeado
-    if (productosMapeados.length > 0) {
-      console.log('🔍 PRODUCTO MAPEADO (debe tener id):', productosMapeados[0]);
-    }
-    
     return productosMapeados;
   } catch (error) {
-    console.error('❌ Error al obtener productos:', error);
-    console.error('Detalles:', error.response?.data || error.message);
-    throw new Error(`No se pudieron cargar los productos del backend: ${error.message}`);
+    const mensajeError = handleError(error, 'Obtener productos');
+    logger.error('Error al obtener productos:', error);
+    throw new Error(mensajeError);
   }
 }
 
@@ -111,15 +103,13 @@ export async function obtenerProductos() {
  */
 export async function obtenerProductoPorId(id) {
   try {
-    console.log(`📡 Obteniendo producto ${id} del backend...`);
+    logger.debug(`Obteniendo producto ${id} del backend...`);
     const response = await api.get(`/productos/${id}`);
-    console.log(`✅ Producto ${id} recibido:`, response.data);
+    logger.success(`Producto ${id} recibido`);
     const productoMapeado = mapearProductoBackend(response.data);
-    console.log(`✅ Producto mapeado:`, productoMapeado);
     return productoMapeado;
   } catch (error) {
-    console.error(`❌ Error al obtener producto ${id}:`, error);
-    console.error('Detalles:', error.response?.data || error.message);
+    logger.error(`Error al obtener producto ${id}:`, error);
     return null;
   }
 }
@@ -133,7 +123,7 @@ export async function obtenerProductosDestacados() {
     const productos = await obtenerProductos();
     return productos.filter(p => p.destacado === true);
   } catch (error) {
-    console.error('Error al obtener destacados:', error);
+    logger.error('Error al obtener destacados:', error);
     return [];
   }
 }
@@ -153,7 +143,7 @@ export async function filtrarPorCategoria(categoria) {
       p.categoria.toLowerCase() === categoria.toLowerCase()
     );
   } catch (error) {
-    console.error('Error al filtrar por categoría:', error);
+    logger.error('Error al filtrar por categoría:', error);
     return [];
   }
 }
@@ -174,7 +164,7 @@ export async function buscarProductos(termino) {
       (p.descripcion && p.descripcion.toLowerCase().includes(terminoLower))
     );
   } catch (error) {
-    console.error('Error al buscar productos:', error);
+    logger.error('Error al buscar productos:', error);
     return [];
   }
 }
@@ -200,9 +190,10 @@ export async function agregarProducto(producto) {
     };
     
     const response = await api.post('/productos', productoBackend);
+    logger.success('Producto creado exitosamente');
     return mapearProductoBackend(response.data);
   } catch (error) {
-    console.error('Error al crear producto:', error);
+    logger.error('Error al crear producto:', error);
     throw error;
   }
 }
@@ -229,9 +220,10 @@ export async function actualizarProducto(id, datosActualizados) {
     };
     
     const response = await api.put(`/productos/${id}`, datosBackend);
+    logger.success(`Producto ${id} actualizado exitosamente`);
     return mapearProductoBackend(response.data);
   } catch (error) {
-    console.error('Error al actualizar producto:', error);
+    logger.error('Error al actualizar producto:', error);
     throw error;
   }
 }
@@ -244,10 +236,10 @@ export async function actualizarProducto(id, datosActualizados) {
 export async function eliminarProducto(id) {
   try {
     await api.delete(`/productos/${id}`);
-    console.log(`✅ Producto ${id} eliminado`);
+    logger.success(`Producto ${id} eliminado`);
     return true;
   } catch (error) {
-    console.error('Error al eliminar producto:', error);
+    logger.error('Error al eliminar producto:', error);
     throw error;
   }
 }

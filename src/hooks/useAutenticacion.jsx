@@ -6,6 +6,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { login as loginAPI, registrar as registrarAPI, logout as logoutAPI, obtenerUsuarioActual, estaLogueado as estaLogueadoLS } from '../util/constants';
 import { notify } from '../components/ui/notificationHelper';
+import logger from '../util/logger';
 
 function useAutenticacion() {
   // Estado del usuario actual
@@ -15,16 +16,16 @@ function useAutenticacion() {
 
   // EFECTO: Verificar si hay usuario guardado al iniciar
   useEffect(() => {
-    console.log('🔍 useAutenticacion - Verificando sesión...');
+    logger.debug('useAutenticacion - Verificando sesión...');
     
     const cargarUsuario = () => {
       const usuarioGuardado = obtenerUsuarioActual();
       
       if (usuarioGuardado) {
-        console.log('✅ useAutenticacion - Usuario encontrado:', usuarioGuardado);
+        logger.success('useAutenticacion - Usuario encontrado:', usuarioGuardado.nombre);
         setUsuario(usuarioGuardado);
       } else {
-        console.log('ℹ️ useAutenticacion - No hay sesión activa');
+        logger.debug('useAutenticacion - No hay sesión activa');
         setUsuario(null);
       }
       
@@ -36,7 +37,7 @@ function useAutenticacion() {
     // Listener para cambios en localStorage (sincroniza entre pestañas y componentes)
     const handleStorageChange = (e) => {
       if (e.key === 'usuario' || e.key === 'token') {
-        console.log('🔄 useAutenticacion - Cambio detectado en localStorage');
+        logger.debug('useAutenticacion - Cambio detectado en localStorage');
         cargarUsuario();
       }
     };
@@ -84,11 +85,10 @@ function useAutenticacion() {
       }
 
       // Llamar al backend
-      console.log('🔐 useAutenticacion - Iniciando login...');
+      logger.debug('useAutenticacion - Iniciando login...');
       const usuarioLogueado = await loginAPI(email, password);
       
-      console.log('✅ useAutenticacion - Login exitoso:', usuarioLogueado);
-      console.log('🔍 useAutenticacion - Verificando token guardado:', localStorage.getItem('token'));
+      logger.success('useAutenticacion - Login exitoso:', usuarioLogueado.nombre);
       
       // Actualizar estado con el usuario
       setUsuario(usuarioLogueado);
@@ -97,7 +97,7 @@ function useAutenticacion() {
     } catch (err) {
       const mensajeError = err.message || 'Error al iniciar sesión';
       setError(mensajeError);
-      console.error('❌ useAutenticacion - Error en login:', mensajeError);
+      logger.error('useAutenticacion - Error en login:', mensajeError);
       return false;
     } finally {
       setCargando(false);
@@ -132,17 +132,17 @@ function useAutenticacion() {
       }
 
       // Llamar al backend
-      console.log('📝 useAutenticacion - Iniciando registro...');
+      logger.debug('useAutenticacion - Iniciando registro...');
       const usuarioRegistrado = await registrarAPI(datosUsuario);
       
       setUsuario(usuarioRegistrado);
-      console.log('✅ useAutenticacion - Registro exitoso:', usuarioRegistrado);
+      logger.success('useAutenticacion - Registro exitoso:', usuarioRegistrado.nombre);
       
       return true;
     } catch (err) {
       const mensajeError = err.message || 'Error al registrarse';
       setError(mensajeError);
-      console.error('❌ useAutenticacion - Error en registro:', mensajeError);
+      logger.error('useAutenticacion - Error en registro:', mensajeError);
       
       // Mostrar notificación con el error específico
       notify(mensajeError, 'error', 4000);
@@ -157,7 +157,7 @@ function useAutenticacion() {
    * FUNCIÓN: Cerrar sesión
    */
   const cerrarSesion = () => {
-    console.log('🚪 useAutenticacion - Cerrando sesión...');
+    logger.debug('useAutenticacion - Cerrando sesión...');
     logoutAPI();
     setUsuario(null);
     setError(null);
@@ -169,7 +169,7 @@ function useAutenticacion() {
     const tieneToken = estaLogueadoLS();
     const resultado = tieneUsuario && tieneToken;
     
-    console.log('🔍 useAutenticacion - estaLogueado:', { 
+    logger.debug('useAutenticacion - estaLogueado:', { 
       usuario: usuario?.nombre, 
       tieneToken, 
       resultado 

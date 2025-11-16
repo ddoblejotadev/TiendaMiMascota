@@ -4,17 +4,22 @@
  * Consume datos del backend via API REST
  */
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { obtenerProductos } from '../services/productService';
+import { useDebounce } from './useDebounce';
+import logger from '../util/logger';
+import { handleError } from '../util/errorHandler';
 
 function useProductos() {
   // Estados
   const [productos, setProductos] = useState([]);
-  const [productosFiltrados, setProductosFiltrados] = useState([]);
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState(null);
   const [busqueda, setBusqueda] = useState('');
   const [categoriaSeleccionada, setCategoriaSeleccionada] = useState('Todas');
+
+  // OPTIMIZACIÓN: Debounce en búsqueda para evitar filtros innecesarios
+  const debouncedBusqueda = useDebounce(busqueda, 300);
 
   // EFECTO 1: Cargar productos al inicio desde el backend
   useEffect(() => {
@@ -28,32 +33,32 @@ function useProductos() {
     try {
       setCargando(true);
       setError(null);
-      console.log('🔄 Cargando productos desde el backend...');
+      logger.debug('Cargando productos desde el backend...');
       
       const productosObtenidos = await obtenerProductos();
       
-      console.log('✅ Productos cargados correctamente:', productosObtenidos.length);
+      logger.success('Productos cargados correctamente:', productosObtenidos.length);
       setProductos(productosObtenidos);
-      setProductosFiltrados(productosObtenidos);
     } catch (error) {
-      console.error('❌ Error al cargar productos:', error);
-      setError(error.message || 'Error al cargar productos del backend');
+      const mensajeError = handleError(error, 'Cargar productos');
+      logger.error('Error al cargar productos:', error);
+      setError(mensajeError);
       setProductos([]);
-      setProductosFiltrados([]);
     } finally {
       setCargando(false);
     }
   };
 
-  // EFECTO 2: Filtrar productos cuando cambia búsqueda o categoría
-  useEffect(() => {
+  // OPTIMIZACIÓN: Filtrar productos con useMemo (se recalcula solo cuando cambian dependencias)
+  const productosFiltrados = useMemo(() => {
     let resultado = [...productos];
 
-    // Filtro 1: Por búsqueda
-    if (busqueda) {
+    // Filtro 1: Por búsqueda (usando debounced)
+    if (debouncedBusqueda) {
+      const busquedaLower = debouncedBusqueda.toLowerCase();
       resultado = resultado.filter(p =>
-        p.nombre.toLowerCase().includes(busqueda.toLowerCase()) ||
-        p.descripcion.toLowerCase().includes(busqueda.toLowerCase())
+        p.nombre?.toLowerCase().includes(busquedaLower) ||
+        p.descripcion?.toLowerCase().includes(busquedaLower)
       );
     }
 
@@ -62,8 +67,8 @@ function useProductos() {
       resultado = resultado.filter(p => p.categoria === categoriaSeleccionada);
     }
 
-    setProductosFiltrados(resultado);
-  }, [busqueda, categoriaSeleccionada, productos]);
+    return resultado;
+  }, [productos, debouncedBusqueda, categoriaSeleccionada]);
 
   /**
    * FUNCIÓN: Buscar productos por texto
@@ -94,13 +99,14 @@ function useProductos() {
     return productos.find(p => p.id === Number(id));
   };
 
+
   /**
-   * FUNCIÓN: Obtener todas las categorías únicas
+   * FUNCIÓN: Obtener todas las categorías únicas (memoizada)
    */
-  const obtenerCategorias = () => {
-    const categorias = productos.map(p => p.categoria);
-    return ['Todas', ...new Set(categorias)];
-  };
+  const categorias = useMemo(() => {
+    const categoriasUnicas = [...new Set(productos.map(p => p.categoria))];
+    return ['Todas', ...categoriasUnicas];
+  }, [productos]);
 
   // Retornar todo
   return {
@@ -114,7 +120,7 @@ function useProductos() {
     filtrarPorCategoria,
     limpiarFiltros,
     obtenerProductoPorId,
-    obtenerCategorias,
+    obtenerCategorias: () => categorias,
     recargarProductos: cargarProductosDelBackend
   };
 }

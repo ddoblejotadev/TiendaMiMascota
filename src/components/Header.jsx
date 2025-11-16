@@ -4,7 +4,6 @@
  */
 
 import { Link, useNavigate } from 'react-router-dom';
-import { useEffect } from 'react';
 import useCarrito from '../hooks/useCarrito';
 import useAutenticacion from '../hooks/useAutenticacion';
 import { confirmDialog } from '../components/ui/confirmDialogHelper';
@@ -15,16 +14,6 @@ function Header() {
   const navegar = useNavigate();
   const { totalArticulos } = useCarrito();
   const { usuario, estaLogueado, cerrarSesion } = useAutenticacion();
-
-  // 🔍 DEBUG: Ver estado de autenticación
-  useEffect(() => {
-    console.log('🔍 Header - Estado:', { 
-      usuario, 
-      estaLogueado,
-      token: localStorage.getItem('token'),
-      usuarioLocal: localStorage.getItem('usuario')
-    });
-  }, [usuario, estaLogueado]);
 
   /**
    * Manejar cierre de sesión

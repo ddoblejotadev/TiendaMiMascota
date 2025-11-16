@@ -9,6 +9,7 @@ import useAutenticacion from '../hooks/useAutenticacion';
 import { formatearPrecio } from '../util/formatters';
 import { obtenerOrdenesUsuario } from '../util/constants';
 import { notify } from '../components/ui/notificationHelper';
+import logger from '../util/logger';
 
 function MisPedidos() {
   const navigate = useNavigate();
@@ -20,20 +21,17 @@ function MisPedidos() {
   useEffect(() => {
     // Esperar a que termine de cargar la autenticación
     if (cargandoAuth) {
-      console.log('⏳ Esperando autenticación...');
       return;
     }
 
     // Redirigir si no está logueado
     if (!estaLogueado) {
-      console.log('❌ No hay sesión activa, redirigiendo a login...');
       navigate('/iniciar-sesion', { 
         state: { mensaje: 'Debes iniciar sesión para ver tus pedidos' }
       });
       return;
     }
 
-    console.log('✅ Usuario autenticado, cargando pedidos...');
     // Cargar pedidos
     cargarPedidos();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -45,7 +43,7 @@ function MisPedidos() {
   async function cargarPedidos() {
     setCargando(true);
     try {
-      console.log('📡 Cargando pedidos desde el backend...');
+      logger.debug('Cargando pedidos desde el backend...');
       
       // Llamar al backend
       const pedidosBackend = await obtenerOrdenesUsuario(usuario.usuario_id);
@@ -54,13 +52,13 @@ function MisPedidos() {
       pedidosBackend.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
 
       setPedidos(pedidosBackend);
-      console.log('✅ Pedidos cargados desde backend:', pedidosBackend);
+      logger.success('Pedidos cargados desde backend:', pedidosBackend.length);
       
     } catch (error) {
-      console.error('❌ Error al cargar pedidos del backend:', error);
+      logger.error('Error al cargar pedidos del backend:', error);
       
       // FALLBACK: Intentar cargar desde localStorage
-      console.log('🔄 Intentando cargar desde localStorage como fallback...');
+      logger.debug('Intentando cargar desde localStorage como fallback...');
       try {
         const ordenesGuardadas = JSON.parse(localStorage.getItem('ordenes') || '[]');
         
@@ -76,11 +74,11 @@ function MisPedidos() {
 
         pedidosUsuario.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
         setPedidos(pedidosUsuario);
-        console.log('📦 Pedidos cargados desde localStorage:', pedidosUsuario);
+        logger.success('Pedidos cargados desde localStorage:', pedidosUsuario.length);
         
         notify('Mostrando pedidos locales. Algunos pedidos pueden no estar sincronizados.', 'warning', 4000);
       } catch (localError) {
-        console.error('Error al cargar desde localStorage:', localError);
+        logger.error('Error al cargar desde localStorage:', localError);
         setPedidos([]);
         notify('Error al cargar pedidos', 'error', 3000);
       }
