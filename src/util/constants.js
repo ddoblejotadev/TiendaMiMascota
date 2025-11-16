@@ -2,6 +2,8 @@
  * CONSTANTES DE LA APLICACIÓN
  */
 
+import logger from './logger';
+
 // Categorías de productos
 export const CATEGORIAS = [
   'Todos',
@@ -77,7 +79,7 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
-      console.warn('Token expirado o inválido');
+      logger.warn('Token expirado o inválido');
       localStorage.removeItem('token');
       localStorage.removeItem('usuario');
       window.location.href = '/iniciar-sesion';
@@ -129,7 +131,7 @@ export async function login(email, password) {
 
     return usuarioData;
   } catch (error) {
-    console.error('Error al login:', error);
+    logger.error('Error al login:', error);
     const mensaje = error.response?.data?.mensaje || 'Email o contraseña incorrectos';
     throw new Error(mensaje);
   }
@@ -175,7 +177,7 @@ export async function registrar(datosUsuario) {
 
     return usuarioData;
   } catch (error) {
-    console.error('Error al registrar:', error);
+    logger.error('Error al registrar:', error);
     
     // Capturar mensajes específicos del backend
     let mensaje = 'Error al registrarse';
@@ -221,7 +223,7 @@ export function obtenerUsuarioActual() {
   try {
     return JSON.parse(usuarioJSON);
   } catch (error) {
-    console.error('Error al parsear usuario:', error);
+    logger.error('Error al parsear usuario:', error);
     return null;
   }
 }
@@ -266,7 +268,7 @@ export async function actualizarPerfil(datosActualizados) {
 
     return usuarioData;
   } catch (error) {
-    console.error('Error al actualizar perfil:', error);
+    logger.error('Error al actualizar perfil:', error);
     throw error;
   }
 }
@@ -317,7 +319,7 @@ export async function verificarStockCarrito(carrito) {
 
     return resultado;
   } catch (error) {
-    console.error('Error al verificar stock:', error);
+    logger.error('Error al verificar stock:', error);
     throw new Error('No se pudo verificar la disponibilidad de los productos');
   }
 }
@@ -330,7 +332,7 @@ export async function obtenerProductosDestacados() {
     const productos = await obtenerProductos(0, 100);
     return productos.filter(p => p.destacado === true);
   } catch (error) {
-    console.error('Error:', error);
+    logger.error('Error al obtener productos destacados:', error);
     return [];
   }
 }
@@ -346,7 +348,7 @@ export async function filtrarPorCategoria(categoria) {
     }
     return productos.filter(p => p.category === categoria);
   } catch (error) {
-    console.error('Error:', error);
+    logger.error('Error al filtrar por categoría:', error);
     return [];
   }
 }
@@ -365,7 +367,7 @@ export async function buscarProductos(termino) {
       (p.description && p.description.toLowerCase().includes(terminoLower))
     );
   } catch (error) {
-    console.error('Error:', error);
+    logger.error('Error al buscar productos:', error);
     return [];
   }
 }
@@ -378,7 +380,7 @@ export async function agregarProducto(producto) {
     const response = await api.post('/productos', producto);
     return response.data;
   } catch (error) {
-    console.error('Error al crear producto:', error);
+    logger.error('Error al crear producto:', error);
     throw error;
   }
 }
@@ -391,7 +393,7 @@ export async function actualizarProducto(id, datosActualizados) {
     const response = await api.put(`/productos/${id}`, datosActualizados);
     return response.data;
   } catch (error) {
-    console.error('Error al actualizar producto:', error);
+    logger.error('Error al actualizar producto:', error);
     throw error;
   }
 }
@@ -404,7 +406,7 @@ export async function eliminarProducto(id) {
     await api.delete(`/productos/${id}`);
     return true;
   } catch (error) {
-    console.error('Error al eliminar producto:', error);
+    logger.error('Error al eliminar producto:', error);
     throw error;
   }
 }
@@ -418,15 +420,12 @@ export async function eliminarProducto(id) {
  */
 export async function obtenerOrdenesUsuario(usuarioId) {
   try {
-    console.log('🔍 Buscando órdenes para usuario:', usuarioId);
+    logger.debug('Buscando órdenes para usuario:', usuarioId);
     const response = await api.get(`/ordenes/usuario/${usuarioId}`);
-    console.log('📦 Respuesta del backend:', response.data);
-    console.log('📊 Tipo de respuesta:', Array.isArray(response.data) ? 'Array' : typeof response.data);
-    console.log('📈 Cantidad de órdenes:', Array.isArray(response.data) ? response.data.length : 'No es array');
+    logger.success('Órdenes recibidas:', Array.isArray(response.data) ? response.data.length : 'No es array');
     return response.data;
   } catch (error) {
-    console.error('❌ Error al obtener órdenes:', error);
-    console.error('📋 Detalles del error:', error.response?.data || error.message);
+    logger.error('Error al obtener órdenes:', error);
     throw error;
   }
 }
@@ -461,18 +460,15 @@ export async function crearOrden(datosOrden) {
   };
 
   try {
-    console.log('📡 Enviando orden al backend:', datosOrden);
-    console.log('🔄 Orden transformada para backend:', ordenBackend);
-    console.log('📋 Items a enviar:', JSON.stringify(ordenBackend.items, null, 2));
+    logger.debug('Enviando orden al backend');
+    logger.debug('Items a enviar:', ordenBackend.items.length);
     
     const response = await api.post('/ordenes', ordenBackend);
-    console.log('✅ Orden guardada, respuesta:', response.data);
+    logger.success('Orden guardada exitosamente');
     return response.data;
   } catch (error) {
-    console.error('❌ Error al crear orden:', error);
-    console.error('📋 Detalles del error:', error.response?.data || error.message);
-    console.error('🔍 Error completo:', JSON.stringify(error.response?.data, null, 2));
-    console.error('📤 Datos que se enviaron:', JSON.stringify(ordenBackend, null, 2));
+    logger.error('Error al crear orden:', error);
+    logger.debug('Datos que se enviaron:', ordenBackend);
     throw error;
   }
 }
@@ -485,7 +481,7 @@ export async function verificarToken() {
     const response = await api.get('/auth/verificar');
     return response.data;
   } catch (error) {
-    console.error('Token inválido:', error);
+    logger.error('Token inválido:', error);
     throw error;
   }
 }
@@ -498,7 +494,7 @@ export async function obtenerProductos(page = 0, size = 20) {
     const response = await api.get(`/productos?page=${page}&size=${size}`);
     return response.data;
   } catch (error) {
-    console.error('Error al obtener productos:', error);
+    logger.error('Error al obtener productos:', error);
     throw error;
   }
 }
@@ -511,7 +507,7 @@ export async function obtenerProductoPorId(id) {
     const response = await api.get(`/productos/${id}`);
     return response.data;
   } catch (error) {
-    console.error('Error al obtener producto:', error);
+    logger.error('Error al obtener producto:', error);
     throw error;
   }
 }

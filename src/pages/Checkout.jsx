@@ -36,7 +36,6 @@ function Checkout() {
   // Auto-completar con datos del usuario logueado
   useEffect(() => {
     if (estaLogueado && usuario) {
-      console.log('👤 Usuario logueado detectado:', usuario);
       setDatosEnvio(prev => ({
         ...prev,
         nombreCompleto: usuario.nombre || '',
@@ -47,7 +46,6 @@ function Checkout() {
       // Si el usuario tiene dirección guardada, no activar modo edición
       setModoEdicion(!usuario.direccion);
     } else {
-      console.log('🛍️ Comprando como invitado');
       setModoEdicion(true);
     }
   }, [estaLogueado, usuario]);
@@ -134,38 +132,28 @@ function Checkout() {
 
       if (exito) {
         // Preparar datos de la orden
+        const subtotalCalculado = calcularTotal();
         const orden = {
           id: Date.now(),
           fecha: new Date().toISOString(),
           productos: carrito,
           datosEnvio,
-          subtotal: calcularTotal(),
-          total: calcularTotal() + (calcularTotal() >= 50000 ? 0 : 5000),
+          subtotal: subtotalCalculado,
+          total: subtotalCalculado + (subtotalCalculado >= 50000 ? 0 : 5000),
           estado: 'completada',
           esInvitado: !estaLogueado,
           usuarioId: usuario?.usuario_id || null
         };
         
-        console.log('💾 Guardando orden:', orden);
-        console.log('🔐 Estado de autenticación - estaLogueado:', estaLogueado);
-        console.log('👤 Usuario actual:', usuario);
-        
         // Intentar guardar en el backend
         try {
           if (estaLogueado) {
-            console.log('📡 Guardando orden en el backend...');
-            console.log('📤 Datos a enviar:', JSON.stringify(orden, null, 2));
             const respuesta = await crearOrden(orden);
-            console.log('✅ Orden guardada en el backend');
-            console.log('📥 Respuesta del servidor:', respuesta);
+            // Orden guardada exitosamente en backend
           } else {
-            console.log('👤 Usuario invitado, guardando solo en localStorage');
+            // Usuario invitado, guardar solo en localStorage
           }
         } catch (error) {
-          console.error('❌ Error al guardar orden en backend:', error);
-          console.error('📋 Detalles del error:', error.response?.data || error.message);
-          console.error('🔴 Status code:', error.response?.status);
-          console.log('⚠️ Guardando orden solo en localStorage');
           notify('Orden guardada localmente (backend no disponible)', 'warning', 3000);
         }
 
@@ -191,7 +179,6 @@ function Checkout() {
         navigate('/error-pago');
       }
     } catch (error) {
-      console.error('Error al procesar pago:', error);
       notify('Error al verificar disponibilidad. Intenta nuevamente.', 'error', 4000);
     } finally {
       setProcesando(false);
