@@ -56,15 +56,19 @@ function Inicio() {
               <div className="spinner-border text-primary" role="status">
                 <span className="visually-hidden">Cargando...</span>
               </div>
-              <p className="text-muted mt-3">Cargando productos del backend...</p>
+              <p className="text-muted mt-3">
+                {import.meta.env.PROD ? 'Cargando productos...' : 'Cargando productos del backend...'}
+              </p>
             </div>
           ) : error ? (
             <div className="alert alert-warning text-center" role="alert">
               <h4 className="alert-heading">⚠️ No se pudieron cargar los productos</h4>
               <p>{error}</p>
-              <small className="text-muted">
-                Verifica que el backend esté corriendo en <code>http://localhost:8080</code>
-              </small>
+              {!import.meta.env.PROD && (
+                <small className="text-muted">
+                  Verifica que el backend esté corriendo en <code>http://localhost:8080</code>
+                </small>
+              )}
             </div>
           ) : productosDestacados.length === 0 ? (
             <div className="alert alert-info text-center">
