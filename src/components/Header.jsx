@@ -44,6 +44,8 @@ function Header() {
             width="50" 
             height="50" 
             className="d-inline-block bg-white rounded-2 p-1 me-2"
+            loading="eager"
+            decoding="async"
           />
           <span className="fw-bold fs-4">Mi Mascota</span>
         </Link>
