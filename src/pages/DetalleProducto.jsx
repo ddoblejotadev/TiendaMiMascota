@@ -187,6 +187,7 @@ function DetalleProducto() {
               className="img-fluid rounded shadow-lg"
               loading="lazy"
               decoding="async"
+              onError={(e) => { e.currentTarget.src = FALLBACK_IMAGE; }}
               style={{ width: '100%', height: '500px', objectFit: 'cover' }}
             />
             

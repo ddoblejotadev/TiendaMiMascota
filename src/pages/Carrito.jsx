@@ -132,6 +132,7 @@ function Carrito() {
                         className="img-fluid rounded"
                         loading="lazy"
                         decoding="async"
+                        onError={(e) => { e.currentTarget.src = FALLBACK_IMAGE; }}
                         style={{ maxHeight: '150px', objectFit: 'cover' }}
                       />
                     </div>
