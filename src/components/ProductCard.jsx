@@ -49,7 +49,7 @@ function ProductCard({ producto }) {
         {/* Imagen del producto */}
         <div className="position-relative" style={{ aspectRatio: '1/1', overflow: 'hidden', backgroundColor: '#f8f9fa' }}>
           <img 
-            src={producto.imagen || FALLBACK_IMAGE} 
+            src={producto.imageUrl || producto.imagen || '/images/fallback.svg'} 
             alt={producto.nombre}
             className="card-img-top"
             style={{ 
@@ -60,7 +60,7 @@ function ProductCard({ producto }) {
             }}
             loading="lazy"
             decoding="async"
-            onError={(e) => { e.currentTarget.src = FALLBACK_IMAGE; }}
+            onError={(e) => { e.currentTarget.src = '/images/fallback.svg'; }}
           />
           
           {/* Badges */}

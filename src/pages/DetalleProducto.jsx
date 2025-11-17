@@ -182,12 +182,12 @@ function DetalleProducto() {
         <div className="col-lg-6">
           <div className="position-relative">
             <img 
-              src={producto.imagen || FALLBACK_IMAGE} 
+              src={producto.imageUrl || producto.imagen || '/images/fallback.svg'} 
               alt={producto.nombre}
               className="img-fluid rounded shadow-lg"
               loading="lazy"
               decoding="async"
-              onError={(e) => { e.currentTarget.src = FALLBACK_IMAGE; }}
+              onError={(e) => { e.currentTarget.src = '/images/fallback.svg'; }}
               style={{ width: '100%', height: '500px', objectFit: 'cover' }}
             />
             

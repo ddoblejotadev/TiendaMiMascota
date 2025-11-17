@@ -127,12 +127,12 @@ function Carrito() {
                     {/* Imagen */}
                     <div className="col-md-3">
                       <img 
-                        src={producto.imagen || FALLBACK_IMAGE} 
+                        src={producto.imageUrl || producto.imagen || '/images/fallback.svg'} 
                         alt={producto.nombre}
                         className="img-fluid rounded"
                         loading="lazy"
                         decoding="async"
-                        onError={(e) => { e.currentTarget.src = FALLBACK_IMAGE; }}
+                        onError={(e) => { e.currentTarget.src = '/images/fallback.svg'; }}
                         style={{ maxHeight: '150px', objectFit: 'cover' }}
                       />
                     </div>

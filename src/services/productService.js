@@ -77,6 +77,23 @@ function mapearProductoBackend(productoBackend) {
   }
 
   let imagenFinal = imagenLocal;
+  // Build a normalized imageUrl that references the backend resource when provided
+  const BACKEND_BASE = (import.meta.env.VITE_API_URL || api.defaults.baseURL || 'https://tiendamimascotabackends.onrender.com/api').replace(/\/api\/?$/, '').replace(/\/$/, '');
+  let imageUrl = null;
+  if (imagenBackend) {
+    // Normalize image url - handle absolute, protocol-relative, relative paths
+    if (/^\/\//.test(imagenBackend)) {
+      imageUrl = 'https:' + imagenBackend;
+    } else if (/^https?:\/\//i.test(imagenBackend) || /^data:/i.test(imagenBackend) || /^blob:/i.test(imagenBackend)) {
+      imageUrl = imagenBackend;
+    } else {
+      try {
+        imageUrl = new URL(imagenBackend, BACKEND_BASE).href;
+      } catch {
+        imageUrl = null;
+      }
+    }
+  }
   if (imagenBackend) {
     logger.debug(`Imagen backend encontrada: ${imagenBackend}`);
     // Si es una URL absoluta, úsala tal cual
@@ -108,6 +125,7 @@ function mapearProductoBackend(productoBackend) {
     precio: productoBackend.price || productoBackend.precio || 0,
     precioAnterior: productoBackend.previousPrice || productoBackend.precioAnterior || null,
     imagen: imagenFinal, // Usar imagen enviada por backend o fallback local
+    imageUrl: imageUrl, // URL absoluta (cuando el backend provee una) o null
     categoria: categoria,
     stock: productoBackend.stock !== undefined ? productoBackend.stock : 0,
     destacado: productoBackend.highlighted !== undefined ? productoBackend.highlighted : productoBackend.destacado || false,
