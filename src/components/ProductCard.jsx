@@ -5,6 +5,7 @@
 
 import { Link } from 'react-router-dom';
 import useCarrito from '../hooks/useCarrito';
+const FALLBACK_IMAGE = 'https://images.unsplash.com/photo-1450778869180-41d0601e046e?w=400';
 
 function ProductCard({ producto }) {
   const { agregarAlCarrito, obtenerCantidadEnCarrito } = useCarrito();
@@ -48,7 +49,7 @@ function ProductCard({ producto }) {
         {/* Imagen del producto */}
         <div className="position-relative" style={{ aspectRatio: '1/1', overflow: 'hidden', backgroundColor: '#f8f9fa' }}>
           <img 
-            src={producto.imagen} 
+            src={producto.imagen || FALLBACK_IMAGE} 
             alt={producto.nombre}
             className="card-img-top"
             style={{ 

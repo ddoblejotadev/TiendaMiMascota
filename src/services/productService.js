@@ -9,20 +9,14 @@ import logger from '../util/logger';
 import { handleError } from '../util/errorHandler';
 
 // Importar imágenes desde assets (usadas como fallback)
-import imagenComida from '../assets/prod.png';
-import imagenJuguetes from '../assets/jugetes.png';
-import imagenAccesorios from '../assets/accesorios.png';
-import imagenHigiene from '../assets/higiene.png';
-import imagenCama from '../assets/cama2.png';
-
-// Mapeo de imágenes por categoría (fallback si backend no tiene imagen)
+// Cuando el backend no provee `imageUrl`, usamos imágenes remotas por categoría
 const imagenesPorCategoria = {
-  'Alimento': imagenComida,
-  'Juguetes': imagenJuguetes,
-  'Accesorios': imagenAccesorios,
-  'Higiene': imagenHigiene,
-  'Medicamentos': imagenHigiene,
-  'default': imagenAccesorios
+  'Alimento': 'https://images.unsplash.com/photo-1589924691995-400dc9ecc119?w=400',
+  'Juguetes': 'https://images.unsplash.com/photo-1535294435445-d7249524ef2e?w=400',
+  'Accesorios': 'https://images.unsplash.com/photo-1601758228041-f3b2795255f1?w=400',
+  'Higiene': 'https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?w=400',
+  'Medicamentos': 'https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?w=400',
+  'default': 'https://images.unsplash.com/photo-1450778869180-41d0601e046e?w=400'
 };
 
 /**
@@ -31,17 +25,37 @@ const imagenesPorCategoria = {
  * Frontend usa: nombre, descripcion, precio, categoria, imagen, destacado, valoracion, precioAnterior
  */
 function mapearProductoBackend(productoBackend) {
-  // Siempre usar imágenes locales del assets (el backend no tiene imágenes físicas)
+  // Priorizar imágenes que envía el backend (imageUrl o image_url)
+  // Si no viene, usar imágenes locales del assets
   const categoria = productoBackend.category || productoBackend.categoria || 'default';
   const imagenLocal = imagenesPorCategoria[categoria] || imagenesPorCategoria.default;
   
+  // Backend puede devolver imageUrl (Cloudinary / Unsplash) o una ruta relativa
+  const imagenBackend = productoBackend.imageUrl || productoBackend.image_url || productoBackend.imagen || null;
+
+  let imagenFinal = imagenLocal;
+  if (imagenBackend) {
+    // Si es una URL absoluta, úsala tal cual
+    if (/^https?:\/\//i.test(imagenBackend)) {
+      imagenFinal = imagenBackend;
+    } else {
+      // Si backend devolvió una ruta relativa, construí una URL completa usando VITE_API_URL
+      try {
+        const base = import.meta.env.VITE_API_URL || api.defaults.baseURL || '/';
+        imagenFinal = new URL(imagenBackend, base).href;
+      } catch {
+        imagenFinal = imagenLocal;
+      }
+    }
+  }
+
   return {
     id: productoBackend.id || productoBackend.producto_id || productoBackend.productoId,
     nombre: productoBackend.name || productoBackend.producto_nombre || productoBackend.nombre,
     descripcion: productoBackend.description || productoBackend.descripcion || '',
     precio: productoBackend.price || productoBackend.precio || 0,
     precioAnterior: productoBackend.previousPrice || productoBackend.precioAnterior || null,
-    imagen: imagenLocal, // SIEMPRE usar imágenes locales
+    imagen: imagenFinal, // Usar imagen enviada por backend o fallback local
     categoria: categoria,
     stock: productoBackend.stock !== undefined ? productoBackend.stock : 0,
     destacado: productoBackend.highlighted !== undefined ? productoBackend.highlighted : productoBackend.destacado || false,
@@ -182,7 +196,9 @@ export async function agregarProducto(producto) {
       description: producto.descripcion,
       price: producto.precio,
       category: producto.categoria,
-      imageUrl: producto.imagen,
+      // Only send imageUrl to backend when it's an absolute URL (Cloudinary, Unsplash),
+      // otherwise omit it so backend can generate or use default image by category.
+      ...(producto.imagen && /^https?:\/\//i.test(producto.imagen) && { imageUrl: producto.imagen }),
       stock: producto.stock || 0,
       highlighted: producto.destacado || false,
       rating: producto.valoracion || 0,
@@ -212,7 +228,7 @@ export async function actualizarProducto(id, datosActualizados) {
       ...(datosActualizados.descripcion && { description: datosActualizados.descripcion }),
       ...(datosActualizados.precio && { price: datosActualizados.precio }),
       ...(datosActualizados.categoria && { category: datosActualizados.categoria }),
-      ...(datosActualizados.imagen && { imageUrl: datosActualizados.imagen }),
+      ...(datosActualizados.imagen && /^https?:\/\//i.test(datosActualizados.imagen) && { imageUrl: datosActualizados.imagen }),
       ...(datosActualizados.stock !== undefined && { stock: datosActualizados.stock }),
       ...(datosActualizados.destacado !== undefined && { highlighted: datosActualizados.destacado }),
       ...(datosActualizados.valoracion !== undefined && { rating: datosActualizados.valoracion }),

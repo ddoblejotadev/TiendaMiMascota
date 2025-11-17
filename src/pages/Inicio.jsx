@@ -6,10 +6,10 @@
 import { Link, useNavigate } from 'react-router-dom';
 import useProductos from '../hooks/useProductos';
 import ProductCard from '../components/ProductCard';
-import imagenComida from '../assets/Comida.jpg';
-import imagenJuguetes from '../assets/jugetes.png';
-import imagenAccesorios from '../assets/accesorios.png';
-import imagenHigiene from '../assets/higiene.png';
+const imagenComida = 'https://images.unsplash.com/photo-1589924691995-400dc9ecc119?w=400';
+const imagenJuguetes = 'https://images.unsplash.com/photo-1535294435445-d7249524ef2e?w=400';
+const imagenAccesorios = 'https://images.unsplash.com/photo-1601758228041-f3b2795255f1?w=400';
+const imagenHigiene = 'https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?w=400';
 
 function Inicio() {
   const navigate = useNavigate();

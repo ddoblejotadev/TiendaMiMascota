@@ -3,7 +3,7 @@ import {screen} from '@testing-library/react';
 import ProductCard from '../components/ProductCard';
 import { renderWithProviders } from './test-utils';
 
-const producto={id:1,nombre:'Comida para Perros',descripcion:'Producto de prueba',precio:5000,imagen:'test.jpg',stock:10,categoria:'Alimento'};
+const producto={id:1,nombre:'Comida para Perros',descripcion:'Producto de prueba',precio:5000,imagen:'https://images.unsplash.com/photo-1714068691210-073dc52c6c1d?w=400',stock:10,categoria:'Alimento'};
 
 describe('ProductCard',()=>{
   it('renderiza producto',()=>{
