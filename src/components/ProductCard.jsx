@@ -58,6 +58,7 @@ function ProductCard({ producto }) {
               display: 'block'
             }}
             loading="lazy"
+            decoding="async"
           />
           
           {/* Badges */}
@@ -112,11 +113,16 @@ function ProductCard({ producto }) {
               <button 
                 className="btn btn-primary btn-sm px-3"
                 onClick={manejarAgregarCarrito}
+                aria-label={`Agregar ${producto.nombre} al carrito`}
               >
-                🛒 Agregar
+                <span aria-hidden="true">🛒</span> Agregar
               </button>
             ) : (
-              <button className="btn btn-secondary btn-sm px-3" disabled>
+              <button 
+                className="btn btn-secondary btn-sm px-3" 
+                disabled
+                aria-label={`${producto.nombre} - producto agotado`}
+              >
                 Agotado
               </button>
             )}
