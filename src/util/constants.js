@@ -54,9 +54,29 @@ import axios from 'axios';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080/api';
 
-// Crear instancia de axios
+// En tiempo de ejecución, si el navegador corre en localhost/127.0.0.1 forzamos la base local
+const runtimeHostname = (typeof window !== 'undefined' && window.location && window.location.hostname) ? window.location.hostname : null;
+const isLocalhost = runtimeHostname === 'localhost' || runtimeHostname === '127.0.0.1' || runtimeHostname === '::1';
+
+// Permitir override desde localStorage (útil para depuración en producción)
+const storedOverride = (typeof window !== 'undefined' && window.localStorage) ? localStorage.getItem('api_base_override') : null;
+const FINAL_API_URL = storedOverride || (isLocalhost ? 'http://localhost:8080/api' : API_URL);
+
+// Log ligero para depuración en desarrollo (se ve en la consola del navegador)
+try {
+  if (typeof window !== 'undefined' && window.console) {
+    console.debug('[API] import.meta.env.VITE_API_URL =', import.meta.env.VITE_API_URL);
+    console.debug('[API] runtime hostname =', runtimeHostname);
+    console.debug('[API] stored override =', storedOverride);
+    console.debug('[API] usando baseURL =', FINAL_API_URL);
+  }
+} catch (e) {
+  // No hacer nada si falla la depuración
+}
+
+// Crear instancia de axios con la base final determinada
 const api = axios.create({
-  baseURL: API_URL,
+  baseURL: FINAL_API_URL,
   timeout: 30000, // 30 segundos para órdenes (Render tarda en despertar)
   headers: {
     'Content-Type': 'application/json'

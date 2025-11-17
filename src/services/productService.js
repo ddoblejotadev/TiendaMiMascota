@@ -5,6 +5,7 @@
  */
 
 import api from '../util/constants';
+import axios from 'axios';
 import logger from '../util/logger';
 import { handleError } from '../util/errorHandler';
 
@@ -78,7 +79,14 @@ function mapearProductoBackend(productoBackend) {
 
   let imagenFinal = imagenLocal;
   // Build a normalized imageUrl that references the backend resource when provided
-  const BACKEND_BASE = (import.meta.env.VITE_API_URL || api.defaults.baseURL || 'https://tiendamimascotabackends.onrender.com/api').replace(/\/api\/?$/, '').replace(/\/$/, '');
+  // Determinar base del backend en tiempo de ejecución.
+  // Priorizar: si estamos desarrollando en localhost, forcemos el backend local para evitar llamar producción.
+  const runtimeHostname = (typeof window !== 'undefined' && window.location && window.location.hostname) ? window.location.hostname : null;
+  const isLocalhost = runtimeHostname === 'localhost' || runtimeHostname === '127.0.0.1';
+  const configuredBase = import.meta.env.VITE_API_URL || api.defaults.baseURL || '';
+  const fallbackBase = 'http://localhost:8080/api';
+  const chosenBaseRaw = isLocalhost ? fallbackBase : (configuredBase || fallbackBase);
+  const BACKEND_BASE = String(chosenBaseRaw).replace(/\/api\/?$/, '').replace(/\/$/, '');
   let imageUrl = null;
   if (imagenBackend) {
     // Normalize image url - handle absolute, protocol-relative, relative paths
@@ -107,8 +115,9 @@ function mapearProductoBackend(productoBackend) {
     } else {
       // Si backend devolvió una ruta relativa, construí una URL completa usando VITE_API_URL
       try {
-        const base = import.meta.env.VITE_API_URL || api.defaults.baseURL || '/';
-        imagenFinal = new URL(imagenBackend, base).href;
+        // Usar la misma lógica de base en tiempo de ejecución para construir URLs relativas
+        const baseForImages = isLocalhost ? fallbackBase : (import.meta.env.VITE_API_URL || api.defaults.baseURL || '/');
+        imagenFinal = new URL(imagenBackend, baseForImages).href;
       } catch {
         imagenFinal = imagenLocal;
       }
@@ -176,6 +185,63 @@ export async function obtenerProductos() {
   } catch (error) {
     const mensajeError = handleError(error, 'Obtener productos');
     logger.error('Error al obtener productos:', error);
+
+    // Si recibimos 404, intentar variaciones de la baseURL (sin /api, con /api, origin)
+    try {
+      const status = error?.response?.status;
+      if (status === 404) {
+        const tried = new Set();
+        const currentBase = api.defaults.baseURL || '';
+        let origin = currentBase;
+        try {
+          origin = (new URL(currentBase)).origin;
+        } catch (err) {
+          logger.debug('No se pudo parsear origin desde currentBase:', currentBase, err);
+        }
+
+        const removeApi = String(currentBase).replace(/\/api\/?$/, '').replace(/\/$/, '');
+        const addApi = removeApi + '/api';
+
+        const candidates = [currentBase, removeApi, addApi, origin].map(s => String(s || '').replace(/\/$/, '')).filter(Boolean);
+
+        for (const cand of candidates) {
+          if (tried.has(cand)) continue;
+          tried.add(cand);
+          const url = `${cand}/productos`;
+          try {
+            logger.debug('Probando alternativa para productos:', url);
+            const resp = await axios.get(url);
+            if (resp && (resp.status === 200 || resp.status === 204)) {
+              // Encontramos una base válida — persistir y usarla
+              api.defaults.baseURL = cand;
+              try {
+                if (typeof window !== 'undefined' && window.localStorage) {
+                  localStorage.setItem('api_base_override', cand);
+                }
+              } catch (err) { logger.debug('No se pudo persistir api_base_override en localStorage', err); }
+              logger.success('Se encontró base alternativa válida para /productos:', cand);
+              // Re-intentar mapeo con la respuesta encontrada
+              let productosArray = [];
+              if (Array.isArray(resp.data)) productosArray = resp.data;
+              else if (resp.data.content && Array.isArray(resp.data.content)) productosArray = resp.data.content;
+              else if (resp.data.data && Array.isArray(resp.data.data)) productosArray = resp.data.data;
+              else {
+                // si el formato no es reconocido, dejaremos continuar y lanzar el error original
+                continue;
+              }
+              const productosMapeados = productosArray.map(mapearProductoBackend);
+              return productosMapeados;
+            }
+          } catch (e) {
+            logger.debug('Alternativa fallida:', url, e?.response?.status || e?.message || e);
+            // seguir probando
+          }
+        }
+      }
+    } catch (e) {
+      logger.debug('Error al intentar alternativas de baseURL:', e);
+    }
+
     throw new Error(mensajeError);
   }
 }
