@@ -30,14 +30,37 @@ function mapearProductoBackend(productoBackend) {
   const categoria = productoBackend.category || productoBackend.categoria || 'default';
   const imagenLocal = imagenesPorCategoria[categoria] || imagenesPorCategoria.default;
   
-  // Backend puede devolver imageUrl (Cloudinary / Unsplash) o una ruta relativa
-  const imagenBackend = productoBackend.imageUrl || productoBackend.image_url || productoBackend.imagen || null;
+  // Backend puede devolver imageUrl (Cloudinary / Unsplash) u otras claves.
+  // Soportar: imageUrl, image_url, image, imagen, url, thumbnail, images[0].url, media[0].url
+  let imagenBackend = null;
+  const imageCandidates = [
+    'imageUrl', 'image_url', 'image', 'imagen', 'imagen_url', 'url', 'thumbnail', 'img'
+  ];
+  for (const key of imageCandidates) {
+    if (productoBackend[key]) {
+      imagenBackend = productoBackend[key];
+      break;
+    }
+  }
+
+  // Si viene una lista 'images' o 'media', tomar la primera url disponible
+  if (!imagenBackend && Array.isArray(productoBackend.images) && productoBackend.images.length > 0) {
+    imagenBackend = productoBackend.images[0].url || productoBackend.images[0];
+  }
+  if (!imagenBackend && Array.isArray(productoBackend.media) && productoBackend.media.length > 0) {
+    imagenBackend = productoBackend.media[0].url || productoBackend.media[0];
+  }
 
   let imagenFinal = imagenLocal;
   if (imagenBackend) {
     // Si es una URL absoluta, úsala tal cual
-    if (/^https?:\/\//i.test(imagenBackend)) {
-      imagenFinal = imagenBackend;
+    if (/^https?:\/\//i.test(imagenBackend) || /^\/\//.test(imagenBackend) || /^data:/i.test(imagenBackend) || /^blob:/i.test(imagenBackend)) {
+      // protocol-relative URLs (//images...) -> use https
+      if (/^\/\//.test(imagenBackend)) {
+        imagenFinal = 'https:' + imagenBackend;
+      } else {
+        imagenFinal = imagenBackend;
+      }
     } else {
       // Si backend devolvió una ruta relativa, construí una URL completa usando VITE_API_URL
       try {
