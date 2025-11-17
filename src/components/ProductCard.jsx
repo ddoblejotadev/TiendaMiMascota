@@ -93,9 +93,9 @@ function ProductCard({ producto }) {
           </span>
           
           {/* Nombre */}
-          <h5 className="card-title text-dark fw-bold mb-2">
+          <h3 className="card-title text-dark fw-bold mb-2 h5">
             {producto.nombre}
-          </h5>
+          </h3>
           
           {/* Descripción corta */}
           <p className="card-text text-muted small flex-grow-1">
