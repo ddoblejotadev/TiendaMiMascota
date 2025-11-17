@@ -37,18 +37,43 @@ function mapearProductoBackend(productoBackend) {
     'imageUrl', 'image_url', 'image', 'imagen', 'imagen_url', 'url', 'thumbnail', 'img'
   ];
   for (const key of imageCandidates) {
-    if (productoBackend[key]) {
-      imagenBackend = productoBackend[key];
+    const candidate = productoBackend[key];
+    if (!candidate) continue;
+
+    // Si es string directa
+    if (typeof candidate === 'string') {
+      imagenBackend = candidate;
       break;
+    }
+
+    // Si es objeto, buscar propiedades comunes
+    if (typeof candidate === 'object' && candidate !== null) {
+      const propsToCheck = ['url', 'secure_url', 'small', 'thumbnail', 'src', 'path'];
+      for (const p of propsToCheck) {
+        if (candidate[p]) {
+          imagenBackend = candidate[p];
+          break;
+        }
+      }
+      if (!imagenBackend) {
+        // Si el objeto tiene key 0 o es un blob-like
+        if (candidate[0] && typeof candidate[0] === 'string') {
+          imagenBackend = candidate[0];
+        }
+      }
+
+      if (imagenBackend) break;
     }
   }
 
   // Si viene una lista 'images' o 'media', tomar la primera url disponible
   if (!imagenBackend && Array.isArray(productoBackend.images) && productoBackend.images.length > 0) {
-    imagenBackend = productoBackend.images[0].url || productoBackend.images[0];
+    const first = productoBackend.images[0];
+    imagenBackend = first?.url || first?.secure_url || first?.small || first || null;
   }
   if (!imagenBackend && Array.isArray(productoBackend.media) && productoBackend.media.length > 0) {
-    imagenBackend = productoBackend.media[0].url || productoBackend.media[0];
+    const first = productoBackend.media[0];
+    imagenBackend = first?.url || first?.secure_url || first?.small || first || null;
   }
 
   let imagenFinal = imagenLocal;
@@ -286,3 +311,6 @@ export async function eliminarProducto(id) {
     throw error;
   }
 }
+
+// Export helper for unit tests and debugging
+export { mapearProductoBackend };
