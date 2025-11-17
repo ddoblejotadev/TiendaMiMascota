@@ -5,6 +5,7 @@
 
 import { Link } from 'react-router-dom';
 import useCarrito from '../hooks/useCarrito';
+const FALLBACK_IMAGE = 'https://images.unsplash.com/photo-1450778869180-41d0601e046e?w=400';
 
 function ProductCard({ producto }) {
   const { agregarAlCarrito, obtenerCantidadEnCarrito } = useCarrito();
@@ -48,7 +49,7 @@ function ProductCard({ producto }) {
         {/* Imagen del producto */}
         <div className="position-relative" style={{ aspectRatio: '1/1', overflow: 'hidden', backgroundColor: '#f8f9fa' }}>
           <img 
-            src={producto.imagen} 
+            src={producto.imageUrl || producto.imagen || '/images/fallback.svg'} 
             alt={producto.nombre}
             className="card-img-top"
             style={{ 
@@ -59,6 +60,7 @@ function ProductCard({ producto }) {
             }}
             loading="lazy"
             decoding="async"
+            onError={(e) => { e.currentTarget.src = '/images/fallback.svg'; }}
           />
           
           {/* Badges */}
@@ -80,6 +82,15 @@ function ProductCard({ producto }) {
             <div className="position-absolute top-0 end-0 p-2">
               <span className="badge bg-success">
                 ✓ En carrito ({cantidadEnCarrito})
+              </span>
+            </div>
+          )}
+
+          {/* DEBUG: Mostrar si la imagen viene del backend o del fallback */}
+          {import.meta.env.DEV && (
+            <div className="position-absolute bottom-0 start-0 p-2">
+              <span className={`badge ${producto.imageUrl ? 'bg-info' : 'bg-secondary'}`}>
+                {producto.imageUrl ? 'Backend image' : 'Fallback image'}
               </span>
             </div>
           )}

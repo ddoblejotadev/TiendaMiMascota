@@ -6,10 +6,10 @@
 import { Link, useNavigate } from 'react-router-dom';
 import useProductos from '../hooks/useProductos';
 import ProductCard from '../components/ProductCard';
-import imagenComida from '../assets/Comida.jpg';
-import imagenJuguetes from '../assets/jugetes.png';
-import imagenAccesorios from '../assets/accesorios.png';
-import imagenHigiene from '../assets/higiene.png';
+const imagenComida = 'https://images.unsplash.com/photo-1589924691995-400dc9ecc119?w=400';
+const imagenJuguetes = 'https://images.unsplash.com/photo-1535294435445-d7249524ef2e?w=400';
+const imagenAccesorios = 'https://images.unsplash.com/photo-1601758228041-f3b2795255f1?w=400';
+const imagenHigiene = 'https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?w=400';
 
 function Inicio() {
   const navigate = useNavigate();
@@ -113,7 +113,7 @@ function Inicio() {
               >
                 <img src={imagenComida} className="card-img-top" alt="Alimento" style={{ height: '200px', objectFit: 'cover' }} />
                 <div className="card-body text-center">
-                  <h5 className="card-title fw-bold">Alimento</h5>
+                  <h3 className="card-title fw-bold h5">Alimento</h3>
                   <p className="card-text text-muted small">Nutrición balanceada para tu mascota</p>
                 </div>
               </div>
@@ -129,7 +129,7 @@ function Inicio() {
               >
                 <img src={imagenJuguetes} className="card-img-top" alt="Juguetes" style={{ height: '200px', objectFit: 'cover' }} />
                 <div className="card-body text-center">
-                  <h5 className="card-title fw-bold">Juguetes</h5>
+                  <h3 className="card-title fw-bold h5">Juguetes</h3>
                   <p className="card-text text-muted small">Diversión y entretenimiento garantizado</p>
                 </div>
               </div>
@@ -145,7 +145,7 @@ function Inicio() {
               >
                 <img src={imagenAccesorios} className="card-img-top" alt="Accesorios" style={{ height: '200px', objectFit: 'cover' }} />
                 <div className="card-body text-center">
-                  <h5 className="card-title fw-bold">Accesorios</h5>
+                  <h3 className="card-title fw-bold h5">Accesorios</h3>
                   <p className="card-text text-muted small">Todo lo que necesita tu mascota</p>
                 </div>
               </div>
@@ -161,7 +161,7 @@ function Inicio() {
               >
                 <img src={imagenHigiene} className="card-img-top" alt="Higiene" style={{ height: '200px', objectFit: 'cover' }} />
                 <div className="card-body text-center">
-                  <h5 className="card-title fw-bold">Higiene</h5>
+                  <h3 className="card-title fw-bold h5">Higiene</h3>
                   <p className="card-text text-muted small">Productos para su cuidado e higiene</p>
                 </div>
               </div>
@@ -179,7 +179,7 @@ function Inicio() {
             <div className="col-sm-6 col-lg-3">
               <div className="card h-100 border-0 shadow-sm text-center p-4">
                 <div className="display-1 mb-3">🚚</div>
-                <h5 className="fw-bold">Envío Gratis</h5>
+                <h3 className="fw-bold h5">Envío Gratis</h3>
                 <p className="text-muted mb-0">En compras sobre $30.000</p>
               </div>
             </div>
@@ -187,7 +187,7 @@ function Inicio() {
             <div className="col-sm-6 col-lg-3">
               <div className="card h-100 border-0 shadow-sm text-center p-4">
                 <div className="display-1 mb-3">💳</div>
-                <h5 className="fw-bold">Pago Seguro</h5>
+                <h3 className="fw-bold h5">Pago Seguro</h3>
                 <p className="text-muted mb-0">Todas las tarjetas aceptadas</p>
               </div>
             </div>
@@ -195,7 +195,7 @@ function Inicio() {
             <div className="col-sm-6 col-lg-3">
               <div className="card h-100 border-0 shadow-sm text-center p-4">
                 <div className="display-1 mb-3">🔄</div>
-                <h5 className="fw-bold">Devolución Fácil</h5>
+                <h3 className="fw-bold h5">Devolución Fácil</h3>
                 <p className="text-muted mb-0">30 días para devolver</p>
               </div>
             </div>
@@ -203,7 +203,7 @@ function Inicio() {
             <div className="col-sm-6 col-lg-3">
               <div className="card h-100 border-0 shadow-sm text-center p-4">
                 <div className="display-1 mb-3">🎧</div>
-                <h5 className="fw-bold">Soporte 24/7</h5>
+                <h3 className="fw-bold h5">Soporte 24/7</h3>
                 <p className="text-muted mb-0">Atención personalizada</p>
               </div>
             </div>

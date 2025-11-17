@@ -9,20 +9,14 @@ import logger from '../util/logger';
 import { handleError } from '../util/errorHandler';
 
 // Importar imágenes desde assets (usadas como fallback)
-import imagenComida from '../assets/prod.png';
-import imagenJuguetes from '../assets/jugetes.png';
-import imagenAccesorios from '../assets/accesorios.png';
-import imagenHigiene from '../assets/higiene.png';
-import imagenCama from '../assets/cama2.png';
-
-// Mapeo de imágenes por categoría (fallback si backend no tiene imagen)
+// Cuando el backend no provee `imageUrl`, usamos imágenes remotas por categoría
 const imagenesPorCategoria = {
-  'Alimento': imagenComida,
-  'Juguetes': imagenJuguetes,
-  'Accesorios': imagenAccesorios,
-  'Higiene': imagenHigiene,
-  'Medicamentos': imagenHigiene,
-  'default': imagenAccesorios
+  'Alimento': 'https://images.unsplash.com/photo-1589924691995-400dc9ecc119?w=400',
+  'Juguetes': 'https://images.unsplash.com/photo-1535294435445-d7249524ef2e?w=400',
+  'Accesorios': 'https://images.unsplash.com/photo-1601758228041-f3b2795255f1?w=400',
+  'Higiene': 'https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?w=400',
+  'Medicamentos': 'https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?w=400',
+  'default': 'https://images.unsplash.com/photo-1450778869180-41d0601e046e?w=400'
 };
 
 /**
@@ -31,17 +25,107 @@ const imagenesPorCategoria = {
  * Frontend usa: nombre, descripcion, precio, categoria, imagen, destacado, valoracion, precioAnterior
  */
 function mapearProductoBackend(productoBackend) {
-  // Siempre usar imágenes locales del assets (el backend no tiene imágenes físicas)
+  // Priorizar imágenes que envía el backend (imageUrl o image_url)
+  // Si no viene, usar imágenes locales del assets
   const categoria = productoBackend.category || productoBackend.categoria || 'default';
   const imagenLocal = imagenesPorCategoria[categoria] || imagenesPorCategoria.default;
   
+  // Backend puede devolver imageUrl (Cloudinary / Unsplash) u otras claves.
+  // Soportar: imageUrl, image_url, image, imagen, url, thumbnail, images[0].url, media[0].url
+  let imagenBackend = null;
+  const imageCandidates = [
+    'imageUrl', 'image_url', 'image', 'imagen', 'imagen_url', 'url', 'thumbnail', 'img'
+  ];
+  for (const key of imageCandidates) {
+    const candidate = productoBackend[key];
+    if (!candidate) continue;
+
+    // Si es string directa
+    if (typeof candidate === 'string') {
+      imagenBackend = candidate;
+      break;
+    }
+
+    // Si es objeto, buscar propiedades comunes
+    if (typeof candidate === 'object' && candidate !== null) {
+      const propsToCheck = ['url', 'secure_url', 'small', 'thumbnail', 'src', 'path'];
+      for (const p of propsToCheck) {
+        if (candidate[p]) {
+          imagenBackend = candidate[p];
+          break;
+        }
+      }
+      if (!imagenBackend) {
+        // Si el objeto tiene key 0 o es un blob-like
+        if (candidate[0] && typeof candidate[0] === 'string') {
+          imagenBackend = candidate[0];
+        }
+      }
+
+      if (imagenBackend) break;
+    }
+  }
+
+  // Si viene una lista 'images' o 'media', tomar la primera url disponible
+  if (!imagenBackend && Array.isArray(productoBackend.images) && productoBackend.images.length > 0) {
+    const first = productoBackend.images[0];
+    imagenBackend = first?.url || first?.secure_url || first?.small || first || null;
+  }
+  if (!imagenBackend && Array.isArray(productoBackend.media) && productoBackend.media.length > 0) {
+    const first = productoBackend.media[0];
+    imagenBackend = first?.url || first?.secure_url || first?.small || first || null;
+  }
+
+  let imagenFinal = imagenLocal;
+  // Build a normalized imageUrl that references the backend resource when provided
+  const BACKEND_BASE = (import.meta.env.VITE_API_URL || api.defaults.baseURL || 'https://tiendamimascotabackends.onrender.com/api').replace(/\/api\/?$/, '').replace(/\/$/, '');
+  let imageUrl = null;
+  if (imagenBackend) {
+    // Normalize image url - handle absolute, protocol-relative, relative paths
+    if (/^\/\//.test(imagenBackend)) {
+      imageUrl = 'https:' + imagenBackend;
+    } else if (/^https?:\/\//i.test(imagenBackend) || /^data:/i.test(imagenBackend) || /^blob:/i.test(imagenBackend)) {
+      imageUrl = imagenBackend;
+    } else {
+      try {
+        imageUrl = new URL(imagenBackend, BACKEND_BASE).href;
+      } catch {
+        imageUrl = null;
+      }
+    }
+  }
+  if (imagenBackend) {
+    logger.debug(`Imagen backend encontrada: ${imagenBackend}`);
+    // Si es una URL absoluta, úsala tal cual
+    if (/^https?:\/\//i.test(imagenBackend) || /^\/\//.test(imagenBackend) || /^data:/i.test(imagenBackend) || /^blob:/i.test(imagenBackend)) {
+      // protocol-relative URLs (//images...) -> use https
+      if (/^\/\//.test(imagenBackend)) {
+        imagenFinal = 'https:' + imagenBackend;
+      } else {
+        imagenFinal = imagenBackend;
+      }
+    } else {
+      // Si backend devolvió una ruta relativa, construí una URL completa usando VITE_API_URL
+      try {
+        const base = import.meta.env.VITE_API_URL || api.defaults.baseURL || '/';
+        imagenFinal = new URL(imagenBackend, base).href;
+      } catch {
+        imagenFinal = imagenLocal;
+      }
+    }
+  }
+  else {
+    logger.debug(`No imageUrl from backend for producto ${productoBackend.id || productoBackend.producto_id || productoBackend.name}`);
+  }
+
   return {
     id: productoBackend.id || productoBackend.producto_id || productoBackend.productoId,
     nombre: productoBackend.name || productoBackend.producto_nombre || productoBackend.nombre,
     descripcion: productoBackend.description || productoBackend.descripcion || '',
     precio: productoBackend.price || productoBackend.precio || 0,
     precioAnterior: productoBackend.previousPrice || productoBackend.precioAnterior || null,
-    imagen: imagenLocal, // SIEMPRE usar imágenes locales
+    imagen: imagenFinal, // Usar imagen enviada por backend o fallback local
+    imageUrl: imageUrl, // URL absoluta (cuando el backend provee una) o null
     categoria: categoria,
     stock: productoBackend.stock !== undefined ? productoBackend.stock : 0,
     destacado: productoBackend.highlighted !== undefined ? productoBackend.highlighted : productoBackend.destacado || false,
@@ -182,7 +266,9 @@ export async function agregarProducto(producto) {
       description: producto.descripcion,
       price: producto.precio,
       category: producto.categoria,
-      imageUrl: producto.imagen,
+      // Only send imageUrl to backend when it's an absolute URL (Cloudinary, Unsplash),
+      // otherwise omit it so backend can generate or use default image by category.
+      ...(producto.imagen && /^https?:\/\//i.test(producto.imagen) && { imageUrl: producto.imagen }),
       stock: producto.stock || 0,
       highlighted: producto.destacado || false,
       rating: producto.valoracion || 0,
@@ -212,7 +298,7 @@ export async function actualizarProducto(id, datosActualizados) {
       ...(datosActualizados.descripcion && { description: datosActualizados.descripcion }),
       ...(datosActualizados.precio && { price: datosActualizados.precio }),
       ...(datosActualizados.categoria && { category: datosActualizados.categoria }),
-      ...(datosActualizados.imagen && { imageUrl: datosActualizados.imagen }),
+      ...(datosActualizados.imagen && /^https?:\/\//i.test(datosActualizados.imagen) && { imageUrl: datosActualizados.imagen }),
       ...(datosActualizados.stock !== undefined && { stock: datosActualizados.stock }),
       ...(datosActualizados.destacado !== undefined && { highlighted: datosActualizados.destacado }),
       ...(datosActualizados.valoracion !== undefined && { rating: datosActualizados.valoracion }),
@@ -243,3 +329,6 @@ export async function eliminarProducto(id) {
     throw error;
   }
 }
+
+// Export helper for unit tests and debugging
+export { mapearProductoBackend };

@@ -8,6 +8,7 @@ import { useParams, useNavigate, Link } from 'react-router-dom';
 import { obtenerProductoPorId as obtenerProductoAPI } from '../services/productService';
 import useProductos from '../hooks/useProductos';
 import useCarrito from '../hooks/useCarrito';
+const FALLBACK_IMAGE = 'https://images.unsplash.com/photo-1450778869180-41d0601e046e?w=400';
 import { notify } from '../components/ui/notificationHelper';
 import logger from '../util/logger';
 
@@ -181,9 +182,12 @@ function DetalleProducto() {
         <div className="col-lg-6">
           <div className="position-relative">
             <img 
-              src={producto.imagen} 
+              src={producto.imageUrl || producto.imagen || '/images/fallback.svg'} 
               alt={producto.nombre}
               className="img-fluid rounded shadow-lg"
+              loading="lazy"
+              decoding="async"
+              onError={(e) => { e.currentTarget.src = '/images/fallback.svg'; }}
               style={{ width: '100%', height: '500px', objectFit: 'cover' }}
             />
             

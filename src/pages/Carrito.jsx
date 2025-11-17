@@ -5,6 +5,7 @@
 
 import { useNavigate } from 'react-router-dom';
 import useCarrito from '../hooks/useCarrito';
+const FALLBACK_IMAGE = 'https://images.unsplash.com/photo-1450778869180-41d0601e046e?w=400';
 import { confirmDialog } from '../components/ui/confirmDialogHelper';
 import { notify } from '../components/ui/notificationHelper';
 
@@ -126,9 +127,12 @@ function Carrito() {
                     {/* Imagen */}
                     <div className="col-md-3">
                       <img 
-                        src={producto.imagen} 
+                        src={producto.imageUrl || producto.imagen || '/images/fallback.svg'} 
                         alt={producto.nombre}
                         className="img-fluid rounded"
+                        loading="lazy"
+                        decoding="async"
+                        onError={(e) => { e.currentTarget.src = '/images/fallback.svg'; }}
                         style={{ maxHeight: '150px', objectFit: 'cover' }}
                       />
                     </div>
