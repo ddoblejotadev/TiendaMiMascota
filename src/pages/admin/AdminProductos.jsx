@@ -5,6 +5,7 @@ function AdminProductos() {
   const [productos, setProductos] = useState([]);
   const [nombre, setNombre] = useState('');
   const [precio, setPrecio] = useState('');
+  const [imagen, setImagen] = useState('');
   const [editId, setEditId] = useState(null);
 
 
@@ -14,9 +15,10 @@ function AdminProductos() {
 
   const agregar = () => {
     if (!nombre) return;
-    const nuevo = productService.crear({ nombre, precio: Number(precio) });
+    const nuevo = productService.crear({ nombre, precio: Number(precio), imagen });
     setProductos(productService.listar());
     setNombre(''); setPrecio('');
+    setImagen('');
   };
 
   const iniciarEdicion = (p) => {
@@ -26,10 +28,11 @@ function AdminProductos() {
   };
 
   const guardarEdicion = () => {
-    productService.actualizar(editId, { nombre, precio: Number(precio) });
+    productService.actualizar(editId, { nombre, precio: Number(precio), imagen });
     setProductos(productService.listar());
     setEditId(null);
     setNombre(''); setPrecio('');
+    setImagen('');
   };
 
   const cancelarEdicion = () => {
@@ -49,6 +52,7 @@ function AdminProductos() {
       <div className="d-flex gap-2 mb-3">
         <input className="form-control" placeholder="Nombre" value={nombre} onChange={(e) => setNombre(e.target.value)} />
         <input className="form-control" placeholder="Precio" value={precio} onChange={(e) => setPrecio(e.target.value)} />
+        <input className="form-control" placeholder="Image URL (opcional)" value={imagen} onChange={(e) => setImagen(e.target.value)} />
         {editId ? (
           <>
             <button className="btn btn-success" onClick={guardarEdicion}>Guardar</button>

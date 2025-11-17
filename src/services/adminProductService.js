@@ -11,7 +11,7 @@ function guardar(lista) {
 
 function crear({ nombre, precio = 0 }) {
   const productos = listar();
-  const nuevo = { id: Date.now(), nombre, precio };
+  const nuevo = { id: Date.now(), nombre, precio, imagen: null };
   productos.push(nuevo);
   guardar(productos);
   return nuevo;
