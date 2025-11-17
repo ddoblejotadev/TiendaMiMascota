@@ -85,6 +85,15 @@ function ProductCard({ producto }) {
               </span>
             </div>
           )}
+
+          {/* DEBUG: Mostrar si la imagen viene del backend o del fallback */}
+          {import.meta.env.DEV && (
+            <div className="position-absolute bottom-0 start-0 p-2">
+              <span className={`badge ${producto.imageUrl ? 'bg-info' : 'bg-secondary'}`}>
+                {producto.imageUrl ? 'Backend image' : 'Fallback image'}
+              </span>
+            </div>
+          )}
         </div>
 
         {/* Información del producto */}
