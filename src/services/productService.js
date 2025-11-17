@@ -53,6 +53,7 @@ function mapearProductoBackend(productoBackend) {
 
   let imagenFinal = imagenLocal;
   if (imagenBackend) {
+    logger.debug(`Imagen backend encontrada: ${imagenBackend}`);
     // Si es una URL absoluta, úsala tal cual
     if (/^https?:\/\//i.test(imagenBackend) || /^\/\//.test(imagenBackend) || /^data:/i.test(imagenBackend) || /^blob:/i.test(imagenBackend)) {
       // protocol-relative URLs (//images...) -> use https
@@ -70,6 +71,9 @@ function mapearProductoBackend(productoBackend) {
         imagenFinal = imagenLocal;
       }
     }
+  }
+  else {
+    logger.debug(`No imageUrl from backend for producto ${productoBackend.id || productoBackend.producto_id || productoBackend.name}`);
   }
 
   return {
