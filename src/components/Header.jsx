@@ -54,6 +54,9 @@ function Header() {
           type="button" 
           data-bs-toggle="collapse" 
           data-bs-target="#navbarNav"
+          aria-label="Abrir menú de navegación"
+          aria-controls="navbarNav"
+          aria-expanded="false"
         >
           <span className="navbar-toggler-icon"></span>
         </button>
@@ -101,8 +104,12 @@ function Header() {
           {/* Acciones del usuario */}
           <div className="d-flex align-items-center gap-3">
             {/* Carrito */}
-            <Link to="/carrito" className="btn btn-light position-relative">
-              <span className="fs-5">🛒</span>
+            <Link 
+              to="/carrito" 
+              className="btn btn-light position-relative"
+              aria-label={`Carrito de compras${totalArticulos > 0 ? ` con ${totalArticulos} producto${totalArticulos !== 1 ? 's' : ''}` : ' vacío'}`}
+            >
+              <span className="fs-5" aria-hidden="true">🛒</span>
               {totalArticulos > 0 && (
                 <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
                   {totalArticulos}
@@ -118,6 +125,7 @@ function Header() {
                   type="button" 
                   data-bs-toggle="dropdown"
                   aria-expanded="false"
+                  aria-label="Menú de usuario"
                   style={{ 
                     display: 'flex', 
                     alignItems: 'center', 
