@@ -4,7 +4,7 @@ import useAutenticacion from '../hooks/useAutenticacion';
 
 /**
  * AdminRoute: Protege rutas de administrador.
- * Reglas simples: usuario debe estar logueado y tener email 'admin@test.com'.
+ * Reglas: usuario debe estar logueado y tener rol 'admin'.
  */
 function AdminRoute({ children }) {
   const { usuario, cargando } = useAutenticacion();
@@ -16,8 +16,8 @@ function AdminRoute({ children }) {
     return <Navigate to="/iniciar-sesion" replace />;
   }
 
-  // Regla simple de admin
-  const esAdmin = usuario.email === 'admin@test.com';
+  // Verificar rol de admin
+  const esAdmin = usuario.rol === 'admin';
   if (!esAdmin) {
     // Usuario no es admin -> redirigir a inicio
     return <Navigate to="/" replace />;

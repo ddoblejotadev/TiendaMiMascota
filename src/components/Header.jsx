@@ -6,6 +6,7 @@
 import { Link, useNavigate } from 'react-router-dom';
 import useCarrito from '../hooks/useCarrito';
 import useAutenticacion from '../hooks/useAutenticacion';
+import { esAdministrador } from '../util/constants';
 import { confirmDialog } from '../components/ui/confirmDialogHelper';
 import { notify } from '../components/ui/notificationHelper';
 import logo from '../assets/logo1.png';
@@ -150,6 +151,16 @@ function Header() {
                       📦 Mis Pedidos
                     </Link>
                   </li>
+                  {esAdministrador() && (
+                    <>
+                      <li><hr className="dropdown-divider" /></li>
+                      <li>
+                        <Link to="/admin" className="dropdown-item">
+                          ⚙️ Panel Administrador
+                        </Link>
+                      </li>
+                    </>
+                  )}
                   <li><hr className="dropdown-divider" /></li>
                   <li>
                     <button 

@@ -21,8 +21,6 @@ function Registrarse() {
   const [confirmarContrasena, setConfirmarContrasena] = useState('');
   const [mostrarContrasena, setMostrarContrasena] = useState(false);
   const [aceptoTerminos, setAceptoTerminos] = useState(false);
-  const [role, setRole] = useState('user');
-  const [mostrarOpcionesAvanzadas, setMostrarOpcionesAvanzadas] = useState(false);
 
   /**
    * Manejar envío del formulario
@@ -193,25 +191,6 @@ function Registrarse() {
                     </a>
                   </label>
                 </div>
-              </div>
-
-              {/* Opciones avanzadas para tests (ocultas por defecto) */}
-              <div className="mb-3">
-                <div className="form-check mb-2">
-                  <input className="form-check-input" type="checkbox" id="optAvanzadas" checked={mostrarOpcionesAvanzadas} onChange={(e) => setMostrarOpcionesAvanzadas(e.target.checked)} />
-                  <label className="form-check-label" htmlFor="optAvanzadas">Mostrar opciones avanzadas</label>
-                </div>
-
-                {mostrarOpcionesAvanzadas && (
-                  <>
-                    <label htmlFor="role" className="form-label fw-semibold">Tipo de cuenta</label>
-                    <select id="role" className="form-select" value={role} onChange={(e) => setRole(e.target.value)}>
-                      <option value="user">Usuario</option>
-                      <option value="admin">Administrador</option>
-                    </select>
-                    <div className="form-text">Selecciona 'Administrador' solo si ésta es una cuenta de administrador (solo para pruebas).</div>
-                  </>
-                )}
               </div>
 
               {/* Botón enviar */}
