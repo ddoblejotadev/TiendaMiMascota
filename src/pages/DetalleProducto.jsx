@@ -6,7 +6,6 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { obtenerProductoPorId as obtenerProductoAPI } from '../services/productService';
-import useProductos from '../hooks/useProductos';
 import useCarrito from '../hooks/useCarrito';
 const FALLBACK_IMAGE = 'https://images.unsplash.com/photo-1450778869180-41d0601e046e?w=400';
 import { notify } from '../components/ui/notificationHelper';
@@ -15,7 +14,6 @@ import logger from '../util/logger';
 function DetalleProducto() {
   const { id } = useParams(); // Obtener ID de la URL
   const navigate = useNavigate();
-  const { obtenerProductoPorId, todosLosProductos, cargando: cargandoProductos } = useProductos();
   const { agregarAlCarrito, obtenerCantidadEnCarrito } = useCarrito();
   
   const [producto, setProducto] = useState(null);
