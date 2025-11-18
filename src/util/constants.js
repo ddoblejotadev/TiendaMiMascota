@@ -187,7 +187,31 @@ export async function login(email, password) {
     return usuarioData;
   } catch (error) {
     logger.error('Error al login:', error);
-    const mensaje = error.response?.data?.mensaje || 'Email o contraseña incorrectos';
+    const status = error.response?.status;
+    const respData = error.response?.data;
+    logger.debug('Detalles del error de login:', { status, respData, message: error.message });
+
+    let mensaje = 'Email o contraseña incorrectos';
+
+    if (respData) {
+      if (typeof respData === 'string') {
+        mensaje = respData;
+      } else if (respData.mensaje || respData.message || respData.error) {
+        mensaje = respData.mensaje || respData.message || respData.error;
+      } else {
+        try {
+          mensaje = JSON.stringify(respData);
+        } catch (err) {
+          logger.debug('Error convirtiendo respData a JSON:', err);
+          mensaje = String(respData);
+        }
+      }
+    } else if (status) {
+      mensaje = `Error del servidor (${status})`;
+    } else if (error.message) {
+      mensaje = error.message;
+    }
+
     throw new Error(mensaje);
   }
 }
