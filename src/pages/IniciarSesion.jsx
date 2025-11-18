@@ -28,7 +28,8 @@ function IniciarSesion() {
       return;
     }
 
-    if (!email.includes('@')) {
+    // Allow special-case admin (no @) or normal emails containing '@'
+    if (email !== 'admin' && !email.includes('@')) {
       notify('Email inválido', 'error', 3000);
       return;
     }
@@ -99,10 +100,10 @@ function IniciarSesion() {
               <div className="mb-3">
                 <label htmlFor="email" className="form-label fw-semibold">Email</label>
                 <input
-                  type="email"
+                  type="text"
                   id="email"
                   className="form-control form-control-lg"
-                  placeholder="tu@email.com"
+                  placeholder="tu@email.com o admin"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
