@@ -256,6 +256,21 @@ export function obtenerUsuarioActual() {
 }
 
 /**
+ * Obtiene el token JWT
+ */
+export function obtenerToken() {
+  return localStorage.getItem(TOKEN_KEY);
+}
+
+/**
+ * Verifica si hay un usuario logueado
+ */
+export function estaLogueado() {
+  const token = obtenerToken();
+  return !!token;
+}
+
+/**
  * Verifica si el usuario actual es administrador
  */
 export function esAdministrador() {
