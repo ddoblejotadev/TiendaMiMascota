@@ -161,12 +161,16 @@ export async function login(email, password) {
       nombre, 
       telefono, 
       direccion, 
-      run 
+      run
     } = response.data;
 
     // Guardar tokens
     localStorage.setItem(TOKEN_KEY, token);
     localStorage.setItem('refreshToken', refreshToken);
+
+    // Decodificar JWT para obtener el rol
+    const payload = decodeJWT(token);
+    const rol = payload?.rol || payload?.role || 'user';
 
     // Guardar datos del usuario
     const usuarioData = {
@@ -175,7 +179,8 @@ export async function login(email, password) {
       nombre,
       telefono: telefono || null,
       direccion: direccion || null,
-      run: run || null
+      run: run || null,
+      rol: rol
     };
     localStorage.setItem(USER_KEY, JSON.stringify(usuarioData));
 
@@ -209,7 +214,8 @@ export async function registrar(datosUsuario) {
       nombre,
       telefono,
       direccion,
-      run
+      run,
+      rol
     } = response.data;
 
     // Guardar tokens
@@ -223,7 +229,8 @@ export async function registrar(datosUsuario) {
       nombre,
       telefono: telefono || null,
       direccion: direccion || null,
-      run: run || null
+      run: run || null,
+      rol: rol || 'user'
     };
     localStorage.setItem(USER_KEY, JSON.stringify(usuarioData));
 
@@ -282,18 +289,53 @@ export function obtenerUsuarioActual() {
 }
 
 /**
- * Verifica si hay un usuario logueado
- */
-export function estaLogueado() {
-  const token = localStorage.getItem(TOKEN_KEY);
-  return !!token;
-}
-
-/**
  * Obtiene el token JWT
  */
 export function obtenerToken() {
   return localStorage.getItem(TOKEN_KEY);
+}
+
+/**
+ * Verifica si hay un usuario logueado
+ */
+export function estaLogueado() {
+  const token = obtenerToken();
+  return !!token;
+}
+
+/**
+ * Verifica si el usuario actual es administrador
+ */
+export function esAdministrador() {
+  const usuario = obtenerUsuarioActual();
+  return usuario && usuario.rol === 'admin';
+}
+
+/**
+ * Decodifica un JWT y devuelve el payload
+ */
+export function decodeJWT(token) {
+  try {
+    const base64Url = token.split('.')[1];
+    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+      return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+    }).join(''));
+    return JSON.parse(jsonPayload);
+  } catch (error) {
+    logger.error('Error decodificando JWT:', error);
+    return null;
+  }
+}
+
+/**
+ * Obtiene el rol del usuario desde el JWT
+ */
+export function obtenerRolDesdeToken() {
+  const token = obtenerToken();
+  if (!token) return null;
+  const payload = decodeJWT(token);
+  return payload?.rol || payload?.role || null;  // Ajusta según el claim en tu JWT
 }
 
 /**
@@ -315,7 +357,8 @@ export async function actualizarPerfil(datosActualizados) {
       nombre: response.data.nombre,
       telefono: response.data.telefono,
       direccion: response.data.direccion,
-      run: response.data.run
+      run: response.data.run,
+      rol: response.data.rol || usuarioActual.rol || 'user'
     };
     localStorage.setItem(USER_KEY, JSON.stringify(usuarioData));
 
