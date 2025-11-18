@@ -148,12 +148,12 @@ function Checkout() {
         // Intentar guardar en el backend
         try {
           if (estaLogueado) {
-            const respuesta = await crearOrden(orden);
+            await crearOrden(orden);
             // Orden guardada exitosamente en backend
           } else {
             // Usuario invitado, guardar solo en localStorage
           }
-        } catch (error) {
+        } catch (_) {
           notify('Orden guardada localmente (backend no disponible)', 'warning', 3000);
         }
 
@@ -178,7 +178,7 @@ function Checkout() {
         // Redirigir a página de error
         navigate('/error-pago');
       }
-    } catch (error) {
+    } catch (_) {
       notify('Error al verificar disponibilidad. Intenta nuevamente.', 'error', 4000);
     } finally {
       setProcesando(false);

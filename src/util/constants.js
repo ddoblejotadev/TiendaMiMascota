@@ -52,15 +52,14 @@ export const MENSAJES = {
 
 import axios from 'axios';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080/api';
+const API_URL = import.meta.env.VITE_API_URL || 'https://tiendamimascotabackends.onrender.com/api';
 
 // En tiempo de ejecución, si el navegador corre en localhost/127.0.0.1 forzamos la base local
 const runtimeHostname = (typeof window !== 'undefined' && window.location && window.location.hostname) ? window.location.hostname : null;
-const isLocalhost = runtimeHostname === 'localhost' || runtimeHostname === '127.0.0.1' || runtimeHostname === '::1';
 
 // Permitir override desde localStorage (útil para depuración en producción)
 const storedOverride = (typeof window !== 'undefined' && window.localStorage) ? localStorage.getItem('api_base_override') : null;
-const FINAL_API_URL = storedOverride || (isLocalhost ? 'http://localhost:8080/api' : API_URL);
+const FINAL_API_URL = storedOverride || API_URL;
 
 // Log ligero para depuración en desarrollo (se ve en la consola del navegador)
 try {
@@ -94,16 +93,45 @@ api.interceptors.request.use((config) => {
   return Promise.reject(error);
 });
 
-// Interceptor para manejar errores (401 Unauthorized)
+// Interceptor para manejar errores (401 Unauthorized) con refresh token
 api.interceptors.response.use(
   (response) => response,
-  (error) => {
-    if (error.response?.status === 401) {
-      logger.warn('Token expirado o inválido');
-      localStorage.removeItem('token');
-      localStorage.removeItem('usuario');
-      window.location.href = '/iniciar-sesion';
+  async (error) => {
+    const originalRequest = error.config;
+    
+    if (error.response?.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true;
+      
+      try {
+        // Intentar refrescar el token
+        const refreshToken = localStorage.getItem('refreshToken');
+        if (refreshToken) {
+          const refreshResponse = await axios.post(`${FINAL_API_URL}/auth/refresh`, {
+            refreshToken: refreshToken
+          });
+          
+          const { token: newToken, refreshToken: newRefreshToken } = refreshResponse.data;
+          
+          // Guardar nuevos tokens
+          localStorage.setItem('token', newToken);
+          localStorage.setItem('refreshToken', newRefreshToken);
+          
+          // Reintentar la petición original con el nuevo token
+          originalRequest.headers.Authorization = `Bearer ${newToken}`;
+          return api(originalRequest);
+        }
+      } catch (refreshError) {
+        logger.warn('Error al refrescar token:', refreshError);
+        // Si falla el refresh, limpiar y redirigir
+        localStorage.removeItem('token');
+        localStorage.removeItem('refreshToken');
+        localStorage.removeItem('usuario');
+        window.location.href = '/iniciar-sesion';
+        return Promise.reject(refreshError);
+      }
     }
+    
+    // Si no es 401 o ya se intentó refresh, rechazar
     return Promise.reject(error);
   }
 );
@@ -127,6 +155,7 @@ export async function login(email, password) {
 
     const { 
       token, 
+      refreshToken,
       usuario_id, 
       email: userEmail, 
       nombre, 
@@ -135,8 +164,9 @@ export async function login(email, password) {
       run
     } = response.data;
 
-    // Guardar token
+    // Guardar tokens
     localStorage.setItem(TOKEN_KEY, token);
+    localStorage.setItem('refreshToken', refreshToken);
 
     // Decodificar JWT para obtener el rol
     const payload = decodeJWT(token);
@@ -178,6 +208,7 @@ export async function registrar(datosUsuario) {
 
     const { 
       token, 
+      refreshToken,
       usuario_id, 
       email: userEmail, 
       nombre,
@@ -187,8 +218,9 @@ export async function registrar(datosUsuario) {
       rol
     } = response.data;
 
-    // Guardar token
+    // Guardar tokens
     localStorage.setItem(TOKEN_KEY, token);
+    localStorage.setItem('refreshToken', refreshToken);
 
     // Guardar datos del usuario
     const usuarioData = {
@@ -237,6 +269,7 @@ export async function registrar(datosUsuario) {
 export function logout() {
   localStorage.removeItem(USER_KEY);
   localStorage.removeItem(TOKEN_KEY);
+  localStorage.removeItem('refreshToken');
 }
 
 /**
