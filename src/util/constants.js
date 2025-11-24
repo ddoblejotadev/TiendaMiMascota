@@ -170,7 +170,35 @@ export async function login(email, password) {
 
     // Decodificar JWT para obtener el rol
     const payload = decodeJWT(token);
-    const rol = payload?.rol || payload?.role || 'user';
+
+    // Normalizar rol: soportar 'rol', 'role' o 'roles' (array), y valores como 'ROLE_ADMIN'
+    const normalizeRole = (raw) => {
+      if (!raw) return null;
+      if (Array.isArray(raw)) {
+        raw = raw[0];
+      }
+      try {
+        const s = String(raw).toLowerCase();
+        // eliminar prefijos comunes
+        return s.replace(/role[_-]?/i, '').trim();
+      } catch {
+        return null;
+      }
+    };
+
+    let rol = 'user';
+    if (payload) {
+      if (payload.roles) {
+        const r = normalizeRole(payload.roles);
+        if (r) rol = r;
+      } else if (payload.rol) {
+        const r = normalizeRole(payload.rol);
+        if (r) rol = r;
+      } else if (payload.role) {
+        const r = normalizeRole(payload.role);
+        if (r) rol = r;
+      }
+    }
 
     // Guardar datos del usuario
     const usuarioData = {
@@ -187,7 +215,31 @@ export async function login(email, password) {
     return usuarioData;
   } catch (error) {
     logger.error('Error al login:', error);
-    const mensaje = error.response?.data?.mensaje || 'Email o contraseña incorrectos';
+    const status = error.response?.status;
+    const respData = error.response?.data;
+    logger.debug('Detalles del error de login:', { status, respData, message: error.message });
+
+    let mensaje = 'Email o contraseña incorrectos';
+
+    if (respData) {
+      if (typeof respData === 'string') {
+        mensaje = respData;
+      } else if (respData.mensaje || respData.message || respData.error) {
+        mensaje = respData.mensaje || respData.message || respData.error;
+      } else {
+        try {
+          mensaje = JSON.stringify(respData);
+        } catch (err) {
+          logger.debug('Error convirtiendo respData a JSON:', err);
+          mensaje = String(respData);
+        }
+      }
+    } else if (status) {
+      mensaje = `Error del servidor (${status})`;
+    } else if (error.message) {
+      mensaje = error.message;
+    }
+
     throw new Error(mensaje);
   }
 }
@@ -308,7 +360,23 @@ export function estaLogueado() {
  */
 export function esAdministrador() {
   const usuario = obtenerUsuarioActual();
-  return usuario && usuario.rol === 'admin';
+  if (!usuario) return false;
+
+  // Si el campo rol es string, normalizar y comprobar
+  if (usuario.rol && typeof usuario.rol === 'string') {
+    const r = String(usuario.rol).toLowerCase().replace(/role[_-]?/i, '').trim();
+    if (r === 'admin') return true;
+  }
+
+  // Si existe un array de roles
+  if (Array.isArray(usuario.roles) && usuario.roles.length > 0) {
+    for (const item of usuario.roles) {
+      const r = String(item).toLowerCase().replace(/role[_-]?/i, '').trim();
+      if (r === 'admin') return true;
+    }
+  }
+
+  return false;
 }
 
 /**
@@ -335,7 +403,19 @@ export function obtenerRolDesdeToken() {
   const token = obtenerToken();
   if (!token) return null;
   const payload = decodeJWT(token);
-  return payload?.rol || payload?.role || null;  // Ajusta según el claim en tu JWT
+  // Manejar también arrays y normalizar prefijos ROLE_
+  if (!payload) return null;
+  const normalize = (raw) => {
+    if (!raw) return null;
+    if (Array.isArray(raw)) raw = raw[0];
+    try {
+      return String(raw).toLowerCase().replace(/role[_-]?/i, '').trim();
+    } catch {
+      return null;
+    }
+  };
+
+  return normalize(payload.roles) || normalize(payload.rol) || normalize(payload.role) || null;
 }
 
 /**

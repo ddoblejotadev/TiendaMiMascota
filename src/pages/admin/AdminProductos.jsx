@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import productService from '../../services/adminProductService';
+import { obtenerProductos, agregarProducto, actualizarProducto, eliminarProducto } from '../../services/productService';
+import { notify } from '../../components/ui/notificationHelper';
+import { confirmDialog } from '../../components/ui/confirmDialogHelper';
 
 function AdminProductos() {
   const [productos, setProductos] = useState([]);
@@ -7,18 +9,37 @@ function AdminProductos() {
   const [precio, setPrecio] = useState('');
   const [imagen, setImagen] = useState('');
   const [editId, setEditId] = useState(null);
+  const [cargando, setCargando] = useState(false);
 
 
   useEffect(() => {
-    setProductos(productService.listar());
+    const cargar = async () => {
+      setCargando(true);
+      try {
+        const lista = await obtenerProductos();
+        setProductos(lista);
+      } catch (err) {
+        notify('Error al cargar productos', 'error');
+      } finally {
+        setCargando(false);
+      }
+    };
+    cargar();
   }, []);
 
-  const agregar = () => {
-    if (!nombre) return;
-    const nuevo = productService.crear({ nombre, precio: Number(precio), imagen });
-    setProductos(productService.listar());
-    setNombre(''); setPrecio('');
-    setImagen('');
+  const agregar = async () => {
+    if (!nombre) {
+      notify('El nombre es requerido', 'warning');
+      return;
+    }
+    try {
+      const creado = await agregarProducto({ nombre, precio: Number(precio || 0), imagen });
+      notify('Producto creado', 'success');
+      setProductos(prev => [creado, ...prev]);
+      setNombre(''); setPrecio(''); setImagen('');
+    } catch (err) {
+      notify('Error al crear producto', 'error');
+    }
   };
 
   const iniciarEdicion = (p) => {
@@ -27,12 +48,16 @@ function AdminProductos() {
     setPrecio(String(p.precio));
   };
 
-  const guardarEdicion = () => {
-    productService.actualizar(editId, { nombre, precio: Number(precio), imagen });
-    setProductos(productService.listar());
-    setEditId(null);
-    setNombre(''); setPrecio('');
-    setImagen('');
+  const guardarEdicion = async () => {
+    try {
+      const actualizado = await actualizarProducto(editId, { nombre, precio: Number(precio || 0), imagen });
+      setProductos(prev => prev.map(p => p.id === actualizado.id ? actualizado : p));
+      setEditId(null);
+      setNombre(''); setPrecio(''); setImagen('');
+      notify('Producto actualizado', 'success');
+    } catch (err) {
+      notify('Error al actualizar producto', 'error');
+    }
   };
 
   const cancelarEdicion = () => {
@@ -40,14 +65,22 @@ function AdminProductos() {
     setNombre(''); setPrecio('');
   };
 
-  const eliminar = (id) => {
-    productService.eliminar(id);
-    setProductos(productService.listar());
+  const eliminar = async (id) => {
+    const confirmar = await confirmDialog({ title: 'Eliminar producto', message: '¿Estás seguro de eliminar este producto?' });
+    if (!confirmar) return;
+    try {
+      await eliminarProducto(id);
+      setProductos(prev => prev.filter(p => p.id !== id));
+      notify('Producto eliminado', 'success');
+    } catch (err) {
+      notify('Error al eliminar producto', 'error');
+    }
   };
 
   return (
     <div className="container">
       <h1 className="mb-4">Productos</h1>
+      {cargando && <div className="alert alert-secondary">Cargando productos...</div>}
 
       <div className="d-flex gap-2 mb-3">
         <input className="form-control" placeholder="Nombre" value={nombre} onChange={(e) => setNombre(e.target.value)} />

@@ -78,7 +78,8 @@ function useAutenticacion() {
         throw new Error(error);
       }
 
-      if (!email.includes('@')) {
+      // Allow special-case admin login which may not include an '@'
+      if (email !== 'admin' && !email.includes('@')) {
         const error = 'Email inválido';
         setError(error);
         throw new Error(error);
