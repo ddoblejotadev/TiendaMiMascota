@@ -12,7 +12,12 @@ export default function AdminUsuarios() {
       setCargando(true);
       try {
         const lista = await adminUserService.listar();
-        setUsuarios(lista);
+        // Normalizar identificador: algunos backends usan usuario_id, _id, userId, etc.
+        const normalizados = lista.map(u => ({
+          ...u,
+          id: u.id ?? u.usuario_id ?? u._id ?? u.usuarioId ?? u.userId
+        }));
+        setUsuarios(normalizados);
       } catch (err) {
         notify('Error al cargar usuarios', 'error');
       } finally {
