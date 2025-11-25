@@ -7,6 +7,7 @@ import { useState, useEffect, useMemo } from 'react';
 import { login as loginAPI, registrar as registrarAPI, logout as logoutAPI, obtenerUsuarioActual, estaLogueado as estaLogueadoLS } from '../util/constants';
 import { notify } from '../components/ui/notificationHelper';
 import logger from '../util/logger';
+import { setAuthToken } from '../services/api.js';
 
 function useAutenticacion() {
   // Estado del usuario actual
@@ -87,7 +88,12 @@ function useAutenticacion() {
 
       // Llamar al backend
       logger.debug('useAutenticacion - Iniciando login...');
-      const usuarioLogueado = await loginAPI(email, password);
+      const response = await loginAPI(email, password);
+      const usuarioLogueado = response.data.usuario;
+      const token = response.data.token;
+      
+      // Configurar el token en el cliente para futuras peticiones
+      setAuthToken(token);
       
       logger.success('useAutenticacion - Login exitoso:', usuarioLogueado.nombre);
       
