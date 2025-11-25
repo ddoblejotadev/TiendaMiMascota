@@ -176,10 +176,13 @@ try {
  */
 export async function login(email, password) {
   try {
-    const response = await api.post('/auth/login', { 
-      email, 
-      password 
-    });
+    // Algunos backends aceptan 'username' en lugar de 'email' (ej. cuenta seeded 'admin').
+    // Si el identificador no contiene '@', enviamos 'username' para mayor compatibilidad.
+    const loginPayload = (typeof email === 'string' && !email.includes('@'))
+      ? { username: email, password }
+      : { email, password };
+
+    const response = await api.post('/auth/login', loginPayload);
 
     const { 
       token, 
@@ -675,6 +678,26 @@ export async function crearOrden(datosOrden) {
   } catch (error) {
     logger.error('Error al crear orden:', error);
     logger.debug('Datos que se enviaron:', ordenBackend);
+    throw error;
+  }
+}
+
+/**
+ * Obtiene todas las órdenes (admin)
+ */
+export async function obtenerTodasOrdenes(page = 0, size = 50) {
+  try {
+    logger.debug('Obteniendo todas las órdenes (admin)...');
+    const response = await api.get(`/ordenes?page=${page}&size=${size}`);
+
+    // Soportar respuesta paginada o array directo
+    if (Array.isArray(response.data)) return response.data;
+    if (response.data.content && Array.isArray(response.data.content)) return response.data.content;
+    if (response.data.data && Array.isArray(response.data.data)) return response.data.data;
+
+    return [];
+  } catch (error) {
+    logger.error('Error al obtener todas las órdenes:', error);
     throw error;
   }
 }
