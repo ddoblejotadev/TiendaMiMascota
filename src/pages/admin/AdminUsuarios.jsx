@@ -19,6 +19,7 @@ export default function AdminUsuarios() {
         }));
         setUsuarios(normalizados);
       } catch (err) {
+        console.error('Error cargando usuarios:', err);
         notify('Error al cargar usuarios', 'error');
       } finally {
         setCargando(false);
@@ -33,6 +34,7 @@ export default function AdminUsuarios() {
       setUsuarios(prev => prev.map(u => u.id === id ? { ...u, role } : u));
       notify('Role actualizado', 'success');
     } catch (err) {
+      console.error('Error actualizando role:', err);
       notify('Error al actualizar role', 'error');
     }
   };
@@ -45,6 +47,7 @@ export default function AdminUsuarios() {
       setUsuarios(prev => prev.filter(u => u.id !== id));
       notify('Usuario eliminado', 'success');
     } catch (err) {
+      console.error('Error eliminando usuario:', err);
       notify('Error al eliminar usuario', 'error');
     }
   };
