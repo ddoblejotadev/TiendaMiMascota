@@ -144,6 +144,34 @@ const USER_KEY = 'usuario';
 const TOKEN_KEY = 'token';
 
 /**
+ * Configura o limpia el header Authorization en la instancia axios
+ * y sincroniza con localStorage.
+ */
+export function setAuthToken(token) {
+  try {
+    if (token) {
+      localStorage.setItem(TOKEN_KEY, token);
+      api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+    } else {
+      localStorage.removeItem(TOKEN_KEY);
+      delete api.defaults.headers.common['Authorization'];
+    }
+  } catch (err) {
+    logger.debug('setAuthToken error:', err);
+  }
+}
+
+// Inicializar header Authorization si ya hay token en localStorage
+try {
+  const existingToken = (typeof window !== 'undefined' && window.localStorage) ? localStorage.getItem(TOKEN_KEY) : null;
+  if (existingToken) {
+    api.defaults.headers.common['Authorization'] = `Bearer ${existingToken}`;
+  }
+} catch (err) {
+  logger.debug('No se pudo inicializar Authorization header:', err);
+}
+
+/**
  * Inicia sesión contra el backend
  */
 export async function login(email, password) {
@@ -164,8 +192,8 @@ export async function login(email, password) {
       run
     } = response.data;
 
-    // Guardar tokens
-    localStorage.setItem(TOKEN_KEY, token);
+    // Guardar tokens y configurar header Authorization
+    setAuthToken(token);
     localStorage.setItem('refreshToken', refreshToken);
 
     // Decodificar JWT para obtener el rol
@@ -271,7 +299,8 @@ export async function registrar(datosUsuario) {
     } = response.data;
 
     // Guardar tokens
-    localStorage.setItem(TOKEN_KEY, token);
+    // Guardar tokens y configurar header Authorization
+    setAuthToken(token);
     localStorage.setItem('refreshToken', refreshToken);
 
     // Guardar datos del usuario
@@ -320,7 +349,8 @@ export async function registrar(datosUsuario) {
  */
 export function logout() {
   localStorage.removeItem(USER_KEY);
-  localStorage.removeItem(TOKEN_KEY);
+  // limpiar header y token
+  setAuthToken(null);
   localStorage.removeItem('refreshToken');
 }
 
