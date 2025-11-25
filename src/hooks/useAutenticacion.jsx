@@ -78,7 +78,8 @@ function useAutenticacion() {
         throw new Error(error);
       }
 
-      if (!email.includes('@')) {
+      // Allow special-case admin login which may not include an '@'
+      if (email !== 'admin' && !email.includes('@')) {
         const error = 'Email inválido';
         setError(error);
         throw new Error(error);
@@ -87,10 +88,10 @@ function useAutenticacion() {
       // Llamar al backend
       logger.debug('useAutenticacion - Iniciando login...');
       const usuarioLogueado = await loginAPI(email, password);
-      
-      logger.success('useAutenticacion - Login exitoso:', usuarioLogueado.nombre);
-      
-      // Actualizar estado con el usuario
+
+      logger.success('useAutenticacion - Login exitoso:', usuarioLogueado?.nombre);
+
+      // Actualizar estado con el usuario (login() ya configura token y localStorage)
       setUsuario(usuarioLogueado);
       
       return true;

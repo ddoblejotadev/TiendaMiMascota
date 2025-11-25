@@ -357,9 +357,10 @@ export async function agregarProducto(producto) {
  * @returns {Promise<Object|null>} - Producto actualizado o null
  */
 export async function actualizarProducto(id, datosActualizados) {
+  let datosBackend;
   try {
     // Convertir campos frontend → backend si es necesario
-    const datosBackend = {
+    datosBackend = {
       ...(datosActualizados.nombre && { name: datosActualizados.nombre }),
       ...(datosActualizados.descripcion && { description: datosActualizados.descripcion }),
       ...(datosActualizados.precio && { price: datosActualizados.precio }),
@@ -371,12 +372,31 @@ export async function actualizarProducto(id, datosActualizados) {
       ...(datosActualizados.precioAnterior !== undefined && { previousPrice: datosActualizados.precioAnterior })
     };
     
+    // Log del payload justo antes de enviar la petición (ayuda a reproducir 500)
+    try {
+      // Usar console.log para garantizar visibilidad en la mayoría de consolas
+      console.log('Enviando PUT /productos/' + id, datosBackend);
+      console.debug('Enviando PUT /productos/' + id, datosBackend);
+    } catch (e) {
+      console.debug('No se pudo imprimir payload antes de PUT:', e);
+    }
+
     const response = await api.put(`/productos/${id}`, datosBackend);
     logger.success(`Producto ${id} actualizado exitosamente`);
     return mapearProductoBackend(response.data);
   } catch (error) {
+    // Mostrar payload y detalles de la respuesta para facilitar debugging
+    try {
+      console.log('Payload enviado a /productos:', datosBackend);
+      console.error('Error response status:', error?.response?.status);
+      console.error('Error response data:', error?.response?.data);
+    } catch (e) {
+      console.debug('No se pudo imprimir detalles del error:', e);
+    }
     logger.error('Error al actualizar producto:', error);
-    throw error;
+    // Re-lanzar con más contexto
+    const msg = error?.response?.data?.message || error?.response?.data?.mensaje || error?.message || 'Error al actualizar producto';
+    throw new Error(msg);
   }
 }
 

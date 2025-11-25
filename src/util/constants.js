@@ -144,14 +144,45 @@ const USER_KEY = 'usuario';
 const TOKEN_KEY = 'token';
 
 /**
+ * Configura o limpia el header Authorization en la instancia axios
+ * y sincroniza con localStorage.
+ */
+export function setAuthToken(token) {
+  try {
+    if (token) {
+      localStorage.setItem(TOKEN_KEY, token);
+      api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+    } else {
+      localStorage.removeItem(TOKEN_KEY);
+      delete api.defaults.headers.common['Authorization'];
+    }
+  } catch (err) {
+    logger.debug('setAuthToken error:', err);
+  }
+}
+
+// Inicializar header Authorization si ya hay token en localStorage
+try {
+  const existingToken = (typeof window !== 'undefined' && window.localStorage) ? localStorage.getItem(TOKEN_KEY) : null;
+  if (existingToken) {
+    api.defaults.headers.common['Authorization'] = `Bearer ${existingToken}`;
+  }
+} catch (err) {
+  logger.debug('No se pudo inicializar Authorization header:', err);
+}
+
+/**
  * Inicia sesión contra el backend
  */
 export async function login(email, password) {
   try {
-    const response = await api.post('/auth/login', { 
-      email, 
-      password 
-    });
+    // Algunos backends aceptan 'username' en lugar de 'email' (ej. cuenta seeded 'admin').
+    // Si el identificador no contiene '@', enviamos 'username' para mayor compatibilidad.
+    const loginPayload = (typeof email === 'string' && !email.includes('@'))
+      ? { username: email, password }
+      : { email, password };
+
+    const response = await api.post('/auth/login', loginPayload);
 
     const { 
       token, 
@@ -164,13 +195,41 @@ export async function login(email, password) {
       run
     } = response.data;
 
-    // Guardar tokens
-    localStorage.setItem(TOKEN_KEY, token);
+    // Guardar tokens y configurar header Authorization
+    setAuthToken(token);
     localStorage.setItem('refreshToken', refreshToken);
 
     // Decodificar JWT para obtener el rol
     const payload = decodeJWT(token);
-    const rol = payload?.rol || payload?.role || 'user';
+
+    // Normalizar rol: soportar 'rol', 'role' o 'roles' (array), y valores como 'ROLE_ADMIN'
+    const normalizeRole = (raw) => {
+      if (!raw) return null;
+      if (Array.isArray(raw)) {
+        raw = raw[0];
+      }
+      try {
+        const s = String(raw).toLowerCase();
+        // eliminar prefijos comunes
+        return s.replace(/role[_-]?/i, '').trim();
+      } catch {
+        return null;
+      }
+    };
+
+    let rol = 'user';
+    if (payload) {
+      if (payload.roles) {
+        const r = normalizeRole(payload.roles);
+        if (r) rol = r;
+      } else if (payload.rol) {
+        const r = normalizeRole(payload.rol);
+        if (r) rol = r;
+      } else if (payload.role) {
+        const r = normalizeRole(payload.role);
+        if (r) rol = r;
+      }
+    }
 
     // Guardar datos del usuario
     const usuarioData = {
@@ -187,7 +246,31 @@ export async function login(email, password) {
     return usuarioData;
   } catch (error) {
     logger.error('Error al login:', error);
-    const mensaje = error.response?.data?.mensaje || 'Email o contraseña incorrectos';
+    const status = error.response?.status;
+    const respData = error.response?.data;
+    logger.debug('Detalles del error de login:', { status, respData, message: error.message });
+
+    let mensaje = 'Email o contraseña incorrectos';
+
+    if (respData) {
+      if (typeof respData === 'string') {
+        mensaje = respData;
+      } else if (respData.mensaje || respData.message || respData.error) {
+        mensaje = respData.mensaje || respData.message || respData.error;
+      } else {
+        try {
+          mensaje = JSON.stringify(respData);
+        } catch (err) {
+          logger.debug('Error convirtiendo respData a JSON:', err);
+          mensaje = String(respData);
+        }
+      }
+    } else if (status) {
+      mensaje = `Error del servidor (${status})`;
+    } else if (error.message) {
+      mensaje = error.message;
+    }
+
     throw new Error(mensaje);
   }
 }
@@ -219,7 +302,8 @@ export async function registrar(datosUsuario) {
     } = response.data;
 
     // Guardar tokens
-    localStorage.setItem(TOKEN_KEY, token);
+    // Guardar tokens y configurar header Authorization
+    setAuthToken(token);
     localStorage.setItem('refreshToken', refreshToken);
 
     // Guardar datos del usuario
@@ -268,7 +352,8 @@ export async function registrar(datosUsuario) {
  */
 export function logout() {
   localStorage.removeItem(USER_KEY);
-  localStorage.removeItem(TOKEN_KEY);
+  // limpiar header y token
+  setAuthToken(null);
   localStorage.removeItem('refreshToken');
 }
 
@@ -308,7 +393,23 @@ export function estaLogueado() {
  */
 export function esAdministrador() {
   const usuario = obtenerUsuarioActual();
-  return usuario && usuario.rol === 'admin';
+  if (!usuario) return false;
+
+  // Si el campo rol es string, normalizar y comprobar
+  if (usuario.rol && typeof usuario.rol === 'string') {
+    const r = String(usuario.rol).toLowerCase().replace(/role[_-]?/i, '').trim();
+    if (r === 'admin') return true;
+  }
+
+  // Si existe un array de roles
+  if (Array.isArray(usuario.roles) && usuario.roles.length > 0) {
+    for (const item of usuario.roles) {
+      const r = String(item).toLowerCase().replace(/role[_-]?/i, '').trim();
+      if (r === 'admin') return true;
+    }
+  }
+
+  return false;
 }
 
 /**
@@ -335,7 +436,19 @@ export function obtenerRolDesdeToken() {
   const token = obtenerToken();
   if (!token) return null;
   const payload = decodeJWT(token);
-  return payload?.rol || payload?.role || null;  // Ajusta según el claim en tu JWT
+  // Manejar también arrays y normalizar prefijos ROLE_
+  if (!payload) return null;
+  const normalize = (raw) => {
+    if (!raw) return null;
+    if (Array.isArray(raw)) raw = raw[0];
+    try {
+      return String(raw).toLowerCase().replace(/role[_-]?/i, '').trim();
+    } catch {
+      return null;
+    }
+  };
+
+  return normalize(payload.roles) || normalize(payload.rol) || normalize(payload.role) || null;
 }
 
 /**
@@ -565,6 +678,26 @@ export async function crearOrden(datosOrden) {
   } catch (error) {
     logger.error('Error al crear orden:', error);
     logger.debug('Datos que se enviaron:', ordenBackend);
+    throw error;
+  }
+}
+
+/**
+ * Obtiene todas las órdenes (admin)
+ */
+export async function obtenerTodasOrdenes(page = 0, size = 50) {
+  try {
+    logger.debug('Obteniendo todas las órdenes (admin)...');
+    const response = await api.get(`/ordenes?page=${page}&size=${size}`);
+
+    // Soportar respuesta paginada o array directo
+    if (Array.isArray(response.data)) return response.data;
+    if (response.data.content && Array.isArray(response.data.content)) return response.data.content;
+    if (response.data.data && Array.isArray(response.data.data)) return response.data.data;
+
+    return [];
+  } catch (error) {
+    logger.error('Error al obtener todas las órdenes:', error);
     throw error;
   }
 }
