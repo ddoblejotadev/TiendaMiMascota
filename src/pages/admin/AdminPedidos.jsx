@@ -55,7 +55,7 @@ function AdminPedidos() {
           <ul>
             {pedidos.map(p => (
               <li key={p.id}>
-                <strong>Pedido #{p.id}</strong> - {p.cliente} - {p.estado} - ${p.total} - {p.fecha}
+                <strong>Pedido #{p.id}</strong> - {p.cliente} - {p.estado} - ${p.total} - {p.fecha} - {p.items.length} items
               </li>
             ))}
           </ul>
