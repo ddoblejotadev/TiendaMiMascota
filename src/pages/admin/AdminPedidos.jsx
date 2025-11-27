@@ -9,7 +9,21 @@ const normalizarOrden = (o) => {
 
   const email = o.datos_envio?.email || o.usuario?.email || o.usuario_email || o.email || o.contact?.email || null;
 
-  const clienteNombre = o.datos_envio?.nombre_completo || o.usuario?.nombre || o.usuario?.name || o.usuario?.username || o.usuario_email || o.email || o.cliente || null;
+  // Intentar extraer el mejor nombre posible del pedido/usuario en varias rutas comunes
+  const clienteNombre = o.datos_envio?.nombre_completo
+    || o.usuario?.nombre
+    || o.usuario?.name
+    || o.usuario?.username
+    || o.usuario?.fullName
+    || o.usuario?.full_name
+    || o.usuario?.displayName
+    || o.usuario?.display_name
+    || o.usuario?.profile?.name
+    || (o.usuario?.firstName && o.usuario?.lastName && `${o.usuario.firstName} ${o.usuario.lastName}`)
+    || o.usuario_email
+    || o.email
+    || o.cliente
+    || null;
 
   const fecha = o.createdAt || o.fecha || o.fecha_creacion || o.date || o.created_at || o.createdAt || '';
 
@@ -125,9 +139,19 @@ function AdminPedidos() {
               // luego email y finalmente fallback a 'Usuario #id'.
               let label = 'Invitado';
               if (group.usuarioId) {
-                label = group.clienteNombre || (
-                  group.pedidos.find(p => p.original && (p.original.usuario?.nombre || p.original.usuario?.name || p.original.usuario?.username))?.original.usuario?.nombre
-                ) || group.email || `Usuario #${group.usuarioId}`;
+                // preferir clienteNombre ya normalizado
+                label = group.clienteNombre || group.email || `Usuario #${group.usuarioId}`;
+                // si aún no hay nombre intentar buscar en los originales de los pedidos (más rutas)
+                if (!group.clienteNombre) {
+                  const found = group.pedidos.find(pp => {
+                    const u = pp.original?.usuario;
+                    return u && (u.nombre || u.name || u.username || u.fullName || u.full_name || u.displayName || u.display_name || (u.firstName && u.lastName));
+                  });
+                  if (found) {
+                    const u = found.original.usuario;
+                    label = u.nombre || u.name || u.username || u.fullName || u.full_name || u.displayName || u.display_name || (u.firstName && u.lastName && `${u.firstName} ${u.lastName}`) || label;
+                  }
+                }
               } else {
                 label = group.email || group.clienteNombre || 'Invitado';
               }
