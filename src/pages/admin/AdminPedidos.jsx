@@ -120,7 +120,17 @@ function AdminPedidos() {
             const formatter = new Intl.NumberFormat('es-CL', { style: 'currency', currency: 'CLP' });
 
             return Object.values(grouped).map(group => {
-              const label = group.usuarioId ? (group.clienteNombre || `Usuario #${group.usuarioId}`) : (group.email || 'Invitado');
+              // Preferir nombre real del cliente: clienteNombre (ya normalizado),
+              // si no existe intentar extraer desde alguno de los pedidos (original.usuario),
+              // luego email y finalmente fallback a 'Usuario #id'.
+              let label = 'Invitado';
+              if (group.usuarioId) {
+                label = group.clienteNombre || (
+                  group.pedidos.find(p => p.original && (p.original.usuario?.nombre || p.original.usuario?.name || p.original.usuario?.username))?.original.usuario?.nombre
+                ) || group.email || `Usuario #${group.usuarioId}`;
+              } else {
+                label = group.email || group.clienteNombre || 'Invitado';
+              }
               return (
                 <div key={group.clave} className="card mb-3">
                   <div className="card-body">
