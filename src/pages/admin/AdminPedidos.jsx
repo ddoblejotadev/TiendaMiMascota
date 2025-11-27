@@ -13,16 +13,34 @@ function AdminPedidos() {
   useEffect(() => {
     let mounted = true;
 
-    const mapOrden = (o) => ({
-      id: o.id || o.orden_id || o._id || o.orderId || o.order_id,
-      usuarioId: o.usuarioId || o.usuario_id || o.usuario?.id || null,
-      email: o.datos_envio?.email || o.usuario_email || o.email || null,
-      cliente: o.datos_envio?.nombre_completo || o.usuario?.nombre || o.usuario_email || o.email || o.cliente || 'N/A',
-      estado: o.estado || o.status || 'pendiente',
-      total: o.total || o.subtotal || o.amount || 0,
-      fecha: o.createdAt || o.fecha || o.fecha_creacion || o.date || o.created_at || '' ,
-      items: o.items || o.productos || o.orderItems || []
-    });
+    const mapOrden = (o) => {
+      // Normalizar posibles campos donde el backend pueda devolver el usuario
+      const usuarioId = o.usuarioId || o.usuario_id || o.userId || o.user_id || o.customerId || o.customer_id ||
+        (o.usuario && (o.usuario.id || o.usuario.usuario_id || o.usuario._id || o.usuario.userId || o.usuario.user_id)) || null;
+
+      const email = o.datos_envio?.email || o.usuario?.email || o.usuario_email || o.email || o.contact?.email || null;
+
+      const cliente = o.datos_envio?.nombre_completo || o.usuario?.nombre || o.usuario?.name || o.usuario?.username || o.usuario_email || o.email || o.cliente || 'N/A';
+
+      const fecha = o.createdAt || o.fecha || o.fecha_creacion || o.date || o.created_at || o.createdAt || '';
+
+      const items = o.items || o.productos || o.orderItems || [];
+
+      const total = o.total || o.subtotal || o.amount || o.totalAmount || 0;
+
+      const id = o.id || o.orden_id || o._id || o.orderId || o.order_id || o.idPedido || null;
+
+      return {
+        id,
+        usuarioId,
+        email,
+        cliente,
+        estado: o.estado || o.status || 'pendiente',
+        total,
+        fecha,
+        items
+      };
+    };
 
     async function cargar() {
       setCargando(true);
