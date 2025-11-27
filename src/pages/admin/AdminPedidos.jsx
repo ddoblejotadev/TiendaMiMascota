@@ -7,12 +7,16 @@ function AdminPedidos() {
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState(null);
   const [ultimaActualizacion, setUltimaActualizacion] = useState(null);
+  const [expandedOrders, setExpandedOrders] = useState({});
+  const [mostrarInvitados, setMostrarInvitados] = useState(true);
 
   useEffect(() => {
     let mounted = true;
 
     const mapOrden = (o) => ({
       id: o.id || o.orden_id || o._id || o.orderId || o.order_id,
+      usuarioId: o.usuarioId || o.usuario_id || o.usuario?.id || null,
+      email: o.datos_envio?.email || o.usuario_email || o.email || null,
       cliente: o.datos_envio?.nombre_completo || o.usuario?.nombre || o.usuario_email || o.email || o.cliente || 'N/A',
       estado: o.estado || o.status || 'pendiente',
       total: o.total || o.subtotal || o.amount || 0,
@@ -71,6 +75,10 @@ function AdminPedidos() {
       <h1>Pedidos</h1>
       <div className="d-flex align-items-center mb-2">
         <button className="btn btn-sm btn-primary me-2" onClick={handleRefrescar} disabled={cargando}>Refrescar</button>
+        <div className="form-check form-switch me-3">
+          <input className="form-check-input" type="checkbox" id="mostrarInvitados" checked={mostrarInvitados} onChange={(e) => { setMostrarInvitados(e.target.checked); setExpandedOrders({}); }} />
+          <label className="form-check-label" htmlFor="mostrarInvitados">Mostrar pedidos de invitados</label>
+        </div>
         <small className="text-muted">Última actualización: {ultimaActualizacion ? ultimaActualizacion.toLocaleString() : 'Nunca'}</small>
       </div>
       {cargando && <p>Cargando pedidos...</p>}
@@ -78,13 +86,78 @@ function AdminPedidos() {
       {!cargando && !error && (
         <div>
           <p>Listado de pedidos</p>
-          <ul>
-            {pedidos.map(p => (
-              <li key={p.id}>
-                <strong>Pedido #{p.id}</strong> - {p.cliente} - {p.estado} - ${p.total} - {p.fecha} - {p.items.length} items
-              </li>
-            ))}
-          </ul>
+
+          {/* Agrupar pedidos por usuario/cliente */}
+          {(() => {
+            const grouped = pedidos.reduce((acc, p) => {
+              const isGuest = !p.usuarioId;
+              if (isGuest && !mostrarInvitados) return acc; // saltar invitados si el filtro está apagado
+
+              // usar email como clave si existe, para agrupar invitados por email
+              const usuarioClave = p.usuarioId || p.email || p.cliente || `Invitado-${p.email || 'sin-email'}`;
+              if (!acc[usuarioClave]) acc[usuarioClave] = { usuarioId: p.usuarioId || null, clave: usuarioClave, cliente: p.cliente || (p.email ? p.email : 'Invitado'), email: p.email || null, pedidos: [] };
+              acc[usuarioClave].pedidos.push(p);
+              return acc;
+            }, {});
+
+            const formatter = new Intl.NumberFormat('es-CL', { style: 'currency', currency: 'CLP' });
+
+            return Object.values(grouped).map(group => (
+              <div key={group.usuarioId} className="card mb-3">
+                <div className="card-body">
+                  <h5 className="card-title">Usuario: {group.cliente}
+                    {(!group.usuarioId) && <span className="badge bg-secondary ms-2">Invitado</span>}
+                  </h5>
+                  <p className="card-subtitle text-muted mb-2">Pedidos: {group.pedidos.length}</p>
+
+                  <table className="table table-sm table-hover">
+                    <thead>
+                      <tr>
+                        <th>Pedido</th>
+                        <th>Estado</th>
+                        <th>Total</th>
+                        <th>Fecha</th>
+                        <th>Items</th>
+                        <th></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {group.pedidos.map(p => (
+                        <>
+                          <tr key={p.id}>
+                            <td>#{p.id}</td>
+                            <td>{p.estado}</td>
+                            <td>{formatter.format(Number(p.total || 0))}</td>
+                            <td>{p.fecha ? new Date(p.fecha).toLocaleString() : '-'}</td>
+                            <td>{p.items ? p.items.length : 0}</td>
+                            <td>
+                              <button className="btn btn-sm btn-outline-secondary" onClick={() => setExpandedOrders(prev => ({ ...prev, [p.id]: !prev[p.id] }))}>
+                                {expandedOrders[p.id] ? 'Ocultar' : 'Ver'}
+                              </button>
+                            </td>
+                          </tr>
+                          {expandedOrders[p.id] && (
+                            <tr>
+                              <td colSpan={6}>
+                                <div>
+                                  <strong>Items:</strong>
+                                  <ul className="mb-0">
+                                    {(p.items || []).map((it, idx) => (
+                                      <li key={idx}>{it.nombre || it.name || it.producto_nombre || it.producto?.nombre || `ID ${it.producto_id || it.id}`} — {it.cantidad || it.quantity || it.qty || 1} unidad(es) — {formatter.format(Number(it.precio_unitario || it.precio || it.price || it.unit_price || 0))}</li>
+                                    ))}
+                                  </ul>
+                                </div>
+                              </td>
+                            </tr>
+                          )}
+                        </>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            ));
+          })()}
         </div>
       )}
     </div>
