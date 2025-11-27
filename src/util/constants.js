@@ -489,8 +489,33 @@ export async function actualizarPerfil(datosActualizados) {
 
     return usuarioData;
   } catch (error) {
-    logger.error('Error al actualizar perfil:', error);
-    throw error;
+    // Intentar extraer un mensaje más legible desde la respuesta del backend
+    logger.error('Error al actualizar perfil (raw):', error);
+    const status = error.response?.status;
+    const respData = error.response?.data;
+    logger.debug('Detalles del error al actualizar perfil:', { status, respData });
+
+    let mensaje = 'Error al actualizar perfil';
+    if (respData) {
+      if (typeof respData === 'string') {
+        mensaje = respData;
+      } else if (respData.mensaje || respData.message || respData.error) {
+        mensaje = respData.mensaje || respData.message || respData.error;
+      } else {
+        try {
+          mensaje = JSON.stringify(respData);
+        } catch (err) {
+          logger.debug('No se pudo convertir respData a string:', err);
+        }
+      }
+    } else if (status) {
+      mensaje = `Error del servidor (${status})`;
+    } else if (error.message) {
+      mensaje = error.message;
+    }
+
+    // Enviar un Error con mensaje amigable para que la UI lo muestre
+    throw new Error(mensaje);
   }
 }
 
