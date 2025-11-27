@@ -480,6 +480,8 @@ export async function actualizarPerfil(datosActualizados) {
       nombre: response.data.nombre,
       telefono: response.data.telefono,
       direccion: response.data.direccion,
+      ciudad: response.data.ciudad || response.data.city || null,
+      region: response.data.region || response.data.region_name || null,
       run: response.data.run,
       rol: response.data.rol || usuarioActual.rol || 'user'
     };
@@ -489,6 +491,154 @@ export async function actualizarPerfil(datosActualizados) {
   } catch (error) {
     logger.error('Error al actualizar perfil:', error);
     throw error;
+  }
+}
+
+/**
+ * Gestión local de direcciones del usuario (útil cuando el backend no soporta direcciones múltiples)
+ */
+export function agregarDireccionLocal(nuevaDireccion) {
+  try {
+    const usuario = obtenerUsuarioActual();
+    if (!usuario) throw new Error('No hay usuario logueado');
+
+    usuario.direcciones = Array.isArray(usuario.direcciones) ? usuario.direcciones : [];
+    const direccionConId = { id: Date.now(), ...nuevaDireccion };
+    usuario.direcciones.push(direccionConId);
+
+    // Persistir y emitir evento
+    localStorage.setItem(USER_KEY, JSON.stringify(usuario));
+    try { window.dispatchEvent(new CustomEvent('usuarioActualizado', { detail: usuario })); } catch (e) { logger.debug('dispatch usuarioActualizado failed:', e); }
+
+    return usuario.direcciones;
+  } catch (err) {
+    logger.error('Error agregando dirección local:', err);
+    throw err;
+  }
+}
+
+export function eliminarDireccionLocal(direccionId) {
+  try {
+    const usuario = obtenerUsuarioActual();
+    if (!usuario) throw new Error('No hay usuario logueado');
+
+    usuario.direcciones = Array.isArray(usuario.direcciones) ? usuario.direcciones.filter(d => d.id !== direccionId) : [];
+    localStorage.setItem(USER_KEY, JSON.stringify(usuario));
+    try { window.dispatchEvent(new CustomEvent('usuarioActualizado', { detail: usuario })); } catch (e) { logger.debug('dispatch usuarioActualizado failed:', e); }
+
+    return usuario.direcciones;
+  } catch (err) {
+    logger.error('Error eliminando dirección local:', err);
+    throw err;
+  }
+}
+
+export function actualizarDireccionesLocal(direcciones) {
+  try {
+    const usuario = obtenerUsuarioActual();
+    if (!usuario) throw new Error('No hay usuario logueado');
+
+    usuario.direcciones = Array.isArray(direcciones) ? direcciones : [];
+    localStorage.setItem(USER_KEY, JSON.stringify(usuario));
+    try { window.dispatchEvent(new CustomEvent('usuarioActualizado', { detail: usuario })); } catch (e) { logger.debug('dispatch usuarioActualizado failed:', e); }
+
+    return usuario.direcciones;
+  } catch (err) {
+    logger.error('Error actualizando direcciones local:', err);
+    throw err;
+  }
+}
+
+/**
+ * Actualiza una dirección local por id (helper)
+ */
+export function actualizarDireccionLocal(id, datos) {
+  try {
+    const usuario = obtenerUsuarioActual();
+    if (!usuario) throw new Error('No hay usuario logueado');
+
+    usuario.direcciones = Array.isArray(usuario.direcciones) ? usuario.direcciones.map(d => d.id === id ? { ...d, ...datos } : d) : [];
+    localStorage.setItem(USER_KEY, JSON.stringify(usuario));
+    try { window.dispatchEvent(new CustomEvent('usuarioActualizado', { detail: usuario })); } catch (e) { logger.debug('dispatch usuarioActualizado failed:', e); }
+
+    return usuario.direcciones;
+  } catch (err) {
+    logger.error('Error actualizando dirección local:', err);
+    throw err;
+  }
+}
+
+/**
+ * CRUD de direcciones intentando usar backend y haciendo fallback a local
+ */
+export async function obtenerDireccionesUsuario() {
+  const usuario = obtenerUsuarioActual();
+  if (!usuario) return [];
+
+  try {
+    const response = await api.get(`/usuarios/${usuario.usuario_id}/direcciones`);
+    // Normalizar
+    const dirs = Array.isArray(response.data) ? response.data : (response.data.content || response.data.data || []);
+    // Si backend devuelve datos, actualizar localStorage
+    usuario.direcciones = dirs;
+    localStorage.setItem(USER_KEY, JSON.stringify(usuario));
+    try { window.dispatchEvent(new CustomEvent('usuarioActualizado', { detail: usuario })); } catch (e) { logger.debug('dispatch usuarioActualizado failed:', e); }
+    return dirs;
+  } catch (err) {
+    logger.debug('obtenerDireccionesUsuario fallback local:', err.message || err);
+    return Array.isArray(usuario.direcciones) ? usuario.direcciones : (usuario.direccion ? [{ id: 'main', etiqueta: 'Principal', direccion: usuario.direccion, ciudad: usuario.ciudad || '', region: usuario.region || '' }] : []);
+  }
+}
+
+export async function agregarDireccionUsuario(nuevaDireccion) {
+  const usuario = obtenerUsuarioActual();
+  if (!usuario) throw new Error('No hay usuario logueado');
+
+  try {
+    const response = await api.post(`/usuarios/${usuario.usuario_id}/direcciones`, nuevaDireccion);
+    const created = response.data;
+    // actualizar localStorage
+    usuario.direcciones = Array.isArray(usuario.direcciones) ? [...usuario.direcciones, created] : [created];
+    localStorage.setItem(USER_KEY, JSON.stringify(usuario));
+    try { window.dispatchEvent(new CustomEvent('usuarioActualizado', { detail: usuario })); } catch (e) { logger.debug('dispatch usuarioActualizado failed:', e); }
+    return usuario.direcciones;
+  } catch (err) {
+    logger.debug('agregarDireccionUsuario fallback local:', err.message || err);
+    return agregarDireccionLocal(nuevaDireccion);
+  }
+}
+
+export async function actualizarDireccionUsuario(id, datos) {
+  const usuario = obtenerUsuarioActual();
+  if (!usuario) throw new Error('No hay usuario logueado');
+
+  try {
+    const response = await api.put(`/usuarios/${usuario.usuario_id}/direcciones/${id}`, datos);
+    const updated = response.data;
+    // reemplazar en localStorage
+    usuario.direcciones = Array.isArray(usuario.direcciones) ? usuario.direcciones.map(d => d.id === id ? updated : d) : [updated];
+    localStorage.setItem(USER_KEY, JSON.stringify(usuario));
+    try { window.dispatchEvent(new CustomEvent('usuarioActualizado', { detail: usuario })); } catch (e) { logger.debug('dispatch usuarioActualizado failed:', e); }
+    return usuario.direcciones;
+  } catch (err) {
+    logger.debug('actualizarDireccionUsuario fallback local:', err.message || err);
+    return actualizarDireccionLocal(id, datos);
+  }
+}
+
+export async function eliminarDireccionUsuario(id) {
+  const usuario = obtenerUsuarioActual();
+  if (!usuario) throw new Error('No hay usuario logueado');
+
+  try {
+    await api.delete(`/usuarios/${usuario.usuario_id}/direcciones/${id}`);
+    usuario.direcciones = Array.isArray(usuario.direcciones) ? usuario.direcciones.filter(d => d.id !== id) : [];
+    localStorage.setItem(USER_KEY, JSON.stringify(usuario));
+    try { window.dispatchEvent(new CustomEvent('usuarioActualizado', { detail: usuario })); } catch (e) { logger.debug('dispatch usuarioActualizado failed:', e); }
+    return usuario.direcciones;
+  } catch (err) {
+    logger.debug('eliminarDireccionUsuario fallback local:', err.message || err);
+    return eliminarDireccionLocal(id);
   }
 }
 

@@ -9,9 +9,10 @@ import { useNavigate } from 'react-router-dom';
 import useCarrito from '../hooks/useCarrito';
 import useAutenticacion from '../hooks/useAutenticacion';
 import { formatearPrecio } from '../util/formatters';
-import { verificarStockCarrito, crearOrden } from '../util/constants';
+import { verificarStockCarrito, crearOrden, agregarDireccionUsuario } from '../util/constants';
 import { notify } from '../components/ui/notificationHelper';
 import { confirmDialog } from '../components/ui/confirmDialogHelper';
+import logger from '../util/logger';
 
 function Checkout() {
   const navigate = useNavigate();
@@ -41,7 +42,9 @@ function Checkout() {
         nombreCompleto: usuario.nombre || '',
         email: usuario.email || '',
         telefono: usuario.telefono || '',
-        direccion: usuario.direccion || ''
+        direccion: usuario.direccion || '',
+        ciudad: usuario.ciudad || '',
+        region: usuario.region || ''
       }));
       // Si el usuario tiene dirección guardada, no activar modo edición
       setModoEdicion(!usuario.direccion);
@@ -49,6 +52,27 @@ function Checkout() {
       setModoEdicion(true);
     }
   }, [estaLogueado, usuario]);
+
+  // Fuente de dirección seleccionada: 'perfil' | 'nueva'
+  const [direccionFuente, setDireccionFuente] = useState(() => (usuario?.direccion ? 'perfil' : 'nueva'));
+  const [selectedDireccionId, setSelectedDireccionId] = useState(null);
+  const [nuevaDireccion, setNuevaDireccion] = useState({ direccion: '', ciudad: '', region: '', codigoPostal: '' });
+  const [guardarEnCuenta, setGuardarEnCuenta] = useState(false);
+  const [erroresEnvio, setErroresEnvio] = useState({});
+
+  // Mantener direccionFuente en sync si cambia el usuario
+  useEffect(() => {
+    if (usuario && usuario.direccion) {
+      setDireccionFuente('perfil');
+    }
+  }, [usuario]);
+
+  // Inicializar selección de direcciones guardadas
+  useEffect(() => {
+    if (usuario && Array.isArray(usuario.direcciones) && usuario.direcciones.length > 0) {
+      setSelectedDireccionId(usuario.direcciones[0].id);
+    }
+  }, [usuario]);
 
   // Redirigir si el carrito está vacío
   useEffect(() => {
@@ -77,6 +101,28 @@ function Checkout() {
     setProcesando(true);
 
     try {
+      // Validar datos de envío
+      const camposRequeridos = ['nombreCompleto', 'email', 'telefono', 'direccion', 'ciudad', 'region'];
+      const errs = {};
+      for (const campo of camposRequeridos) {
+        if (!datosEnvio[campo] || String(datosEnvio[campo]).trim().length === 0) errs[campo] = 'Campo requerido';
+      }
+      setErroresEnvio(errs);
+      if (Object.keys(errs).length > 0) {
+        notify('Por favor completa todos los campos requeridos', 'error', 3000);
+        setProcesando(false);
+        return;
+      }
+
+      // Si el usuario eligió guardar la dirección en su cuenta, guardarla localmente
+      if (estaLogueado && guardarEnCuenta && direccionFuente === 'nueva') {
+        try {
+          await agregarDireccionUsuario({ etiqueta: 'Guardada', direccion: datosEnvio.direccion, ciudad: datosEnvio.ciudad, region: datosEnvio.region, codigoPostal: datosEnvio.codigoPostal });
+          notify('Dirección guardada en tu cuenta', 'success');
+        } catch (err) {
+          logger?.error?.('No se pudo guardar dirección en cuenta:', err);
+        }
+      }
       // 🔍 PASO 1: Verificar stock en tiempo real
       notify('Verificando disponibilidad de productos...', 'info', 2000);
       
@@ -232,7 +278,48 @@ function Checkout() {
               <div className="card-body p-4">
                 <h3 className="card-title mb-4 fw-bold">📦 Información de Envío</h3>
                 
-                <form onSubmit={procesarPago}>
+                  {estaLogueado && (Array.isArray(usuario?.direcciones) && usuario.direcciones.length > 0 ? (
+                    <div className="mb-3">
+                      <label className="form-label fw-semibold">Direcciones guardadas</label>
+                      <div className="list-group mb-2">
+                        {usuario.direcciones.map(d => (
+                          <label key={d.id} className={`list-group-item list-group-item-action d-flex justify-content-between align-items-start ${selectedDireccionId === d.id ? 'active' : ''}`}>
+                            <div>
+                              <div className="fw-semibold">{d.etiqueta || 'Dirección'}</div>
+                              <div className="small">{d.direccion} · {d.ciudad} · {d.region}</div>
+                            </div>
+                            <div>
+                              <input type="radio" name="selectedAddress" checked={selectedDireccionId === d.id} onChange={() => { setSelectedDireccionId(d.id); setDireccionFuente('perfil'); setModoEdicion(false); setDatosEnvio(prev => ({ ...prev, nombreCompleto: usuario.nombre || '', email: usuario.email || '', telefono: usuario.telefono || '', direccion: d.direccion || '', ciudad: d.ciudad || '', region: d.region || '' })); }} />
+                            </div>
+                          </label>
+                        ))}
+                      </div>
+                      <div className="btn-group" role="group">
+                        <button type="button" className={`btn btn-outline-secondary ${direccionFuente === 'perfil' ? 'active' : ''}`} onClick={() => { setDireccionFuente('perfil'); setModoEdicion(false); if (selectedDireccionId) {
+                          const sel = usuario.direcciones.find(x => x.id === selectedDireccionId);
+                          if (sel) setDatosEnvio(prev => ({ ...prev, nombreCompleto: usuario.nombre || '', email: usuario.email || '', telefono: usuario.telefono || '', direccion: sel.direccion || '', ciudad: sel.ciudad || '', region: sel.region || '' }));
+                        }}}>Usar dirección seleccionada</button>
+                        <button type="button" className={`btn btn-outline-secondary ${direccionFuente === 'nueva' ? 'active' : ''}`} onClick={() => { setDireccionFuente('nueva'); setModoEdicion(true); }}>Ingresar nueva dirección</button>
+                      </div>
+                      <div className="form-text mt-2">Puedes elegir una dirección guardada o ingresar una nueva para esta compra.</div>
+                    </div>
+                  ) : (
+                    // Si no hay direcciones guardadas, mostrar opción simple
+                    usuario?.direccion && (
+                      <div className="mb-3">
+                        <label className="form-label fw-semibold">Dirección Guardada</label>
+                        <div className="d-flex gap-2 align-items-center">
+                          <div className="flex-grow-1 small text-muted">{usuario.direccion} · {usuario.ciudad || ''} · {usuario.region || ''}</div>
+                          <div className="btn-group">
+                            <button className={`btn btn-outline-secondary ${direccionFuente === 'perfil' ? 'active' : ''}`} onClick={() => { setDireccionFuente('perfil'); setModoEdicion(false); setDatosEnvio(prev => ({ ...prev, nombreCompleto: usuario.nombre || '', email: usuario.email || '', telefono: usuario.telefono || '', direccion: usuario.direccion || '', ciudad: usuario.ciudad || '', region: usuario.region || '' })); }}>Usar</button>
+                            <button className={`btn btn-outline-secondary ${direccionFuente === 'nueva' ? 'active' : ''}`} onClick={() => { setDireccionFuente('nueva'); setModoEdicion(true); }}>Ingresar nueva</button>
+                          </div>
+                        </div>
+                      </div>
+                    )
+                  ))}
+
+                  <form onSubmit={procesarPago}>
                   {/* Datos personales */}
                   <div className="row g-3 mb-4">
                     <div className="col-12">
@@ -280,29 +367,31 @@ function Checkout() {
                       <input
                         type="text"
                         name="direccion"
-                        className="form-control"
+                        className={`form-control ${erroresEnvio.direccion ? 'is-invalid' : ''}`}
                         placeholder="Calle, número, departamento"
                         value={datosEnvio.direccion}
                         onChange={manejarCambio}
                         required
                       />
+                      {erroresEnvio.direccion && <div className="invalid-feedback">{erroresEnvio.direccion}</div>}
                     </div>
                     <div className="col-md-4">
                       <label className="form-label fw-bold">Ciudad *</label>
                       <input
                         type="text"
                         name="ciudad"
-                        className="form-control"
+                        className={`form-control ${erroresEnvio.ciudad ? 'is-invalid' : ''}`}
                         value={datosEnvio.ciudad}
                         onChange={manejarCambio}
                         required
                       />
+                      {erroresEnvio.ciudad && <div className="invalid-feedback">{erroresEnvio.ciudad}</div>}
                     </div>
                     <div className="col-md-4">
                       <label className="form-label fw-bold">Región *</label>
                       <select
                         name="region"
-                        className="form-select"
+                        className={`form-select ${erroresEnvio.region ? 'is-invalid' : ''}`}
                         value={datosEnvio.region}
                         onChange={manejarCambio}
                         required
@@ -315,6 +404,14 @@ function Checkout() {
                         <option value="Los Lagos">Los Lagos</option>
                       </select>
                     </div>
+                    {estaLogueado && direccionFuente === 'nueva' && (
+                      <div className="col-12">
+                        <div className="form-check">
+                          <input className="form-check-input" type="checkbox" id="guardarEnCuenta" checked={guardarEnCuenta} onChange={(e) => setGuardarEnCuenta(e.target.checked)} />
+                          <label className="form-check-label" htmlFor="guardarEnCuenta">Guardar esta dirección en mi cuenta</label>
+                        </div>
+                      </div>
+                    )}
                     <div className="col-md-4">
                       <label className="form-label fw-bold">Código Postal</label>
                       <input
