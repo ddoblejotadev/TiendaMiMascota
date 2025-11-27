@@ -15,6 +15,12 @@ function AdminProductos() {
   const [destacado, setDestacado] = useState(false);
   const [editId, setEditId] = useState(null);
   const [cargando, setCargando] = useState(false);
+  // UI: search, filters, sort and pagination
+  const [search, setSearch] = useState('');
+  const [categoryFilter, setCategoryFilter] = useState('');
+  const [sortOption, setSortOption] = useState('');
+  const [page, setPage] = useState(1);
+  const [perPage, setPerPage] = useState(12);
 
 
   useEffect(() => {
@@ -32,6 +38,35 @@ function AdminProductos() {
     };
     cargar();
   }, []);
+
+  // Derived list: search + filter + sort
+  const filtered = React.useMemo(() => {
+    let out = productos.slice();
+    if (search && search.trim().length > 0) {
+      const q = search.trim().toLowerCase();
+      out = out.filter(p => (p.nombre || '').toString().toLowerCase().includes(q) || (p.descripcion || '').toString().toLowerCase().includes(q));
+    }
+    if (categoryFilter) {
+      out = out.filter(p => (p.categoria || '').toString() === categoryFilter);
+    }
+    if (sortOption) {
+      const [field, dir] = sortOption.split(':');
+      out.sort((a, b) => {
+        const va = a[field] ?? '';
+        const vb = b[field] ?? '';
+        if (typeof va === 'number' && typeof vb === 'number') return dir === 'asc' ? va - vb : vb - va;
+        return dir === 'asc' ? String(va).localeCompare(String(vb)) : String(vb).localeCompare(String(va));
+      });
+    }
+    return out;
+  }, [productos, search, categoryFilter, sortOption]);
+
+  const totalPages = Math.max(1, Math.ceil(filtered.length / perPage));
+  useEffect(() => { if (page > totalPages) setPage(totalPages); }, [totalPages, page]);
+  const paged = React.useMemo(() => {
+    const start = (page - 1) * perPage;
+    return filtered.slice(start, start + perPage);
+  }, [filtered, page, perPage]);
 
   const agregar = async () => {
     if (!nombre) {
@@ -163,38 +198,92 @@ function AdminProductos() {
         </div>
       </div>
 
-      <table className="table table-bordered">
-        <thead className="table-light">
-          <tr>
-            <th>ID</th>
-            <th>Nombre</th>
-            <th>Categoria</th>
-            <th>Precio</th>
-            <th>Stock</th>
-            <th>Destacado</th>
-            <th>Acciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          {productos.map(p => (
-            <tr key={p.id}>
-              <td>{p.id}</td>
-              <td>
-                <div>{p.nombre}</div>
-                {p.descripcion && <small className="text-muted">{p.descripcion}</small>}
-              </td>
-              <td>{p.categoria}</td>
-              <td>{p.precio}</td>
-              <td>{p.stock}</td>
-              <td>{p.destacado ? 'Sí' : 'No'}</td>
-              <td>
-                <button className="btn btn-sm btn-warning me-2" onClick={() => iniciarEdicion(p)}>Editar</button>
-                <button className="btn btn-sm btn-danger" onClick={() => eliminar(p.id)}>Eliminar</button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      {/* Controles de búsqueda, filtros, orden y paginación */}
+      <div className="card mb-3">
+        <div className="card-body">
+          <div className="row g-2 align-items-center">
+            <div className="col-md-4">
+              <input className="form-control" placeholder="Buscar por nombre o descripción" value={search} onChange={(e) => { setSearch(e.target.value); setPage(1); }} />
+            </div>
+            <div className="col-md-3">
+              <select className="form-select" value={categoryFilter} onChange={(e) => { setCategoryFilter(e.target.value); setPage(1); }}>
+                <option value="">Todas las categorías</option>
+                {CATEGORIAS.filter(c => c !== 'Todos').map(c => <option key={c} value={c}>{c}</option>)}
+              </select>
+            </div>
+            <div className="col-md-3">
+              <select className="form-select" value={sortOption} onChange={(e) => setSortOption(e.target.value)}>
+                <option value="">Orden: predeterminado</option>
+                <option value="nombre:asc">Nombre A→Z</option>
+                <option value="nombre:desc">Nombre Z→A</option>
+                <option value="precio:asc">Precio ↑</option>
+                <option value="precio:desc">Precio ↓</option>
+                <option value="stock:asc">Stock ↑</option>
+                <option value="stock:desc">Stock ↓</option>
+              </select>
+            </div>
+            <div className="col-md-2 text-end">
+              <select className="form-select" value={perPage} onChange={(e) => { setPerPage(Number(e.target.value)); setPage(1); }}>
+                <option value={6}>6 / pág</option>
+                <option value={12}>12 / pág</option>
+                <option value={24}>24 / pág</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Grid de productos */}
+      <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-3">
+        {paged.map(p => (
+          <div key={p.id} className="col">
+            <div className={`card h-100 shadow-sm ${editId === p.id ? 'border-primary' : ''}`}>
+              {p.imagen ? <img src={p.imagen} className="card-img-top" alt={p.nombre} style={{height:120, objectFit:'cover'}} /> : (
+                <div className="bg-light d-flex align-items-center justify-content-center" style={{height:120}}>Sin imagen</div>
+              )}
+              <div className="card-body d-flex flex-column">
+                <h5 className="card-title mb-1">{p.nombre}</h5>
+                <div className="mb-2"><small className="text-muted">{p.categoria}</small></div>
+                {p.descripcion && <p className="card-text text-truncate" style={{maxHeight: '3.6rem'}}>{p.descripcion}</p>}
+                <div className="mt-auto d-flex justify-content-between align-items-center">
+                  <div>
+                    <div className="fw-bold">${p.precio}</div>
+                    <div><small className="text-muted">Stock: {p.stock}</small></div>
+                  </div>
+                  <div className="btn-group">
+                    <button className="btn btn-sm btn-outline-warning" onClick={() => iniciarEdicion(p)}>Editar</button>
+                    <button className="btn btn-sm btn-outline-danger" onClick={() => eliminar(p.id)}>Eliminar</button>
+                  </div>
+                </div>
+              </div>
+              {p.destacado && <div className="position-absolute top-0 end-0 m-2 badge bg-success">Destacado</div>}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Paginación */}
+      <div className="d-flex justify-content-between align-items-center mt-4">
+        <div>
+          <small className="text-muted">Mostrando {filtered.length === 0 ? 0 : ( (page-1)*perPage + 1)} - {Math.min(page*perPage, filtered.length)} de {filtered.length} productos</small>
+        </div>
+        <nav>
+          <ul className="pagination mb-0">
+            <li className={`page-item ${page === 1 ? 'disabled' : ''}`}><button className="page-link" onClick={() => setPage(1)}>«</button></li>
+            <li className={`page-item ${page === 1 ? 'disabled' : ''}`}><button className="page-link" onClick={() => setPage(Math.max(1, page-1))}>‹</button></li>
+            {Array.from({length: totalPages}).map((_, i) => {
+              const pIdx = i+1;
+              // show only nearby pages if many
+              if (totalPages > 10 && Math.abs(pIdx - page) > 3 && pIdx !== 1 && pIdx !== totalPages) return null;
+              return (
+                <li key={pIdx} className={`page-item ${pIdx === page ? 'active' : ''}`}><button className="page-link" onClick={() => setPage(pIdx)}>{pIdx}</button></li>
+              );
+            })}
+            <li className={`page-item ${page === totalPages ? 'disabled' : ''}`}><button className="page-link" onClick={() => setPage(Math.min(totalPages, page+1))}>›</button></li>
+            <li className={`page-item ${page === totalPages ? 'disabled' : ''}`}><button className="page-link" onClick={() => setPage(totalPages)}>»</button></li>
+          </ul>
+        </nav>
+      </div>
     </div>
   );
 }
