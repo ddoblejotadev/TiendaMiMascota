@@ -253,6 +253,16 @@ export async function login(email, password) {
       logger.debug('No se pudo emitir evento usuarioActualizado:', e);
     }
 
+    // Emitir evento para sincronizar en vivo en la misma pestaña
+    try {
+      if (typeof window !== 'undefined' && window.dispatchEvent) {
+        const evt = new CustomEvent('usuarioActualizado', { detail: usuarioData });
+        window.dispatchEvent(evt);
+      }
+    } catch (e) {
+      logger.debug('No se pudo emitir evento usuarioActualizado:', e);
+    }
+
     return usuarioData;
   } catch (error) {
     logger.error('Error al login:', error);

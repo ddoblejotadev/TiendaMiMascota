@@ -10,6 +10,7 @@ import useCarrito from '../hooks/useCarrito';
 import useAutenticacion from '../hooks/useAutenticacion';
 import { formatearPrecio } from '../util/formatters';
 import { verificarStockCarrito, crearOrden, agregarDireccionUsuario } from '../util/constants';
+import { validarEtiqueta } from '../util/validators';
 import { notify } from '../components/ui/notificationHelper';
 import { confirmDialog } from '../components/ui/confirmDialogHelper';
 import logger from '../util/logger';
@@ -24,6 +25,7 @@ function Checkout() {
     nombreCompleto: '',
     email: '',
     telefono: '',
+    etiqueta: '',
     direccion: '',
     ciudad: '',
     region: '',
@@ -56,7 +58,7 @@ function Checkout() {
   // Fuente de dirección seleccionada: 'perfil' | 'nueva'
   const [direccionFuente, setDireccionFuente] = useState(() => (usuario?.direccion ? 'perfil' : 'nueva'));
   const [selectedDireccionId, setSelectedDireccionId] = useState(null);
-  const [nuevaDireccion, setNuevaDireccion] = useState({ direccion: '', ciudad: '', region: '', codigoPostal: '' });
+  // Nota: usamos `datosEnvio` como fuente para la nueva dirección (incluye `etiqueta` ahora)
   const [guardarEnCuenta, setGuardarEnCuenta] = useState(false);
   const [erroresEnvio, setErroresEnvio] = useState({});
 
@@ -117,7 +119,8 @@ function Checkout() {
       // Si el usuario eligió guardar la dirección en su cuenta, guardarla localmente
       if (estaLogueado && guardarEnCuenta && direccionFuente === 'nueva') {
         try {
-          await agregarDireccionUsuario({ etiqueta: 'Guardada', direccion: datosEnvio.direccion, ciudad: datosEnvio.ciudad, region: datosEnvio.region, codigoPostal: datosEnvio.codigoPostal });
+          const etiquetaParaGuardar = datosEnvio.etiqueta && validarEtiqueta(datosEnvio.etiqueta) ? datosEnvio.etiqueta.trim() : 'Guardada';
+          await agregarDireccionUsuario({ etiqueta: etiquetaParaGuardar, direccion: datosEnvio.direccion, ciudad: datosEnvio.ciudad, region: datosEnvio.region, codigoPostal: datosEnvio.codigoPostal });
           notify('Dirección guardada en tu cuenta', 'success');
         } catch (err) {
           logger?.error?.('No se pudo guardar dirección en cuenta:', err);
@@ -289,7 +292,7 @@ function Checkout() {
                               <div className="small">{d.direccion} · {d.ciudad} · {d.region}</div>
                             </div>
                             <div>
-                              <input type="radio" name="selectedAddress" checked={selectedDireccionId === d.id} onChange={() => { setSelectedDireccionId(d.id); setDireccionFuente('perfil'); setModoEdicion(false); setDatosEnvio(prev => ({ ...prev, nombreCompleto: usuario.nombre || '', email: usuario.email || '', telefono: usuario.telefono || '', direccion: d.direccion || '', ciudad: d.ciudad || '', region: d.region || '' })); }} />
+                              <input type="radio" name="selectedAddress" checked={selectedDireccionId === d.id} onChange={() => { setSelectedDireccionId(d.id); setDireccionFuente('perfil'); setModoEdicion(false); setDatosEnvio(prev => ({ ...prev, nombreCompleto: usuario.nombre || '', email: usuario.email || '', telefono: usuario.telefono || '', etiqueta: d.etiqueta || '', direccion: d.direccion || '', ciudad: d.ciudad || '', region: d.region || '' })); }} />
                             </div>
                           </label>
                         ))}
@@ -297,7 +300,7 @@ function Checkout() {
                       <div className="btn-group" role="group">
                         <button type="button" className={`btn btn-outline-secondary ${direccionFuente === 'perfil' ? 'active' : ''}`} onClick={() => { setDireccionFuente('perfil'); setModoEdicion(false); if (selectedDireccionId) {
                           const sel = usuario.direcciones.find(x => x.id === selectedDireccionId);
-                          if (sel) setDatosEnvio(prev => ({ ...prev, nombreCompleto: usuario.nombre || '', email: usuario.email || '', telefono: usuario.telefono || '', direccion: sel.direccion || '', ciudad: sel.ciudad || '', region: sel.region || '' }));
+                          if (sel) setDatosEnvio(prev => ({ ...prev, nombreCompleto: usuario.nombre || '', email: usuario.email || '', telefono: usuario.telefono || '', etiqueta: sel.etiqueta || '', direccion: sel.direccion || '', ciudad: sel.ciudad || '', region: sel.region || '' }));
                         }}}>Usar dirección seleccionada</button>
                         <button type="button" className={`btn btn-outline-secondary ${direccionFuente === 'nueva' ? 'active' : ''}`} onClick={() => { setDireccionFuente('nueva'); setModoEdicion(true); }}>Ingresar nueva dirección</button>
                       </div>
@@ -362,6 +365,21 @@ function Checkout() {
 
                   {/* Dirección */}
                   <div className="row g-3 mb-4">
+                    {direccionFuente === 'nueva' && (
+                      <div className="col-12">
+                        <label className="form-label fw-bold">Etiqueta (nombre de la dirección)</label>
+                        <input
+                          type="text"
+                          name="etiqueta"
+                          className={`form-control ${erroresEnvio.etiqueta ? 'is-invalid' : ''}`}
+                          placeholder="Etiqueta (ej. Casa, Oficina)"
+                          value={datosEnvio.etiqueta}
+                          onChange={manejarCambio}
+                        />
+                        {erroresEnvio.etiqueta && <div className="invalid-feedback">{erroresEnvio.etiqueta}</div>}
+                      </div>
+                    )}
+
                     <div className="col-12">
                       <label className="form-label fw-bold">Dirección *</label>
                       <input
