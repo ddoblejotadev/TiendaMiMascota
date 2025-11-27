@@ -16,6 +16,28 @@ function Header() {
   const { totalArticulos } = useCarrito();
   const { usuario, estaLogueado, cerrarSesion } = useAutenticacion();
 
+  // Calcular localmente si el usuario es administrador a partir del usuario del hook.
+  // Mantener fallback a la función util `esAdministrador()` por compatibilidad.
+  const isAdminFromUser = (() => {
+    if (!usuario) return false;
+    try {
+      if (usuario.rol && typeof usuario.rol === 'string') {
+        const r = String(usuario.rol).toLowerCase().replace(/role[_-]?/i, '').trim();
+        if (r === 'admin') return true;
+      }
+      if (Array.isArray(usuario.roles) && usuario.roles.length > 0) {
+        for (const it of usuario.roles) {
+          const r = String(it).toLowerCase().replace(/role[_-]?/i, '').trim();
+          if (r === 'admin') return true;
+        }
+      }
+    } catch (e) {
+      // Si algo falla, no interrumpir la UI
+      // fallback below
+    }
+    return false;
+  })();
+
   /**
    * Manejar cierre de sesión
    */
@@ -151,7 +173,7 @@ function Header() {
                       📦 Mis Pedidos
                     </Link>
                   </li>
-                  {esAdministrador() && (
+                  {(isAdminFromUser || esAdministrador()) && (
                     <>
                       <li><hr className="dropdown-divider" /></li>
                       <li>

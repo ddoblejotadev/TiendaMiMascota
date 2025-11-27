@@ -43,9 +43,17 @@ function useAutenticacion() {
     };
     
     window.addEventListener('storage', handleStorageChange);
+
+    // Listener para eventos personalizados dentro de la misma pestaña
+    const handleUsuarioActualizado = (e) => {
+      logger.debug('useAutenticacion - Evento usuarioActualizado recibido');
+      cargarUsuario();
+    };
+    window.addEventListener('usuarioActualizado', handleUsuarioActualizado);
     
     return () => {
       window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('usuarioActualizado', handleUsuarioActualizado);
     };
   }, []);
 

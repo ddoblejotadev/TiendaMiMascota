@@ -19,6 +19,7 @@ import ErrorPago from './pages/ErrorPago';
 import Ofertas from './pages/Ofertas';
 import Blog from './pages/Blog';
 import MisPedidos from './pages/MisPedidos';
+import Perfil from './pages/Perfil';
 import PanelAdministrador from './pages/PanelAdministrador';
 import AdminRoute from './components/AdminRoute';
 import AdminLayout from './layouts/AdminLayout';
@@ -51,6 +52,7 @@ function App() {
           <Route path="compra-exitosa" element={<CompraExitosa />} />
           <Route path="error-pago" element={<ErrorPago />} />
           <Route path="pedidos" element={<MisPedidos />} />
+          <Route path="perfil" element={<Perfil />} />
           
           {/* Rutas protegidas para administradores (layout + subrutas) */}
           <Route path="admin" element={<AdminRoute><AdminLayout /></AdminRoute>}>
