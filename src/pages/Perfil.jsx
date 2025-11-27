@@ -142,6 +142,7 @@ export default function Perfil() {
     try {
       const payload = {
         nombre: form.nombre,
+        email: form.email,
         telefono: form.telefono,
         direccion: form.direccion,
         ciudad: form.ciudad,

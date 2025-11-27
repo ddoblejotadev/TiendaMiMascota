@@ -66,6 +66,19 @@ export function validarTelefono(telefono) {
 }
 
 /**
+ * Valida una etiqueta para una dirección (nombre corto como 'Casa', 'Oficina')
+ * Requerimos al menos 2 caracteres si se provee
+ */
+export function validarEtiqueta(etiqueta) {
+  if (!etiqueta) return false;
+  try {
+    return String(etiqueta).trim().length >= 2;
+  } catch {
+    return false;
+  }
+}
+
+/**
  * Valida un objeto de formulario completo
  * @param {Object} datos - Objeto con los datos del formulario
  * @param {Array} camposRequeridos - Array con nombres de campos requeridos
