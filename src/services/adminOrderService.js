@@ -58,4 +58,53 @@ function crearOrdenLocal(orden) {
   return nueva;
 }
 
-export default { obtenerTodasOrdenes, crearOrdenLocal };
+/**
+ * Obtiene órdenes con paginación desde el backend (si el backend soporta page/size)
+ * Devuelve array de órdenes o fallback al listado local.
+ */
+async function obtenerOrdenesPaginadas(page = 0, size = 50) {
+  try {
+    logger.debug('Solicitando órdenes paginadas al backend...', { page, size });
+    const endpoints = ['/ordenes', '/pedidos', '/orders'];
+    for (const ep of endpoints) {
+      try {
+        const url = `${ep}?page=${page}&size=${size}`;
+        const resp = await api.get(url);
+        const data = resp.data;
+        if (!data) continue;
+        if (Array.isArray(data)) return data;
+        if (data.content && Array.isArray(data.content)) return data.content;
+        if (data.data && Array.isArray(data.data)) return data.data;
+        if (data.ordenes && Array.isArray(data.ordenes)) return data.ordenes;
+        if (data.pedidos && Array.isArray(data.pedidos)) return data.pedidos;
+      } catch (errEp) {
+        logger.debug('Endpoint paginado no disponible:', ep, errEp.message || errEp);
+        continue;
+      }
+    }
+    return listarLocal();
+  } catch (err) {
+    logger.error('Error obtenerOrdenesPaginadas:', err);
+    return listarLocal();
+  }
+}
+
+/**
+ * Actualiza campos de una orden (p.ej. estado) probando PUT en endpoints comunes.
+ */
+async function actualizarEstadoOrden(orderId, datos) {
+  const endpoints = [`/ordenes/${orderId}`, `/pedidos/${orderId}`, `/orders/${orderId}`];
+  let lastErr = null;
+  for (const ep of endpoints) {
+    try {
+      const resp = await api.put(ep, datos);
+      return resp.data;
+    } catch (err) {
+      lastErr = err;
+      continue;
+    }
+  }
+  throw lastErr || new Error('No se pudo actualizar la orden');
+}
+
+export default { obtenerTodasOrdenes, crearOrdenLocal, obtenerOrdenesPaginadas, actualizarEstadoOrden };
