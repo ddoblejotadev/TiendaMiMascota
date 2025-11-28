@@ -17,6 +17,25 @@ async function listar() {
   }
 }
 
+async function obtenerPorId(id) {
+  try {
+    const resp = await api.get(`/usuarios/${id}`);
+    // Normalizar distintos formatos
+    const data = resp.data;
+    if (!data) return null;
+    // Si viene { usuario: { ... } }
+    if (data.usuario && typeof data.usuario === 'object') return data.usuario;
+    // Si viene { data: { ... } }
+    if (data.data && typeof data.data === 'object') return data.data;
+    // Si viene directamente el objeto usuario
+    if (typeof data === 'object') return data;
+    return null;
+  } catch (error) {
+    logger.error('Error obteniendo usuario por id:', id, error);
+    return null;
+  }
+}
+
 async function actualizarRole(id, role) {
   try {
     // Intentar usar PUT /usuarios/:id con payload { rol } o { role }
@@ -39,4 +58,4 @@ async function eliminar(id) {
   }
 }
 
-export default { listar, actualizarRole, eliminar };
+export default { listar, actualizarRole, eliminar, obtenerPorId };

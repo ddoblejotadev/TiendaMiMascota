@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import adminOrderService from '../../services/adminOrderService';
+import adminUserService from '../../services/adminUserService';
 import { ESTADOS_PEDIDO } from '../../util/constants';
 import { notify } from '../../components/ui/notificationHelper';
 import { confirmDialog } from '../../components/ui/confirmDialogHelper';
+import useDebounce from '../../hooks/useDebounce';
+import { Link } from 'react-router-dom';
 
 // Helper para normalizar una orden en una forma estable usada por la UI
 const normalizarOrden = (o) => {
@@ -58,6 +61,7 @@ function AdminPedidos() {
   const [page, setPage] = useState(1);
   const [size, setSize] = useState(20);
   const [filtroUsuario, setFiltroUsuario] = useState('');
+  const debouncedFiltro = useDebounce(filtroUsuario, 450);
   const [estadoEdicion, setEstadoEdicion] = useState({});
 
   useEffect(() => {
@@ -70,14 +74,43 @@ function AdminPedidos() {
         let data = [];
         // Preferir la función paginada si está disponible
         if (adminOrderService.obtenerOrdenesPaginadas) {
-          data = await adminOrderService.obtenerOrdenesPaginadas(p, size, filtroUsuario);
+          data = await adminOrderService.obtenerOrdenesPaginadas(p, size, debouncedFiltro);
         } else {
           data = await adminOrderService.obtenerTodasOrdenes();
         }
         if (!mounted) return;
         const array = Array.isArray(data) ? data : [];
         const normalizadas = array.map(normalizarOrden);
-        setPedidos(normalizadas);
+          setPedidos(normalizadas);
+          // Enriquecer con datos de usuario cuando exista usuarioId pero falten nombre/email
+          (async () => {
+            try {
+              const ids = Array.from(new Set(normalizadas.filter(p => p.usuarioId && !(p.clienteNombre || p.email)).map(p => p.usuarioId)));
+              if (ids.length === 0) return;
+              const fetches = await Promise.all(ids.map(id => adminUserService.obtenerPorId(id).catch(() => null)));
+              const usersById = {};
+              ids.forEach((id, i) => { if (fetches[i]) usersById[id] = fetches[i]; });
+              if (Object.keys(usersById).length === 0) return;
+              const enriched = normalizadas.map(p => {
+                if (p.usuarioId && usersById[p.usuarioId]) {
+                  const u = usersById[p.usuarioId];
+                  return {
+                    ...p,
+                    clienteNombre: p.clienteNombre || u.nombre || u.name || u.username || u.fullName || p.clienteNombre,
+                    email: p.email || u.email || p.email,
+                    original: { ...p.original, usuario: { ...u } }
+                  };
+                }
+                return p;
+              });
+              setPedidos(enriched);
+              const initEstados2 = {};
+              enriched.forEach(o => { initEstados2[o.id] = o.estado; });
+              setEstadoEdicion(initEstados2);
+            } catch (err) {
+              console.debug('No se pudo enriquecer usuarios de pedidos:', err);
+            }
+          })();
         // inicializar estadoEdicion con estados actuales
         const initEstados = {};
         normalizadas.forEach(o => { initEstados[o.id] = o.estado; });
@@ -96,7 +129,7 @@ function AdminPedidos() {
     cargar(page - 1);
     const intervalo = setInterval(() => { cargar(page - 1); }, 30000);
     return () => { mounted = false; clearInterval(intervalo); };
-  }, [page, size, filtroUsuario]);
+  }, [page, size, debouncedFiltro]);
 
   const handleRefrescar = async () => {
     setCargando(true);
@@ -104,7 +137,7 @@ function AdminPedidos() {
     try {
       let data = [];
       if (adminOrderService.obtenerOrdenesPaginadas) {
-        data = await adminOrderService.obtenerOrdenesPaginadas(page - 1, size, filtroUsuario);
+        data = await adminOrderService.obtenerOrdenesPaginadas(page - 1, size, debouncedFiltro);
       } else {
         data = await adminOrderService.obtenerTodasOrdenes();
       }
@@ -234,7 +267,17 @@ function AdminPedidos() {
                   <div className="card-body">
                     <h5 className="card-title">Usuario: {label}
                       {(!group.usuarioId) && <span className="badge bg-secondary ms-2">Invitado</span>}
+                      {group.usuarioId && (
+                        <Link to={`/admin/usuarios/${group.usuarioId}`} className="btn btn-sm btn-link ms-3">Ver perfil</Link>
+                      )}
                     </h5>
+                    <div>
+                      {group.email && <small className="text-muted d-block">Email: {group.email}</small>}
+                      {/* intentar mostrar teléfono o datos_envio del primer pedido */}
+                      {group.pedidos[0]?.original?.datos_envio?.telefono && (
+                        <small className="text-muted d-block">Tel: {group.pedidos[0].original.datos_envio.telefono}</small>
+                      )}
+                    </div>
                     <p className="card-subtitle text-muted mb-2">Pedidos: {group.pedidos.length}</p>
 
                     <table className="table table-sm table-hover">
@@ -272,13 +315,41 @@ function AdminPedidos() {
                             {expandedOrders[p.id] && (
                               <tr>
                                 <td colSpan={6}>
-                                  <div>
-                                    <strong>Items:</strong>
-                                    <ul className="mb-0">
-                                      {(p.items || []).map((it, idx) => (
-                                        <li key={idx}>{it.nombre || it.name || it.producto_nombre || it.producto?.nombre || `ID ${it.producto_id || it.id}`} — {it.cantidad || it.quantity || it.qty || 1} unidad(es) — {formatter.format(Number(it.precio_unitario || it.precio || it.price || it.unit_price || 0))}</li>
-                                      ))}
-                                    </ul>
+                                  <div className="container-fluid">
+                                    <div className="row">
+                                      <div className="col-md-4">
+                                        <div className="card">
+                                          <div className="card-body">
+                                            <h6>Datos de envío</h6>
+                                            <div><strong>Nombre:</strong> {p.original?.datos_envio?.nombre_completo || p.clienteNombre || '-'}</div>
+                                            <div><strong>Email:</strong> {p.original?.datos_envio?.email || p.email || '-'}</div>
+                                            <div><strong>Teléfono:</strong> {p.original?.datos_envio?.telefono || '-'}</div>
+                                            <div><strong>Dirección:</strong> {p.original?.datos_envio?.direccion || '-'}</div>
+                                            <div><strong>Ciudad / Región:</strong> {`${p.original?.datos_envio?.ciudad || ''} ${p.original?.datos_envio?.region ? '/ ' + p.original?.datos_envio?.region : ''}`}</div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                      <div className="col-md-8">
+                                        <h6>Items</h6>
+                                        <div className="list-group">
+                                          {(p.items || []).map((it, idx) => {
+                                            const img = it.imagen || it.imagen_url || it.image || it.producto?.imagen || it.producto?.image || null;
+                                            const nombre = it.nombre || it.name || it.producto_nombre || it.producto?.nombre || `ID ${it.producto_id || it.id}`;
+                                            const cantidad = it.cantidad || it.quantity || it.qty || 1;
+                                            const precio = Number(it.precio_unitario || it.precio || it.price || it.unit_price || 0);
+                                            return (
+                                              <div key={idx} className="list-group-item d-flex align-items-center">
+                                                {img ? <img src={img} alt={nombre} style={{ width: 64, height: 64, objectFit: 'cover' }} className="me-3" /> : <div style={{ width: 64, height: 64 }} className="bg-light me-3 d-flex align-items-center justify-content-center text-muted">No img</div>}
+                                                <div className="flex-grow-1">
+                                                  <div><strong>{nombre}</strong></div>
+                                                  <div className="text-muted">{cantidad} unidad(es) — {formatter.format(precio)}</div>
+                                                </div>
+                                              </div>
+                                            );
+                                          })}
+                                        </div>
+                                      </div>
+                                    </div>
                                   </div>
                                 </td>
                               </tr>
