@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import adminOrderService from '../../services/adminOrderService';
 import adminUserService from '../../services/adminUserService';
 import { ESTADOS_PEDIDO } from '../../util/constants';
@@ -51,6 +51,37 @@ const normalizarOrden = (o) => {
   };
 };
 
+// Normaliza cada item del pedido para tener nombre, imagen, cantidad y precio
+const normalizarItem = (it) => {
+  if (!it) return { nombre: 'Desconocido', imagen: null, cantidad: 1, precio: 0, raw: it };
+
+  const nombre = it.nombre || it.name || it.titulo || it.title || it.producto_nombre || it.producto?.nombre || it.producto?.name || it.producto?.title || `ID ${it.producto_id || it.id || (it.producto && (it.producto.id || it.producto.producto_id))}`;
+
+  // Imagen: intentar varias claves y estructuras (string o objeto)
+  const imgCandidates = [
+    it.imagen, it.imagen_url, it.image, it.imageUrl, it.imagenUrl, it.url,
+    it.producto?.imagen, it.producto?.image, it.producto?.imageUrl,
+    it.images?.[0], it.media?.[0]
+  ];
+  let imagen = null;
+  for (const c of imgCandidates) {
+    if (!c) continue;
+    if (typeof c === 'string') { imagen = c; break; }
+    if (typeof c === 'object') {
+      imagen = c.url || c.secure_url || c.path || c.src || c[0] || null;
+      if (imagen) break;
+    }
+  }
+
+  // Cantidad: qty, quantity, cantidad
+  const cantidad = Number(it.cantidad || it.quantity || it.qty || it.amount || 1) || 1;
+
+  // Precio unitario: precio_unitario, unit_price, price, precio
+  const precio = Number(it.precio_unitario || it.unit_price || it.price || it.precio || it.subtotal || it.total || 0) || 0;
+
+  return { nombre, imagen, cantidad, precio, raw: it };
+};
+
 function AdminPedidos() {
   const [pedidos, setPedidos] = useState([]);
   const [cargando, setCargando] = useState(true);
@@ -64,97 +95,105 @@ function AdminPedidos() {
   const debouncedFiltro = useDebounce(filtroUsuario, 450);
   const [estadoEdicion, setEstadoEdicion] = useState({});
 
-  useEffect(() => {
-    let mounted = true;
+  // Mounted ref para controlar actualizaciones asíncronas
+  const mountedRef = useRef(true);
 
-    async function cargar(p = 0) {
-      setCargando(true);
-      setError(null);
-      try {
-        let data = [];
-        // Preferir la función paginada si está disponible
-        if (adminOrderService.obtenerOrdenesPaginadas) {
-          data = await adminOrderService.obtenerOrdenesPaginadas(p, size, debouncedFiltro);
-        } else {
-          data = await adminOrderService.obtenerTodasOrdenes();
-        }
-        if (!mounted) return;
-        const array = Array.isArray(data) ? data : [];
-        const normalizadas = array.map(normalizarOrden);
-          setPedidos(normalizadas);
-          // Enriquecer con datos de usuario cuando exista usuarioId pero falten nombre/email
-          (async () => {
-            try {
-              const ids = Array.from(new Set(normalizadas.filter(p => p.usuarioId && !(p.clienteNombre || p.email)).map(p => p.usuarioId)));
-              if (ids.length === 0) return;
-              const fetches = await Promise.all(ids.map(id => adminUserService.obtenerPorId(id).catch(() => null)));
-              const usersById = {};
-              ids.forEach((id, i) => { if (fetches[i]) usersById[id] = fetches[i]; });
-              if (Object.keys(usersById).length === 0) return;
-              const enriched = normalizadas.map(p => {
-                if (p.usuarioId && usersById[p.usuarioId]) {
-                  const u = usersById[p.usuarioId];
-                  return {
-                    ...p,
-                    clienteNombre: p.clienteNombre || u.nombre || u.name || u.username || u.fullName || p.clienteNombre,
-                    email: p.email || u.email || p.email,
-                    original: { ...p.original, usuario: { ...u } }
-                  };
-                }
-                return p;
-              });
-              setPedidos(enriched);
-              const initEstados2 = {};
-              enriched.forEach(o => { initEstados2[o.id] = o.estado; });
-              setEstadoEdicion(initEstados2);
-            } catch (err) {
-              console.debug('No se pudo enriquecer usuarios de pedidos:', err);
-            }
-          })();
-        // inicializar estadoEdicion con estados actuales
-        const initEstados = {};
-        normalizadas.forEach(o => { initEstados[o.id] = o.estado; });
-        setEstadoEdicion(initEstados);
-        setUltimaActualizacion(new Date());
-      } catch (err) {
-        if (!mounted) return;
-        console.error('Error cargando pedidos (AdminPedidos):', err);
-        setError('No se pudieron cargar los pedidos');
-      } finally {
-        if (mounted) setCargando(false);
+  // Merge de pedidos: mantiene pedidos previos si no se reemplazan, y evita resetear expandedOrders.
+  const mergeOrders = (prev = [], incoming = []) => {
+    const byId = new Map(prev.map(p => [String(p.id), p]));
+    // Replace or merge fields from incoming
+    incoming.forEach(n => {
+      const key = String(n.id);
+      if (byId.has(key)) {
+        const existing = byId.get(key);
+        // Merge sensible fields (estado, total, items, original, fecha)
+        byId.set(key, { ...existing, estado: n.estado || existing.estado, total: n.total || existing.total, items: n.items || existing.items, original: { ...existing.original, ...n.original }, fecha: n.fecha || existing.fecha });
+      } else {
+        byId.set(key, n);
       }
-    }
+    });
+    // Preserve order: incoming first (server order), then remaining prev not in incoming
+    const ordered = [];
+    incoming.forEach(n => { ordered.push(byId.get(String(n.id))); });
+    prev.forEach(p => { if (!incoming.find(x => String(x.id) === String(p.id))) ordered.push(p); });
+    return ordered;
+  };
 
-    // cargar inicialmente y activar polling cada 30s (respetando página y filtro)
-    cargar(page - 1);
-    const intervalo = setInterval(() => { cargar(page - 1); }, 30000);
-    return () => { mounted = false; clearInterval(intervalo); };
-  }, [page, size, debouncedFiltro]);
-
-  const handleRefrescar = async () => {
-    setCargando(true);
+  const cargar = useCallback(async (p = 0, options = { replace: true, suppressLoading: false }) => {
+    const { replace, suppressLoading } = options || {};
+    if (!suppressLoading) setCargando(true);
     setError(null);
     try {
       let data = [];
+      // Preferir la función paginada si está disponible
       if (adminOrderService.obtenerOrdenesPaginadas) {
-        data = await adminOrderService.obtenerOrdenesPaginadas(page - 1, size, debouncedFiltro);
+        data = await adminOrderService.obtenerOrdenesPaginadas(p, size, debouncedFiltro);
       } else {
         data = await adminOrderService.obtenerTodasOrdenes();
       }
+      if (!mountedRef.current) return;
       const array = Array.isArray(data) ? data : [];
       const normalizadas = array.map(normalizarOrden);
-      setPedidos(normalizadas);
-      // mantener/actualizar estadoEdicion
-      const initEstados = {};
-      normalizadas.forEach(o => { initEstados[o.id] = o.estado; });
-      setEstadoEdicion(initEstados);
+
+      // Enriquecer con datos de usuario cuando exista usuarioId pero falten nombre/email (no bloqueante)
+      (async () => {
+        try {
+          const ids = Array.from(new Set(normalizadas.filter(pp => pp.usuarioId && !(pp.clienteNombre || pp.email)).map(pp => pp.usuarioId)));
+          if (ids.length === 0) return;
+          const fetches = await Promise.all(ids.map(id => adminUserService.obtenerPorId(id).catch(() => null)));
+          const usersById = {};
+          ids.forEach((id, i) => { if (fetches[i]) usersById[id] = fetches[i]; });
+          if (Object.keys(usersById).length === 0) return;
+          setPedidos(prev => prev.map(p => {
+            const uid = p.usuarioId;
+            if (uid && usersById[uid]) {
+              const u = usersById[uid];
+              return { ...p, clienteNombre: p.clienteNombre || u.nombre || u.name || u.username || u.fullName || p.clienteNombre, email: p.email || u.email || p.email, original: { ...p.original, usuario: { ...u } } };
+            }
+            return p;
+          }));
+          // Inicializar estados que falten sin sobrescribir los existentes
+          setEstadoEdicion(prev => {
+            const out = { ...prev };
+            normalizadas.forEach(o => { if (out[o.id] === undefined) out[o.id] = o.estado; });
+            return out;
+          });
+        } catch (err) {
+          console.debug('No se pudo enriquecer usuarios de pedidos:', err);
+        }
+      })();
+
+      // Merge o replace según opciones
+      setPedidos(prev => (replace ? normalizadas : mergeOrders(prev, normalizadas)));
+
+      // Inicializar estadoEdicion SOLO para claves nuevas (no sobrescribir)
+      setEstadoEdicion(prev => {
+        const out = { ...prev };
+        normalizadas.forEach(o => { if (out[o.id] === undefined) out[o.id] = o.estado; });
+        return out;
+      });
+
       setUltimaActualizacion(new Date());
     } catch (err) {
-      console.error('Error refrescando pedidos:', err);
-      setError('No se pudo refrescar la lista de pedidos');
+      if (!mountedRef.current) return;
+      console.error('Error cargando pedidos (AdminPedidos):', err);
+      setError('No se pudieron cargar los pedidos');
     } finally {
-      setCargando(false);
+      if (mountedRef.current && !suppressLoading) setCargando(false);
     }
+  }, [size, debouncedFiltro]);
+
+  useEffect(() => {
+    mountedRef.current = true;
+    // cargar inicialmente y activar polling cada 30s (respetando página y filtro)
+    cargar(page - 1, { replace: true, suppressLoading: false });
+    const intervalo = setInterval(() => { cargar(page - 1, { replace: false, suppressLoading: true }); }, 30000);
+    return () => { mountedRef.current = false; clearInterval(intervalo); };
+  }, [page, size, debouncedFiltro, cargar]);
+
+  const handleRefrescar = async () => {
+    // Usar la misma lógica de carga, forzando reemplazo y mostrando loader
+    await cargar(page - 1, { replace: true, suppressLoading: false });
   };
 
   const aplicarFiltroUsuario = (lista) => {
@@ -321,11 +360,11 @@ function AdminPedidos() {
                                         <div className="card">
                                           <div className="card-body">
                                             <h6>Datos de envío</h6>
-                                            <div><strong>Nombre:</strong> {p.original?.datos_envio?.nombre_completo || p.clienteNombre || '-'}</div>
+                                            <div><strong>Nombre:</strong> {p.original?.datos_envio?.nombre_completo || p.original?.datos_envio?.nombre || p.clienteNombre || '-'}</div>
                                             <div><strong>Email:</strong> {p.original?.datos_envio?.email || p.email || '-'}</div>
-                                            <div><strong>Teléfono:</strong> {p.original?.datos_envio?.telefono || '-'}</div>
-                                            <div><strong>Dirección:</strong> {p.original?.datos_envio?.direccion || '-'}</div>
-                                            <div><strong>Ciudad / Región:</strong> {`${p.original?.datos_envio?.ciudad || ''} ${p.original?.datos_envio?.region ? '/ ' + p.original?.datos_envio?.region : ''}`}</div>
+                                            <div><strong>Teléfono:</strong> {p.original?.datos_envio?.telefono || p.original?.datos_envio?.phone || p.original?.datos_envio?.phone_number || '-'}</div>
+                                            <div><strong>Dirección:</strong> {p.original?.datos_envio?.direccion || p.original?.datos_envio?.address || p.original?.datos_envio?.direccion_linea1 || p.original?.datos_envio?.street || '-'}</div>
+                                            <div><strong>Ciudad / Región:</strong> {`${p.original?.datos_envio?.ciudad || p.original?.datos_envio?.city || ''} ${p.original?.datos_envio?.region || p.original?.datos_envio?.state ? '/ ' + (p.original?.datos_envio?.region || p.original?.datos_envio?.state) : ''}`}</div>
                                           </div>
                                         </div>
                                       </div>
@@ -333,10 +372,11 @@ function AdminPedidos() {
                                         <h6>Items</h6>
                                         <div className="list-group">
                                           {(p.items || []).map((it, idx) => {
-                                            const img = it.imagen || it.imagen_url || it.image || it.producto?.imagen || it.producto?.image || null;
-                                            const nombre = it.nombre || it.name || it.producto_nombre || it.producto?.nombre || `ID ${it.producto_id || it.id}`;
-                                            const cantidad = it.cantidad || it.quantity || it.qty || 1;
-                                            const precio = Number(it.precio_unitario || it.precio || it.price || it.unit_price || 0);
+                                            const ni = normalizarItem(it);
+                                            const nombre = ni.nombre;
+                                            const img = ni.imagen;
+                                            const cantidad = ni.cantidad;
+                                            const precio = ni.precio;
                                             return (
                                               <div key={idx} className="list-group-item d-flex align-items-center">
                                                 {img ? <img src={img} alt={nombre} style={{ width: 64, height: 64, objectFit: 'cover' }} className="me-3" /> : <div style={{ width: 64, height: 64 }} className="bg-light me-3 d-flex align-items-center justify-content-center text-muted">No img</div>}
