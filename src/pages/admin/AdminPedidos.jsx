@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import adminOrderService from '../../services/adminOrderService';
 import { ESTADOS_PEDIDO } from '../../util/constants';
 import { notify } from '../../components/ui/notificationHelper';
+import { confirmDialog } from '../../components/ui/confirmDialogHelper';
 
 // Helper para normalizar una orden en una forma estable usada por la UI
 const normalizarOrden = (o) => {
@@ -69,7 +70,7 @@ function AdminPedidos() {
         let data = [];
         // Preferir la función paginada si está disponible
         if (adminOrderService.obtenerOrdenesPaginadas) {
-          data = await adminOrderService.obtenerOrdenesPaginadas(p, size);
+          data = await adminOrderService.obtenerOrdenesPaginadas(p, size, filtroUsuario);
         } else {
           data = await adminOrderService.obtenerTodasOrdenes();
         }
@@ -91,11 +92,11 @@ function AdminPedidos() {
       }
     }
 
-    // cargar inicialmente y activar polling cada 30s (respetando página)
+    // cargar inicialmente y activar polling cada 30s (respetando página y filtro)
     cargar(page - 1);
     const intervalo = setInterval(() => { cargar(page - 1); }, 30000);
     return () => { mounted = false; clearInterval(intervalo); };
-  }, [page, size]);
+  }, [page, size, filtroUsuario]);
 
   const handleRefrescar = async () => {
     setCargando(true);
@@ -103,7 +104,7 @@ function AdminPedidos() {
     try {
       let data = [];
       if (adminOrderService.obtenerOrdenesPaginadas) {
-        data = await adminOrderService.obtenerOrdenesPaginadas(page - 1, size);
+        data = await adminOrderService.obtenerOrdenesPaginadas(page - 1, size, filtroUsuario);
       } else {
         data = await adminOrderService.obtenerTodasOrdenes();
       }
@@ -139,6 +140,9 @@ function AdminPedidos() {
   const confirmarCambioEstado = async (order) => {
     const nuevo = estadoEdicion[order.id];
     if (!nuevo || nuevo === order.estado) return;
+    // Confirmar con modal antes de enviar PUT
+    const confirmado = await confirmDialog({ title: 'Confirmar cambio de estado', message: `Cambiar estado del pedido #${order.id} a '${nuevo}'?`, confirmText: 'Sí, cambiar', cancelText: 'Cancelar' });
+    if (!confirmado) return;
     try {
       setCargando(true);
       const resultado = await adminOrderService.actualizarEstadoOrden(order.id, { estado: nuevo });
@@ -159,7 +163,7 @@ function AdminPedidos() {
         <button className="btn btn-sm btn-primary me-2" onClick={handleRefrescar} disabled={cargando}>Refrescar</button>
         <div className="input-group" style={{maxWidth:360}}>
           <span className="input-group-text">Buscar usuario</span>
-          <input className="form-control" placeholder="nombre o email" value={filtroUsuario} onChange={(e) => setFiltroUsuario(e.target.value)} />
+          <input className="form-control" placeholder="nombre o email" value={filtroUsuario} onChange={(e) => { setFiltroUsuario(e.target.value); setPage(1); }} />
         </div>
         <div className="ms-auto d-flex align-items-center gap-2">
           <label className="mb-0">Pág:</label>

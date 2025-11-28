@@ -62,13 +62,17 @@ function crearOrdenLocal(orden) {
  * Obtiene órdenes con paginación desde el backend (si el backend soporta page/size)
  * Devuelve array de órdenes o fallback al listado local.
  */
-async function obtenerOrdenesPaginadas(page = 0, size = 50) {
+async function obtenerOrdenesPaginadas(page = 0, size = 50, q = '') {
   try {
-    logger.debug('Solicitando órdenes paginadas al backend...', { page, size });
+    logger.debug('Solicitando órdenes paginadas al backend...', { page, size, q });
     const endpoints = ['/ordenes', '/pedidos', '/orders'];
     for (const ep of endpoints) {
       try {
-        const url = `${ep}?page=${page}&size=${size}`;
+        const params = new URLSearchParams();
+        params.set('page', String(page));
+        params.set('size', String(size));
+        if (q && q.toString().trim().length > 0) params.set('q', q.toString().trim());
+        const url = `${ep}?${params.toString()}`;
         const resp = await api.get(url);
         const data = resp.data;
         if (!data) continue;
