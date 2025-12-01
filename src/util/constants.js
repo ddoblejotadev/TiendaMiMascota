@@ -88,6 +88,20 @@ api.interceptors.request.use((config) => {
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
+
+  // Console logging for debugging requests
+  try {
+    const method = (config.method || 'GET').toUpperCase();
+    const url = config.url || config.baseURL || '';
+    console.groupCollapsed(`[API] Request ${method} ${url}`);
+    console.log('Headers:', config.headers);
+    if (config.params) console.log('Params:', config.params);
+    if (config.data) console.log('Body:', config.data);
+    console.groupEnd();
+  } catch (e) {
+    // ignore logging errors
+  }
+
   return config;
 }, (error) => {
   return Promise.reject(error);
@@ -95,8 +109,35 @@ api.interceptors.request.use((config) => {
 
 // Interceptor para manejar errores (401 Unauthorized) con refresh token
 api.interceptors.response.use(
-  (response) => response,
+  (response) => {
+    try {
+      const status = response.status;
+      const url = response.config?.url || response.config?.baseURL || '';
+      console.groupCollapsed(`[API] Response ${status} ${url}`);
+      console.log('Data:', response.data);
+      console.log('Headers:', response.headers);
+      console.groupEnd();
+    } catch (e) {
+      // ignore
+    }
+    return response;
+  },
   async (error) => {
+    // Log error details for debugging
+    try {
+      const status = error.response?.status || 'NETWORK';
+      const url = error.config?.url || error.config?.baseURL || '';
+      console.groupCollapsed(`[API] Error ${status} ${url}`);
+      console.error('Message:', error.message);
+      if (error.response) {
+        console.error('Response data:', error.response.data);
+        console.error('Response headers:', error.response.headers);
+      }
+      console.groupEnd();
+    } catch (e) {
+      // ignore
+    }
+
     const originalRequest = error.config;
     
     if (error.response?.status === 401 && !originalRequest._retry) {
