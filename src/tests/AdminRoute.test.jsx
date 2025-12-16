@@ -30,7 +30,7 @@ describe('AdminRoute', () => {
   });
 
   test('redirige a / si usuario no es admin', () => {
-    useAutenticacion.mockReturnValue({ usuario: { email: 'user@test.com', role: 'user' }, cargando: false });
+    useAutenticacion.mockReturnValue({ usuario: { email: 'user@test.com', rol: 'user' }, cargando: false });
 
     render(
       <MemoryRouter initialEntries={["/admin"]}>
@@ -45,7 +45,7 @@ describe('AdminRoute', () => {
   });
 
   test('renderiza children si usuario es admin', () => {
-    useAutenticacion.mockReturnValue({ usuario: { email: 'admin@test.com', role: 'admin' }, cargando: false });
+    useAutenticacion.mockReturnValue({ usuario: { email: 'admin@test.com', rol: 'admin' }, cargando: false });
 
     render(
       <MemoryRouter initialEntries={["/admin"]}>
